@@ -1,1 +1,13 @@
-// Android/eclipse gitignore here
+target
+.recommenders
+.metadata
+.gradle
+bin
+.DS_Store
+build
+.project
+.settings
+.classpath
+.private
+.idea
+*.iml
