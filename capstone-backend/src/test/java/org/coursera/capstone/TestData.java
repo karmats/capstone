@@ -2,7 +2,7 @@ package org.coursera.capstone;
 
 import java.util.UUID;
 
-import org.coursera.capstone.repository.Patient;
+import org.coursera.capstone.entity.Patient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

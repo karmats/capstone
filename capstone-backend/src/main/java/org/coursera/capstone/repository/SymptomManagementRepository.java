@@ -3,6 +3,7 @@ package org.coursera.capstone.repository;
 import java.util.Collection;
 
 import org.coursera.capstone.client.SymptomManagementApi;
+import org.coursera.capstone.entity.Patient;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

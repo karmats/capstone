@@ -2,7 +2,7 @@ package org.coursera.capstone.client;
 
 import java.util.Collection;
 
-import org.coursera.capstone.repository.Patient;
+import org.coursera.capstone.entity.Patient;
 
 import retrofit.http.Body;
 import retrofit.http.GET;

@@ -12,7 +12,7 @@ import org.coursera.capstone.TestData;
 import org.coursera.capstone.client.SecuredRestBuilder;
 import org.coursera.capstone.client.SecuredRestException;
 import org.coursera.capstone.client.SymptomManagementApi;
-import org.coursera.capstone.repository.Patient;
+import org.coursera.capstone.entity.Patient;
 import org.junit.Test;
 
 import retrofit.RestAdapter.LogLevel;
