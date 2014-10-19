@@ -1,13 +1,12 @@
 package org.coursera.capstone.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import com.google.common.base.Objects;
 
 /**
  * A simple object to represent a patient.
@@ -25,6 +24,7 @@ public class Patient {
     private Date birthDate;
 
     private Doctor doctor;
+    private List<PainMedication> painMedications;
 
     public Patient() {
     }
@@ -73,20 +73,12 @@ public class Patient {
         this.birthDate = birthDate;
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     * 
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Patient) {
-            Patient other = (Patient) obj;
-            // Google Guava provides great utilities for equals too!
-            return Objects.equal(firstName, other.firstName);
-        } else {
-            return false;
-        }
+    public List<PainMedication> getPainMedications() {
+        return painMedications;
+    }
+
+    public void setPainMedications(List<PainMedication> painMedications) {
+        this.painMedications = painMedications;
     }
 
 }
