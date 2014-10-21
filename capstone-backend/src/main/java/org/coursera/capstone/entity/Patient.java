@@ -19,6 +19,7 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private long medicalRecordNumber;
     private String firstName;
     private String lastName;
     private Date birthDate;
@@ -40,6 +41,14 @@ public class Patient {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getMedicalRecordNumber() {
+        return medicalRecordNumber;
+    }
+
+    public void setMedicalRecordNumber(long medicalRecordNumber) {
+        this.medicalRecordNumber = medicalRecordNumber;
     }
 
     public String getFirstName() {
