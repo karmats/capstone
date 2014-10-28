@@ -24,7 +24,7 @@ public interface SymptomManagementApi {
 
     public static final String USERNAME_PARAMETER = "username";
 
-    public static final String NAME_PARAMETER = "title";
+    public static final String NAME_PARAMETER = "name";
 
     public static final String TOKEN_PATH = "/oauth/token";
 

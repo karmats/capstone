@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * A simple object to represent a patient.
@@ -24,8 +26,10 @@ public class Patient {
     private String lastName;
     private Date birthDate;
 
+    @ManyToOne
     private Doctor doctor;
-    private List<PainMedication> painMedications;
+    @OneToMany(mappedBy = "patient")
+    private List<PatientPainMedication> patientPainMedications;
 
     public Patient() {
     }
@@ -82,12 +86,12 @@ public class Patient {
         this.birthDate = birthDate;
     }
 
-    public List<PainMedication> getPainMedications() {
-        return painMedications;
+    public List<PatientPainMedication> getPatientPainMedications() {
+        return patientPainMedications;
     }
 
-    public void setPainMedications(List<PainMedication> painMedications) {
-        this.painMedications = painMedications;
+    public void setPatientPainMedications(List<PatientPainMedication> patientPainMedications) {
+        this.patientPainMedications = patientPainMedications;
     }
 
 }

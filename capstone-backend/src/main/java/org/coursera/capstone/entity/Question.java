@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * A simple object to represent a Question
@@ -18,6 +19,8 @@ public class Question {
     private long id;
 
     private String text;
+
+    @OneToMany(mappedBy = "question")
     private List<Answer> answers;
 
     public Question() {

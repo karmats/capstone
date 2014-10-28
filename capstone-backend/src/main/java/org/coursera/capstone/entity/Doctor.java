@@ -6,9 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
- * A simple object to represent a Doctor 
+ * A simple object to represent a Doctor
  */
 @Entity
 public class Doctor {
@@ -20,6 +21,7 @@ public class Doctor {
     private String firstName;
     private String lastName;
 
+    @OneToMany(mappedBy = "doctor")
     private List<Patient> patients;
 
     public Doctor() {

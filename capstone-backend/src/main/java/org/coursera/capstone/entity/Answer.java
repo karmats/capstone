@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * A simple object to represent a Answer
@@ -17,6 +18,7 @@ public class Answer {
 
     private String text;
 
+    @ManyToOne
     private Question question;
 
     public Answer() {
