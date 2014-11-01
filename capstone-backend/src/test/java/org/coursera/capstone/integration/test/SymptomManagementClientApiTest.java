@@ -47,8 +47,8 @@ public class SymptomManagementClientApiTest {
 
     private final String USERNAME = "admin";
     private final String PASSWORD = "pass";
-    private final String CLIENT_ID = "mobile";
-    private final String READ_ONLY_CLIENT_ID = "mobileReader";
+    private final String CLIENT_ID = "doctor";
+    private final String READ_ONLY_CLIENT_ID = "patient";
 
     private final String TEST_URL = "https://localhost:8443";
 

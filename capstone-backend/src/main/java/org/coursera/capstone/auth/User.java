@@ -1,15 +1,39 @@
 package org.coursera.capstone.auth;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class User implements UserDetails {
+    private static final long serialVersionUID = 8140371140830590386L;
 
-    public static UserDetails create(String username, String password, String... authorities) {
+    public enum UserAuthority {
+        DOCTOR("doctor"), PATIENT("patient");
+
+        private final String name;
+
+        private UserAuthority(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static String[] userAuthoritesToStrings(UserAuthority... userAuthorities) {
+            List<String> result = new ArrayList<String>();
+            for (UserAuthority userAuthority : userAuthorities) {
+                result.add(userAuthority.getName());
+            }
+            return result.toArray(new String[userAuthorities.length]);
+        }
+    }
+
+    public static UserDetails create(String username, String password, UserAuthority... authorities) {
         return new User(username, password, authorities);
     }
 
@@ -17,22 +41,14 @@ public class User implements UserDetails {
     private final String password;
     private final String username;
 
-    @SuppressWarnings("unchecked")
     private User(String username, String password) {
-        this(username, password, Collections.EMPTY_LIST);
+        this(username, password, new UserAuthority[0]);
     }
 
-    private User(String username, String password, String... authorities) {
+    private User(String username, String password, UserAuthority... authorities) {
         this.username = username;
         this.password = password;
-        this.authorities = AuthorityUtils.createAuthorityList(authorities);
-    }
-
-    private User(String username, String password, Collection<GrantedAuthority> authorities) {
-        super();
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
+        this.authorities = AuthorityUtils.createAuthorityList(UserAuthority.userAuthoritesToStrings(authorities));
     }
 
     public Collection<GrantedAuthority> getAuthorities() {

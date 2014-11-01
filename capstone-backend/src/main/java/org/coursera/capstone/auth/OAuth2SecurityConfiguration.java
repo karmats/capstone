@@ -96,10 +96,10 @@ public class OAuth2SecurityConfiguration {
             // would want to change
 
             // Require all GET requests to have client "read" scope
-            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasScope('read')");
+            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasAnyScope('patientScope', 'doctorScope')");
 
             // Require all other requests to have "write" scope
-            http.authorizeRequests().antMatchers("/**").access("#oauth2.hasScope('write')");
+            http.authorizeRequests().antMatchers("/**").access("#oauth2.hasScope('doctorScope')");
         }
 
     }
@@ -144,21 +144,24 @@ public class OAuth2SecurityConfiguration {
             ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
                     // Create a client that has "read" and "write" access to the
                     // video service
-                    .withClient("mobile").authorizedGrantTypes("password")
-                    .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT").scopes("read", "write")
+                    .withClient("doctor").authorizedGrantTypes("password")
+                    .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT").scopes("doctorScope")
                     .resourceIds("video")
                     .and()
                     // Create a second client that only has "read" access to the
                     // video service
-                    .withClient("mobileReader").authorizedGrantTypes("password").authorities("ROLE_CLIENT")
-                    .scopes("read").resourceIds("video").accessTokenValiditySeconds(3600).and().build();
+                    .withClient("patient").authorizedGrantTypes("password").authorities("ROLE_CLIENT")
+                    .scopes("patientScope").resourceIds("video").accessTokenValiditySeconds(3600).and().build();
 
             // Create a series of hard-coded users.
             UserDetailsService svc = new InMemoryUserDetailsManager(Arrays.asList(
-                    User.create("admin", "pass", "ADMIN", "USER"), User.create("user0", "pass", "USER"),
-                    User.create("user1", "pass", "USER"), User.create("user2", "pass", "USER"),
-                    User.create("user3", "pass", "USER"), User.create("user4", "pass", "USER"),
-                    User.create("user5", "pass", "USER")));
+                    User.create("admin", "pass", User.UserAuthority.DOCTOR),
+                    User.create("user0", "pass", User.UserAuthority.PATIENT),
+                    User.create("user1", "pass", User.UserAuthority.PATIENT),
+                    User.create("user2", "pass", User.UserAuthority.PATIENT),
+                    User.create("user3", "pass", User.UserAuthority.PATIENT),
+                    User.create("user4", "pass", User.UserAuthority.PATIENT),
+                    User.create("user5", "pass", User.UserAuthority.PATIENT)));
 
             // Since clients have to use BASIC authentication with the client's
             // id/secret,
