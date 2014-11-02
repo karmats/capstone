@@ -71,9 +71,9 @@ public class SymptomManagementClientApiTest {
     private Patient patient = TestData.randomVideo();
 
     /**
-     * This test creates a Patient, adds the Patient to the SymptomManagementApi, and then
-     * checks that the Patient is included in the list when getPatientList() is
-     * called.
+     * This test creates a Patient, adds the Patient to the
+     * SymptomManagementApi, and then checks that the Patient is included in the
+     * list when getPatientList() is called.
      * 
      * @throws Exception
      */
@@ -129,6 +129,19 @@ public class SymptomManagementClientApiTest {
             JsonObject body = (JsonObject) e.getBodyAs(JsonObject.class);
             assertEquals("access_denied", body.get("error").getAsString());
         }
+    }
+
+    @Test
+    public void testSearchByName() throws Exception {
+        Collection<Patient> all = smService.getPatientList();
+        System.out.println("===================================");
+        System.out.println("There is " + all.size() + " total patients");
+        for (Patient p : all) {
+            System.out.println(p.getFirstName() + " " + p.getLastName());
+        }
+        Collection<Patient> patients = smService.findByName("Name-2aac4449-e8fd-49eb-a5fe-ef05f5d5aedb");
+        assertNotNull(patients);
+        assertEquals(1, patients.size());
     }
 
 }

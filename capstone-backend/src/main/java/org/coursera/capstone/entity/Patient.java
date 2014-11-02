@@ -98,16 +98,15 @@ public class Patient {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(firstName, lastName, birthDate);
+        return Objects.hashCode(firstName, lastName, medicalRecordNumber);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Patient) {
             Patient other = (Patient) obj;
-            // Google Guava provides great utilities for equals too!
             return Objects.equal(this.firstName, other.firstName) && Objects.equal(this.lastName, other.lastName)
-                    && this.birthDate == other.birthDate;
+                    && this.medicalRecordNumber == other.medicalRecordNumber;
         } else {
             return false;
         }

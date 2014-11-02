@@ -40,7 +40,7 @@ public interface SymptomManagementApi {
     @POST(PATIENT_SVC_PATH)
     public Void addPatient(@Body Patient v);
 
-    //@GET(PATIENT_NAME_SEARCH_PATH)
-    //public Collection<Patient> findByName(@Query(NAME_PARAMETER) String title);
+    @GET(PATIENT_NAME_SEARCH_PATH)
+    public Collection<Patient> findByName(@Query(NAME_PARAMETER) String name);
 
 }
