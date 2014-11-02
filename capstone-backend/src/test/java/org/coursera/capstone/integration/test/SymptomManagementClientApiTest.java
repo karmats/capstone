@@ -68,7 +68,7 @@ public class SymptomManagementClientApiTest {
             .setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient())).setEndpoint(TEST_URL)
             .setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
 
-    private Patient patient = TestData.randomVideo();
+    private Patient patient = TestData.randomPatient();
 
     /**
      * This test creates a Patient, adds the Patient to the
@@ -133,15 +133,8 @@ public class SymptomManagementClientApiTest {
 
     @Test
     public void testSearchByName() throws Exception {
-        Collection<Patient> all = smService.getPatientList();
-        System.out.println("===================================");
-        System.out.println("There is " + all.size() + " total patients");
-        for (Patient p : all) {
-            System.out.println(p.getFirstName() + " " + p.getLastName());
-        }
-        Collection<Patient> patients = smService.findByName("Name-2aac4449-e8fd-49eb-a5fe-ef05f5d5aedb");
+        Collection<Patient> patients = smService.findByName("name");
         assertNotNull(patients);
-        assertEquals(1, patients.size());
     }
 
 }

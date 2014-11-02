@@ -96,7 +96,8 @@ public class OAuth2SecurityConfiguration {
             // would want to change
 
             // Require all GET requests to have client "read" scope
-            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.clientHasAnyRole('patient', 'doctor')");
+            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**")
+                    .access("#oauth2.clientHasAnyRole('patient', 'doctor')");
 
             // Require all other requests to have "write" scope
             http.authorizeRequests().antMatchers("/**").access("#oauth2.clientHasRole('doctor')");
@@ -119,7 +120,7 @@ public class OAuth2SecurityConfiguration {
 
         // A data structure used to store both a ClientDetailsService and a
         // UserDetailsService
-        private ClientAndUserDetailsService combinedService_;
+        private ClientAndUserDetailsService combinedService;
 
         /**
          * 
@@ -147,12 +148,12 @@ public class OAuth2SecurityConfiguration {
                     .withClient("doctor_client").authorizedGrantTypes("password")
                     .authorities(User.UserAuthority.DOCTOR.getName())
                     .scopes("doctorScope")
-                    .resourceIds("video")
+                    .resourceIds("patient")
                     .and()
                     // Create a second client that only has "read" access to the
                     // video service
                     .withClient("patient_client").authorizedGrantTypes("password")
-                    .authorities(User.UserAuthority.PATIENT.getName()).scopes("patientScope").resourceIds("video")
+                    .authorities(User.UserAuthority.PATIENT.getName()).scopes("patientScope").resourceIds("patient")
                     .accessTokenValiditySeconds(3600).and().build();
 
             // Create a series of hard-coded users.
@@ -174,7 +175,7 @@ public class OAuth2SecurityConfiguration {
             // request, this combined UserDetailsService will authenticate that
             // the
             // client is a valid "user".
-            combinedService_ = new ClientAndUserDetailsService(csvc, svc);
+            combinedService = new ClientAndUserDetailsService(csvc, svc);
         }
 
         /**
@@ -183,7 +184,7 @@ public class OAuth2SecurityConfiguration {
          */
         @Bean
         public ClientDetailsService clientDetailsService() throws Exception {
-            return combinedService_;
+            return combinedService;
         }
 
         /**
@@ -192,7 +193,7 @@ public class OAuth2SecurityConfiguration {
          */
         @Bean
         public UserDetailsService userDetailsService() {
-            return combinedService_;
+            return combinedService;
         }
 
         /**

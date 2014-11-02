@@ -37,7 +37,6 @@ public class Patient {
     }
 
     public Patient(String firstName) {
-        super();
         this.firstName = firstName;
     }
 

@@ -24,7 +24,7 @@ public class TestData {
      * 
      * @return
      */
-    public static Patient randomVideo() {
+    public static Patient randomPatient() {
         // Information about the video
         // Construct a random identifier using Java's UUID class
         String id = UUID.randomUUID().toString();
