@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.google.common.base.Objects;
+
 /**
  * A simple object to represent a patient.
  * 
@@ -94,4 +96,20 @@ public class Patient {
         this.patientPainMedications = patientPainMedications;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(firstName, lastName, birthDate);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Patient) {
+            Patient other = (Patient) obj;
+            // Google Guava provides great utilities for equals too!
+            return Objects.equal(this.firstName, other.firstName) && Objects.equal(this.lastName, other.lastName)
+                    && this.birthDate == other.birthDate;
+        } else {
+            return false;
+        }
+    }
 }

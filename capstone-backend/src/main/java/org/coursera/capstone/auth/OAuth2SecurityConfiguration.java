@@ -96,10 +96,10 @@ public class OAuth2SecurityConfiguration {
             // would want to change
 
             // Require all GET requests to have client "read" scope
-            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasAnyScope('patientScope', 'doctorScope')");
+            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.clientHasAnyRole('patient', 'doctor')");
 
             // Require all other requests to have "write" scope
-            http.authorizeRequests().antMatchers("/**").access("#oauth2.hasScope('doctorScope')");
+            http.authorizeRequests().antMatchers("/**").access("#oauth2.clientHasRole('doctor')");
         }
 
     }
@@ -144,14 +144,16 @@ public class OAuth2SecurityConfiguration {
             ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
                     // Create a client that has "read" and "write" access to the
                     // video service
-                    .withClient("doctor").authorizedGrantTypes("password")
-                    .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT").scopes("doctorScope")
+                    .withClient("doctor_client").authorizedGrantTypes("password")
+                    .authorities(User.UserAuthority.DOCTOR.getName())
+                    .scopes("doctorScope")
                     .resourceIds("video")
                     .and()
                     // Create a second client that only has "read" access to the
                     // video service
-                    .withClient("patient").authorizedGrantTypes("password").authorities("ROLE_CLIENT")
-                    .scopes("patientScope").resourceIds("video").accessTokenValiditySeconds(3600).and().build();
+                    .withClient("patient_client").authorizedGrantTypes("password")
+                    .authorities(User.UserAuthority.PATIENT.getName()).scopes("patientScope").resourceIds("video")
+                    .accessTokenValiditySeconds(3600).and().build();
 
             // Create a series of hard-coded users.
             UserDetailsService svc = new InMemoryUserDetailsManager(Arrays.asList(

@@ -47,8 +47,8 @@ public class SymptomManagementClientApiTest {
 
     private final String USERNAME = "admin";
     private final String PASSWORD = "pass";
-    private final String CLIENT_ID = "doctor";
-    private final String READ_ONLY_CLIENT_ID = "patient";
+    private final String CLIENT_ID = "doctor_client";
+    private final String READ_ONLY_CLIENT_ID = "patient_client";
 
     private final String TEST_URL = "https://localhost:8443";
 
@@ -127,7 +127,7 @@ public class SymptomManagementClientApiTest {
                     + " because it is using a read-only client ID");
         } catch (RetrofitError e) {
             JsonObject body = (JsonObject) e.getBodyAs(JsonObject.class);
-            assertEquals("insufficient_scope", body.get("error").getAsString());
+            assertEquals("access_denied", body.get("error").getAsString());
         }
     }
 
