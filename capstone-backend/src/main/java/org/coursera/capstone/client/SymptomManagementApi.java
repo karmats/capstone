@@ -20,10 +20,6 @@ import retrofit.http.Query;
  */
 public interface SymptomManagementApi {
 
-    public static final String PASSWORD_PARAMETER = "password";
-
-    public static final String USERNAME_PARAMETER = "username";
-
     public static final String NAME_PARAMETER = "name";
 
     public static final String TOKEN_PATH = "/oauth/token";

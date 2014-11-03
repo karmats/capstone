@@ -35,24 +35,20 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 /**
  * Configure this web application to use OAuth 2.0.
  *
- * The resource server is located at "/video", and can be accessed only by
- * retrieving a token from "/oauth/token" using the Password Grant Flow as
- * specified by OAuth 2.0.
+ * The resource server is located at "/video", and can be accessed only by retrieving a token from "/oauth/token" using
+ * the Password Grant Flow as specified by OAuth 2.0.
  * 
- * Most of this code can be reused in other applications. The key methods that
- * would definitely need to be changed are:
+ * Most of this code can be reused in other applications. The key methods that would definitely need to be changed are:
  * 
- * ResourceServer.configure(...) - update this method to apply the appropriate
- * set of scope requirements on client requests
+ * ResourceServer.configure(...) - update this method to apply the appropriate set of scope requirements on client
+ * requests
  * 
- * OAuth2Config constructor - update this constructor to create a "real" (not
- * hard-coded) UserDetailsService and ClientDetailsService for authentication.
- * The current implementation should never be used in any type of production
+ * OAuth2Config constructor - update this constructor to create a "real" (not hard-coded) UserDetailsService and
+ * ClientDetailsService for authentication. The current implementation should never be used in any type of production
  * environment as these hard-coded credentials are highly insecure.
  * 
- * OAuth2SecurityConfiguration.containerCustomizer(...) - update this method to
- * use a real keystore and certificate signed by a CA. This current version is
- * highly insecure.
+ * OAuth2SecurityConfiguration.containerCustomizer(...) - update this method to use a real keystore and certificate
+ * signed by a CA. This current version is highly insecure.
  * 
  */
 @Configuration
@@ -75,8 +71,8 @@ public class OAuth2SecurityConfiguration {
     }
 
     /**
-     * This method is used to configure who is allowed to access which parts of
-     * our resource server (i.e. the "/video" endpoint)
+     * This method is used to configure who is allowed to access which parts of our resource server (i.e. the "/video"
+     * endpoint)
      */
     @Configuration
     @EnableResourceServer
@@ -106,8 +102,8 @@ public class OAuth2SecurityConfiguration {
     }
 
     /**
-     * This class is used to configure how our authorization server (the
-     * "/oauth/token" endpoint) validates client credentials.
+     * This class is used to configure how our authorization server (the "/oauth/token" endpoint) validates client
+     * credentials.
      */
     @Configuration
     @EnableAuthorizationServer
@@ -124,13 +120,11 @@ public class OAuth2SecurityConfiguration {
 
         /**
          * 
-         * This constructor is used to setup the clients and users that will be
-         * able to login to the system. This is a VERY insecure setup that is
-         * using hard-coded lists of clients / users / passwords and should
-         * never be used for anything other than local testing on a machine that
-         * is not accessible via the Internet. Even if you use this code for
-         * testing, at the bare minimum, you should consider changing the
-         * passwords listed below and updating the VideoSvcClientApiTest.
+         * This constructor is used to setup the clients and users that will be able to login to the system. This is a
+         * VERY insecure setup that is using hard-coded lists of clients / users / passwords and should never be used
+         * for anything other than local testing on a machine that is not accessible via the Internet. Even if you use
+         * this code for testing, at the bare minimum, you should consider changing the passwords listed below and
+         * updating the VideoSvcClientApiTest.
          * 
          * @param auth
          * @throws Exception
@@ -145,7 +139,8 @@ public class OAuth2SecurityConfiguration {
             ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
                     // Create a client that has "read" and "write" access to the
                     // video service
-                    .withClient("doctor_client").authorizedGrantTypes("password")
+                    .withClient("doctor_client")
+                    .authorizedGrantTypes("password")
                     .authorities(User.UserAuthority.DOCTOR.getName())
                     .scopes("doctorScope")
                     .resourceIds("patient")
@@ -158,13 +153,13 @@ public class OAuth2SecurityConfiguration {
 
             // Create a series of hard-coded users.
             UserDetailsService svc = new InMemoryUserDetailsManager(Arrays.asList(
-                    User.create("admin", "pass", User.UserAuthority.DOCTOR),
-                    User.create("user0", "pass", User.UserAuthority.PATIENT),
-                    User.create("user1", "pass", User.UserAuthority.PATIENT),
-                    User.create("user2", "pass", User.UserAuthority.PATIENT),
-                    User.create("user3", "pass", User.UserAuthority.PATIENT),
-                    User.create("user4", "pass", User.UserAuthority.PATIENT),
-                    User.create("user5", "pass", User.UserAuthority.PATIENT)));
+                    User.create("drporter", "pass", User.UserAuthority.DOCTOR),
+                    User.create("johndoe", "pass", User.UserAuthority.PATIENT),
+                    User.create("janedoe", "pass", User.UserAuthority.PATIENT),
+                    User.create("robrobson", "pass", User.UserAuthority.PATIENT),
+                    User.create("patriksmith", "pass", User.UserAuthority.PATIENT),
+                    User.create("donnasmith", "pass", User.UserAuthority.PATIENT),
+                    User.create("susanblack", "pass", User.UserAuthority.PATIENT)));
 
             // Since clients have to use BASIC authentication with the client's
             // id/secret,
@@ -179,8 +174,7 @@ public class OAuth2SecurityConfiguration {
         }
 
         /**
-         * Return the list of trusted client information to anyone who asks for
-         * it.
+         * Return the list of trusted client information to anyone who asks for it.
          */
         @Bean
         public ClientDetailsService clientDetailsService() throws Exception {
@@ -188,8 +182,7 @@ public class OAuth2SecurityConfiguration {
         }
 
         /**
-         * Return all of our user information to anyone in the framework who
-         * requests it.
+         * Return all of our user information to anyone in the framework who requests it.
          */
         @Bean
         public UserDetailsService userDetailsService() {
@@ -197,8 +190,8 @@ public class OAuth2SecurityConfiguration {
         }
 
         /**
-         * This method tells our AuthorizationServerConfigurerAdapter to use the
-         * delegated AuthenticationManager to process authentication requests.
+         * This method tells our AuthorizationServerConfigurerAdapter to use the delegated AuthenticationManager to
+         * process authentication requests.
          */
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -206,8 +199,8 @@ public class OAuth2SecurityConfiguration {
         }
 
         /**
-         * This method tells the AuthorizationServerConfigurerAdapter to use our
-         * self-defined client details service to authenticate clients with.
+         * This method tells the AuthorizationServerConfigurerAdapter to use our self-defined client details service to
+         * authenticate clients with.
          */
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {

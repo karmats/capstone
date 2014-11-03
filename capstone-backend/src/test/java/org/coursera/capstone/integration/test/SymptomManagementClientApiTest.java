@@ -45,7 +45,7 @@ import com.google.gson.JsonObject;
  */
 public class SymptomManagementClientApiTest {
 
-    private final String USERNAME = "admin";
+    private final String USERNAME = "drporter";
     private final String PASSWORD = "pass";
     private final String CLIENT_ID = "doctor_client";
     private final String READ_ONLY_CLIENT_ID = "patient_client";
