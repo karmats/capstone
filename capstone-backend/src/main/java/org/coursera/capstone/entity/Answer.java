@@ -24,8 +24,9 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(String text) {
+    public Answer(String text, Question question) {
         this.text = text;
+        this.question = question;
     }
 
     public long getId() {

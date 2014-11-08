@@ -1,9 +1,13 @@
 package org.coursera.capstone;
 
 import org.coursera.capstone.auth.OAuth2SecurityConfiguration;
+import org.coursera.capstone.entity.Doctor;
 import org.coursera.capstone.json.ResourcesMapper;
+import org.coursera.capstone.repository.DoctorRepository;
+import org.coursera.capstone.repository.PatientRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -47,7 +51,12 @@ public class Application extends RepositoryRestMvcConfiguration {
     //
     // Tell Spring to launch our app!
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+        PatientRepository patientRepo = ctx.getBean(PatientRepository.class);
+        DoctorRepository doctorRepo = ctx.getBean(DoctorRepository.class);
+        Doctor d = new Doctor("Doctor", "Porter");
+        doctorRepo.save(d);
+        patientRepo.save(InitalTestData.createTestPatients(d));
     }
 
     // We are overriding the bean that RepositoryRestMvcConfiguration

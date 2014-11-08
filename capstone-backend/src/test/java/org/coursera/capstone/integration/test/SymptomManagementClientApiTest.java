@@ -23,22 +23,19 @@ import com.google.gson.JsonObject;
 
 /**
  * 
- * This integration test sends a POST request to the VideoServlet to add a new
- * video and then sends a second GET request to check that the video showed up
- * in the list of videos. Actual network communication using HTTP is performed
- * with this test.
+ * This integration test sends a POST request to the VideoServlet to add a new video and then sends a second GET request
+ * to check that the video showed up in the list of videos. Actual network communication using HTTP is performed with
+ * this test.
  * 
- * The test requires that the VideoSvc be running first (see the directions in
- * the README.md file for how to launch the Application).
+ * The test requires that the VideoSvc be running first (see the directions in the README.md file for how to launch the
+ * Application).
  * 
- * To run this test, right-click on it in Eclipse and select
- * "Run As"->"JUnit Test"
+ * To run this test, right-click on it in Eclipse and select "Run As"->"JUnit Test"
  * 
- * Pay attention to how this test that actually uses HTTP and the test that just
- * directly makes method calls on a VideoSvc object are essentially identical.
- * All that changes is the setup of the videoService variable. Yes, this could
- * be refactored to eliminate code duplication...but the goal was to show how
- * much Retrofit simplifies interaction with our service!
+ * Pay attention to how this test that actually uses HTTP and the test that just directly makes method calls on a
+ * VideoSvc object are essentially identical. All that changes is the setup of the videoService variable. Yes, this
+ * could be refactored to eliminate code duplication...but the goal was to show how much Retrofit simplifies interaction
+ * with our service!
  * 
  * @author jules
  *
@@ -71,9 +68,8 @@ public class SymptomManagementClientApiTest {
     private Patient patient = TestData.randomPatient();
 
     /**
-     * This test creates a Patient, adds the Patient to the
-     * SymptomManagementApi, and then checks that the Patient is included in the
-     * list when getPatientList() is called.
+     * This test creates a Patient, adds the Patient to the SymptomManagementApi, and then checks that the Patient is
+     * included in the list when getPatientList() is called.
      * 
      * @throws Exception
      */
@@ -88,8 +84,7 @@ public class SymptomManagementClientApiTest {
     }
 
     /**
-     * This test ensures that clients with invalid credentials cannot get access
-     * to patients.
+     * This test ensures that clients with invalid credentials cannot get access to patients.
      * 
      * @throws Exception
      */
@@ -108,8 +103,7 @@ public class SymptomManagementClientApiTest {
     }
 
     /**
-     * This test ensures that read-only clients can access the patient list but
-     * not add new patients.
+     * This test ensures that read-only clients can access the patient list but not add new patients.
      * 
      * @throws Exception
      */

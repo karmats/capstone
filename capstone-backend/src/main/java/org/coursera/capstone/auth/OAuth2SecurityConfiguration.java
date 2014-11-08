@@ -142,14 +142,14 @@ public class OAuth2SecurityConfiguration {
                     .withClient("doctor_client")
                     .authorizedGrantTypes("password")
                     .authorities(User.UserAuthority.DOCTOR.getName())
-                    .scopes("doctorScope")
+                    .scopes("read", "update.medication")
                     .resourceIds("patient")
                     .and()
                     // Create a second client that only has "read" access to the
                     // video service
                     .withClient("patient_client").authorizedGrantTypes("password")
-                    .authorities(User.UserAuthority.PATIENT.getName()).scopes("patientScope").resourceIds("patient")
-                    .accessTokenValiditySeconds(3600).and().build();
+                    .authorities(User.UserAuthority.PATIENT.getName()).scopes("read", "answers.submit")
+                    .resourceIds("patient").accessTokenValiditySeconds(3600).and().build();
 
             // Create a series of hard-coded users.
             UserDetailsService svc = new InMemoryUserDetailsManager(Arrays.asList(

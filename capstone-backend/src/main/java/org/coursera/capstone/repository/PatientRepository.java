@@ -10,12 +10,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
- * An interface for a repository that can store Patient objects and allow them
- * to be searched by name.
- * 
+ * An interface for a repository that can store Patient objects and allow them to be searched by name.
  */
 @RepositoryRestResource(path = SymptomManagementApi.PATIENT_SVC_PATH)
-public interface SymptomManagementRepository extends CrudRepository<Patient, Long> {
+public interface PatientRepository extends CrudRepository<Patient, Long> {
 
     // Find all videos with a matching title (e.g., Video.name)
     @Query("select p from Patient p where p.firstName = :name or p.lastName = :name")
@@ -24,6 +22,5 @@ public interface SymptomManagementRepository extends CrudRepository<Patient, Lon
     // parameter it should use to fill in the "name" variable used to
     // search for Patients
             @Param(SymptomManagementApi.NAME_PARAMETER) String name);
-
 
 }

@@ -37,10 +37,20 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(String firstName) {
+    public Patient(String firstName, String lastName) {
         this.firstName = firstName;
+        this.lastName = lastName;
     }
 
+    public Patient(String username, long medicalRecordNumber, String firstName, String lastName, Date birthDate,
+            Doctor doctor) {
+        this.username = username;
+        this.medicalRecordNumber = medicalRecordNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.doctor = doctor;
+    }
     public long getId() {
         return id;
     }

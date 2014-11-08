@@ -29,7 +29,8 @@ public class TestData {
         // Construct a random identifier using Java's UUID class
         String id = UUID.randomUUID().toString();
         String name = "Name-" + id;
-        return new Patient(name);
+        String lastName = "Surname-" + id;
+        return new Patient(name, lastName);
     }
 
     /**

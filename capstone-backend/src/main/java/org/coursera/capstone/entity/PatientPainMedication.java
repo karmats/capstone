@@ -22,6 +22,14 @@ public class PatientPainMedication {
     @OneToOne
     private PainMedication painMedication;
 
+    public PatientPainMedication() {
+    }
+
+    public PatientPainMedication(Patient patient, PainMedication painMedication) {
+        this.patient = patient;
+        this.painMedication = painMedication;
+    }
+
     public long getId() {
         return id;
     }
