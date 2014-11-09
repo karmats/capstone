@@ -83,9 +83,20 @@ public class SymptomManagementClientApiTest {
 
         // We should get back the patients that we added above
         Collection<Patient> patients = smService.getPatientList();
-        System.out.println("===== PATIENT BIRTH DATE =====");
-        System.out.println(((Patient) patients.toArray()[0]).getBirthDate().getTime());
         assertTrue(patients.contains(patient));
+    }
+
+    @Test
+    public void onlyDoctorsShouldHaveAccessToDoctorApi() throws Exception {
+        // Should be fine
+        smService.getDoctorList();
+        // Should fail
+        try {
+            readOnlySmService.getDoctorList();
+            fail("Server should denied patient from accessing doctor api");
+        } catch (RetrofitError e) {
+            assert (e.getCause() instanceof SecuredRestException);
+        }
     }
 
     /**
