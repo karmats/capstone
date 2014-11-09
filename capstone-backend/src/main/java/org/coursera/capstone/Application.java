@@ -6,7 +6,9 @@ import org.coursera.capstone.auth.OAuth2SecurityConfiguration;
 import org.coursera.capstone.entity.Doctor;
 import org.coursera.capstone.entity.PainMedication;
 import org.coursera.capstone.entity.Patient;
+import org.coursera.capstone.entity.Question;
 import org.coursera.capstone.json.ResourcesMapper;
+import org.coursera.capstone.repository.AnswerRepository;
 import org.coursera.capstone.repository.DoctorRepository;
 import org.coursera.capstone.repository.PainMedicationRepository;
 import org.coursera.capstone.repository.PatientRepository;
@@ -64,6 +66,7 @@ public class Application extends RepositoryRestMvcConfiguration {
         PatientRepository patientRepo = ctx.getBean(PatientRepository.class);
         PainMedicationRepository medicationRep = ctx.getBean(PainMedicationRepository.class);
         QuestionRepository questionRepo = ctx.getBean(QuestionRepository.class);
+        AnswerRepository answerRepo = ctx.getBean(AnswerRepository.class);
         // Pain medications
         List<PainMedication> medications = InitialTestData.createPainMedications();
         medicationRep.save(medications);
@@ -74,7 +77,10 @@ public class Application extends RepositoryRestMvcConfiguration {
         List<Patient> patients = InitialTestData.createTestPatients(d, medications);
         patients = (List<Patient>) patientRepo.save(patients);
         // Questions
-        questionRepo.save(InitialTestData.createQuestions());
+        List<Question> questions = InitialTestData.createQuestions();
+        questionRepo.save(questions);
+        // Answers
+        answerRepo.save(InitialTestData.createAnswers(questions.get(0)));
 
     }
 

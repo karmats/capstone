@@ -92,11 +92,11 @@ public class OAuth2SecurityConfiguration {
             // would want to change
 
             // Require all GET requests to have client "read" scope
-            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**")
-                    .access("#oauth2.clientHasAnyRole('patient', 'doctor')");
+            http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasScope('read')");
 
-            // Require all other requests to have "write" scope
-            http.authorizeRequests().antMatchers("/**").access("#oauth2.clientHasRole('doctor')");
+            // Require all other requests to have role doctor
+            // TODO Patients should be able to submit answers and doctors able to update medications
+            http.authorizeRequests().antMatchers("/**").hasRole(User.UserAuthority.DOCTOR.getRole());
         }
 
     }
@@ -137,19 +137,9 @@ public class OAuth2SecurityConfiguration {
 
             // Create a service that has the credentials for all our clients
             ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
-                    // Create a client that has "read" and "write" access to the
-                    // video service
-                    .withClient("doctor_client")
-                    .authorizedGrantTypes("password")
-                    .authorities(User.UserAuthority.DOCTOR.getName())
-                    .scopes("read", "update.medication")
-                    .resourceIds("patient")
-                    .and()
-                    // Create a second client that only has "read" access to the
-                    // video service
-                    .withClient("patient_client").authorizedGrantTypes("password")
-                    .authorities(User.UserAuthority.PATIENT.getName()).scopes("read", "answers.submit")
-                    .resourceIds("patient").accessTokenValiditySeconds(3600).and().build();
+                    // Create a mobile client that has access to patient and doctor
+                    .withClient("mobile").authorizedGrantTypes("password").scopes("read")
+                    .resourceIds("patient", "doctor").accessTokenValiditySeconds(3600).and().build();
 
             // Create a series of hard-coded users.
             UserDetailsService svc = new InMemoryUserDetailsManager(Arrays.asList(

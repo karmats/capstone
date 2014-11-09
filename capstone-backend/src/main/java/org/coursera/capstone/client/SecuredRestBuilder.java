@@ -20,18 +20,18 @@ import retrofit.client.OkClient;
 import retrofit.client.Request;
 import retrofit.client.Response;
 import retrofit.converter.Converter;
+import retrofit.converter.GsonConverter;
 import retrofit.mime.FormUrlEncodedTypedOutput;
 
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 /**
- * A Builder class for a Retrofit REST Adapter. Extends the default
- * implementation by providing logic to handle an OAuth 2.0 password grant login
- * flow. The RestAdapter that it produces uses an interceptor to automatically
- * obtain a bearer token from the authorization server and insert it into all
- * client requests.
+ * A Builder class for a Retrofit REST Adapter. Extends the default implementation by providing logic to handle an OAuth
+ * 2.0 password grant login flow. The RestAdapter that it produces uses an interceptor to automatically obtain a bearer
+ * token from the authorization server and insert it into all client requests.
  * 
  */
 public class SecuredRestBuilder extends RestAdapter.Builder {
@@ -59,15 +59,12 @@ public class SecuredRestBuilder extends RestAdapter.Builder {
         }
 
         /**
-         * Every time a method on the client interface is invoked, this method
-         * is going to get called. The method checks if the client has
-         * previously obtained an OAuth 2.0 bearer token. If not, the method
-         * obtains the bearer token by sending a password grant request to the
-         * server.
+         * Every time a method on the client interface is invoked, this method is going to get called. The method checks
+         * if the client has previously obtained an OAuth 2.0 bearer token. If not, the method obtains the bearer token
+         * by sending a password grant request to the server.
          * 
-         * Once this method has obtained a bearer token, all future invocations
-         * will automatically insert the bearer token as the "Authorization"
-         * header in outgoing HTTP requests.
+         * Once this method has obtained a bearer token, all future invocations will automatically insert the bearer
+         * token as the "Authorization" header in outgoing HTTP requests.
          * 
          */
         @Override
@@ -263,6 +260,9 @@ public class SecuredRestBuilder extends RestAdapter.Builder {
         }
         OAuthHandler hdlr = new OAuthHandler(client, loginUrl, username, password, clientId, clientSecret);
         setRequestInterceptor(hdlr);
+        // Not pretty but it does its job :) Date as ms
+        Gson gson = new GsonBuilder().setDateFormat("SSSSSSSSSSSSS").create();
+        setConverter(new GsonConverter(gson));
 
         return super.build();
     }

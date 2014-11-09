@@ -12,7 +12,7 @@ public class User implements UserDetails {
     private static final long serialVersionUID = 8140371140830590386L;
 
     public enum UserAuthority {
-        DOCTOR("doctor"), PATIENT("patient");
+        DOCTOR("ROLE_DOCTOR"), PATIENT("ROLE_PATIENT");
 
         private final String name;
 
@@ -20,14 +20,18 @@ public class User implements UserDetails {
             this.name = name;
         }
 
-        public String getName() {
+        public String getRole() {
+            return name.replace("ROLE_", "");
+        }
+
+        public String getAuthorityName() {
             return name;
         }
 
         public static String[] userAuthoritesToStrings(UserAuthority... userAuthorities) {
             List<String> result = new ArrayList<String>();
             for (UserAuthority userAuthority : userAuthorities) {
-                result.add(userAuthority.getName());
+                result.add(userAuthority.getAuthorityName());
             }
             return result.toArray(new String[userAuthorities.length]);
         }

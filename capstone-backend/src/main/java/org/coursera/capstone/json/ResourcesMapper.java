@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class ResourcesMapper extends ObjectMapper {
+    private static final long serialVersionUID = 1L;
 
     // This anonymous inner class will handle conversion of the Spring Data Rest
     // Resources objects into JSON. Resources are objects that Spring Data Rest
@@ -33,7 +34,7 @@ public class ResourcesMapper extends ObjectMapper {
             // that we care about (e.g., the list of Patient objects)
             Object content = value.getContent();
             // Instead of all of the Resources member variables, etc.
-            // Just mashall the actual content (Patient) into the JSON
+            // Just mashall the actual content into the JSON
             JsonSerializer<Object> s = provider.findValueSerializer(content.getClass(), null);
             s.serialize(content, jgen, provider);
         }

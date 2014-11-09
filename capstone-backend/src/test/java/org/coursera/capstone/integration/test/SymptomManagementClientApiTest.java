@@ -42,22 +42,25 @@ import com.google.gson.JsonObject;
  */
 public class SymptomManagementClientApiTest {
 
-    private final String USERNAME = "drporter";
-    private final String PASSWORD = "pass";
-    private final String CLIENT_ID = "doctor_client";
-    private final String READ_ONLY_CLIENT_ID = "patient_client";
+    private final String USERNAME_DOCTOR = "drporter";
+    private final String PASSWORD_DOCTOR = "pass";
+    private final String CLIENT_ID = "mobile";
+    private final String USERNAME_PATIENT = "janedoe";
+    private final String PASSWORD_PATIENT = "pass";
 
     private final String TEST_URL = "https://localhost:8443";
 
     private SymptomManagementApi smService = new SecuredRestBuilder()
-            .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(USERNAME).setPassword(PASSWORD)
-            .setClientId(CLIENT_ID).setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient()))
-            .setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
+            .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(USERNAME_DOCTOR)
+            .setPassword(PASSWORD_DOCTOR).setClientId(CLIENT_ID)
+            .setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient())).setEndpoint(TEST_URL)
+            .setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
 
     private SymptomManagementApi readOnlySmService = new SecuredRestBuilder()
-            .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(USERNAME).setPassword(PASSWORD)
-            .setClientId(READ_ONLY_CLIENT_ID).setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient()))
-            .setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
+            .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(USERNAME_PATIENT)
+            .setPassword(PASSWORD_PATIENT).setClientId(CLIENT_ID)
+            .setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient())).setEndpoint(TEST_URL)
+            .setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
 
     private SymptomManagementApi invalidClientVideoService = new SecuredRestBuilder()
             .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(UUID.randomUUID().toString())
@@ -75,11 +78,13 @@ public class SymptomManagementClientApiTest {
      */
     @Test
     public void testPatientAddAndList() throws Exception {
-        // Add the video
+        // Add the patient
         smService.addPatient(patient);
 
         // We should get back the patients that we added above
         Collection<Patient> patients = smService.getPatientList();
+        System.out.println("===== PATIENT BIRTH DATE =====");
+        System.out.println(((Patient) patients.toArray()[0]).getBirthDate().getTime());
         assertTrue(patients.contains(patient));
     }
 

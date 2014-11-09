@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * A simple object to represent a Answer
  */
@@ -18,6 +20,7 @@ public class Answer {
 
     private String text;
 
+    @JsonIgnore
     @ManyToOne
     private Question question;
 

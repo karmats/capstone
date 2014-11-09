@@ -11,7 +11,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 
 /**
@@ -35,7 +34,6 @@ public class Patient {
     private Doctor doctor;
     @ManyToMany
     private Collection<PainMedication> painMedications;
-    @JsonIgnore
     @OneToMany(mappedBy = "patient")
     private Collection<PatientAnswer> patientAnswers;
 

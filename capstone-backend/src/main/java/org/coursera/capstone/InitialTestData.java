@@ -39,13 +39,16 @@ public class InitialTestData {
 
     public static List<Question> createQuestions() {
         List<Question> questions = new ArrayList<>();
-        List<Answer> answers = new ArrayList<>();
         Question q = new Question("How bad do you want it?");
-        answers.add(new Answer("Pretty bad", q));
-        answers.add(new Answer("Not very", q));
-        q.setAnswers(answers);
         questions.add(q);
         return questions;
+    }
+
+    public static List<Answer> createAnswers(Question q) {
+        List<Answer> answers = new ArrayList<>();
+        answers.add(new Answer("Pretty bad", q));
+        answers.add(new Answer("Not very", q));
+        return answers;
     }
 
     public static List<PainMedication> createPainMedications() {
