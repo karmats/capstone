@@ -21,7 +21,7 @@ public class CapstoneConstants {
     public static final String PREFERENCES_USER = "UserPreferences";
 
     /**
-     * The URL where authentication of a user takes place.
+     * The oauth2 client
      */
-    public static final String AUTH_URL = "https://192.168.1.76:8443/oauth/token";
+    public static final String OAUTH_CLIENT = "mobile";
 }

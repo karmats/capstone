@@ -14,6 +14,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.client.UnsafeHttpClient;
 import org.coursera.capstone.android.parceable.User;
 import org.json.JSONException;
@@ -48,14 +49,14 @@ public class LoginTask extends AsyncTask<Void, Void, LoginTask.Result> {
         Result result = Result.WRONG_USERNAME_PASSWORD;
         try {
             HttpClient client = new UnsafeHttpClient();
-            HttpPost httpPost = new HttpPost(CapstoneConstants.AUTH_URL);
+            HttpPost httpPost = new HttpPost(SymptomManagementApi.HOST + SymptomManagementApi.TOKEN_PATH);
             // Request parameters
             List<NameValuePair> pairs = new ArrayList<NameValuePair>();
             pairs.add(new BasicNameValuePair("username", mUsername));
             pairs.add(new BasicNameValuePair("password", mPassword));
 
             // Add the client ID and client secret to the body of the request.
-            pairs.add(new BasicNameValuePair("client_id", "mobileReader"));
+            pairs.add(new BasicNameValuePair("client_id", CapstoneConstants.OAUTH_CLIENT));
             pairs.add(new BasicNameValuePair("client_secret", ""));
             // Indicate that we're using the OAuth Password Grant Flow
             // by adding grant_type=password to the body
@@ -67,7 +68,7 @@ public class LoginTask extends AsyncTask<Void, Void, LoginTask.Result> {
             // the "Authorization" header and the value is set to "Basic "
             // concatenated with the Base64 client_id:client_secret value described
             // above.
-            String base64Auth = Base64.encodeToString(new String("mobileReader:").getBytes(), Base64.NO_WRAP);
+            String base64Auth = Base64.encodeToString(new String(CapstoneConstants.OAUTH_CLIENT + ":").getBytes(), Base64.NO_WRAP);
             // Add the basic authorization header
             httpPost.setHeader(new BasicHeader("Authorization", "Basic " + base64Auth));
             httpPost.setEntity(new UrlEncodedFormEntity(pairs));

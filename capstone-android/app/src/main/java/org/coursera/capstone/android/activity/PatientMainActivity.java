@@ -9,6 +9,7 @@ import android.widget.TextView;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.parceable.User;
+import org.coursera.capstone.android.task.FetchPatientTask;
 
 public class PatientMainActivity extends Activity {
 
@@ -27,7 +28,9 @@ public class PatientMainActivity extends Activity {
 
         mWelcomeText = (TextView) findViewById(R.id.patient_welcome_text);
         String welcomeText = getString(R.string.welcome_patient, mUser.getUsername(), mUser.getAccessToken());
-        mWelcomeText.setText(welcomeText);
+        mWelcomeText.append(welcomeText);
+        mWelcomeText.append("\n\nPatients ftw:\n");
+        new FetchPatientTask(PatientMainActivity.this, mWelcomeText).execute();
     }
 
 
