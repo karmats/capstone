@@ -1,5 +1,6 @@
 package org.coursera.capstone.entity;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class Submission {
     private long id;
 
     @OneToMany(mappedBy = "patient")
-    private List<PatientAnswer> patientAnswers;
+    private Collection<PatientAnswer> patientAnswers;
     private Date when;
 
     public Submission() {
@@ -36,11 +37,11 @@ public class Submission {
         this.id = id;
     }
 
-    public List<PatientAnswer> getPatientAnswers() {
+    public Collection<PatientAnswer> getPatientAnswers() {
         return patientAnswers;
     }
 
-    public void setPatientAnswers(List<PatientAnswer> patientAnswers) {
+    public void setPatientAnswers(Collection<PatientAnswer> patientAnswers) {
         this.patientAnswers = patientAnswers;
     }
 

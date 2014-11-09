@@ -1,6 +1,6 @@
 package org.coursera.capstone.entity;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +23,7 @@ public class Doctor {
     private String lastName;
 
     @OneToMany(mappedBy = "doctor")
-    private List<Patient> patients;
+    private Collection<Patient> patients;
 
     public Doctor() {
     }
@@ -65,11 +65,11 @@ public class Doctor {
         this.lastName = lastName;
     }
 
-    public List<Patient> getPatients() {
+    public Collection<Patient> getPatients() {
         return patients;
     }
 
-    public void setPatients(List<Patient> patients) {
+    public void setPatients(Collection<Patient> patients) {
         this.patients = patients;
     }
 }

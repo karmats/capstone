@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  * A simple object to represent a Patients answer
@@ -18,13 +18,14 @@ public class PatientAnswer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToOne
-    private Patient patient;
-    @OneToOne
-    private Question question;
-    @OneToOne
-    private Answer answer;
     private Date when;
+
+    @ManyToOne
+    private Question question;
+    @ManyToOne
+    private Answer answer;
+    @ManyToOne
+    private Patient patient;
 
     public PatientAnswer() {
     }

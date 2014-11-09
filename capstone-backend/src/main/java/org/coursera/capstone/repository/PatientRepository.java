@@ -11,6 +11,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * An interface for a repository that can store Patient objects and allow them to be searched by name.
+ * 
+ * @author matros
  */
 @RepositoryRestResource(path = SymptomManagementApi.PATIENT_SVC_PATH)
 public interface PatientRepository extends CrudRepository<Patient, Long> {

@@ -1,10 +1,16 @@
 package org.coursera.capstone;
 
+import java.util.List;
+
 import org.coursera.capstone.auth.OAuth2SecurityConfiguration;
 import org.coursera.capstone.entity.Doctor;
+import org.coursera.capstone.entity.PainMedication;
+import org.coursera.capstone.entity.Patient;
 import org.coursera.capstone.json.ResourcesMapper;
 import org.coursera.capstone.repository.DoctorRepository;
+import org.coursera.capstone.repository.PainMedicationRepository;
 import org.coursera.capstone.repository.PatientRepository;
+import org.coursera.capstone.repository.QuestionRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -52,11 +58,24 @@ public class Application extends RepositoryRestMvcConfiguration {
     // Tell Spring to launch our app!
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
-        PatientRepository patientRepo = ctx.getBean(PatientRepository.class);
+
+        // Create some initial data
         DoctorRepository doctorRepo = ctx.getBean(DoctorRepository.class);
+        PatientRepository patientRepo = ctx.getBean(PatientRepository.class);
+        PainMedicationRepository medicationRep = ctx.getBean(PainMedicationRepository.class);
+        QuestionRepository questionRepo = ctx.getBean(QuestionRepository.class);
+        // Pain medications
+        List<PainMedication> medications = InitialTestData.createPainMedications();
+        medicationRep.save(medications);
+        // Doctors
         Doctor d = new Doctor("Doctor", "Porter");
         doctorRepo.save(d);
-        patientRepo.save(InitalTestData.createTestPatients(d));
+        // Patients
+        List<Patient> patients = InitialTestData.createTestPatients(d, medications);
+        patients = (List<Patient>) patientRepo.save(patients);
+        // Questions
+        questionRepo.save(InitialTestData.createQuestions());
+
     }
 
     // We are overriding the bean that RepositoryRestMvcConfiguration

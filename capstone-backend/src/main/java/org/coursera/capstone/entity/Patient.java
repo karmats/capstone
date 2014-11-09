@@ -1,15 +1,17 @@
 package org.coursera.capstone.entity;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 
 /**
@@ -31,8 +33,11 @@ public class Patient {
 
     @ManyToOne
     private Doctor doctor;
+    @ManyToMany
+    private Collection<PainMedication> painMedications;
+    @JsonIgnore
     @OneToMany(mappedBy = "patient")
-    private List<PatientPainMedication> patientPainMedications;
+    private Collection<PatientAnswer> patientAnswers;
 
     public Patient() {
     }
@@ -106,12 +111,12 @@ public class Patient {
         this.birthDate = birthDate;
     }
 
-    public List<PatientPainMedication> getPatientPainMedications() {
-        return patientPainMedications;
+    public Collection<PainMedication> getPainMedications() {
+        return painMedications;
     }
 
-    public void setPatientPainMedications(List<PatientPainMedication> patientPainMedications) {
-        this.patientPainMedications = patientPainMedications;
+    public void setPainMedications(Collection<PainMedication> painMedications) {
+        this.painMedications = painMedications;
     }
 
     @Override

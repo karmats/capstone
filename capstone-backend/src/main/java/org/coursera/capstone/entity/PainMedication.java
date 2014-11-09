@@ -1,9 +1,14 @@
 package org.coursera.capstone.entity;
 
+import java.util.Collection;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class PainMedication {
@@ -15,12 +20,16 @@ public class PainMedication {
     private String medicationId;
     private String name;
 
+    @JsonIgnore
+    @ManyToMany
+    private Collection<Patient> patients;
+
     public PainMedication() {
     }
 
     public PainMedication(String medicationId, String name) {
-        this.setMedicationId(medicationId);
-        this.setName(name);
+        this.medicationId = medicationId;
+        this.name = name;
     }
 
     public long getId() {
@@ -45,5 +54,13 @@ public class PainMedication {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Collection<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(Collection<Patient> patients) {
+        this.patients = patients;
     }
 }
