@@ -31,9 +31,9 @@ public class InitialTestData {
      */
     public static List<Patient> createTestPatients(Doctor doctor, List<PainMedication> meds) {
         List<Patient> patients = new ArrayList<Patient>();
-        patients.add(new Patient("matros", 100, "Mats", "Roshauw", new Date(), doctor));
+        patients.add(new Patient("janedoe", 100, "Jane", "Doe", new Date(), doctor));
         patients.get(0).setPainMedications(meds);
-        patients.add(new Patient("lillan", 101, "Martine", "Roshauw", new Date(), doctor));
+        patients.add(new Patient("johndoe", 101, "John", "Doe", new Date(), doctor));
         return patients;
     }
 

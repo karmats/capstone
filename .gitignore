@@ -11,3 +11,4 @@ build
 .private
 .idea
 *.iml
+local.properties

@@ -25,4 +25,7 @@ public interface PatientRepository extends CrudRepository<Patient, Long> {
     // search for Patients
             @Param(SymptomManagementApi.NAME_PARAMETER) String name);
 
+    // Find patient for by its username
+    Patient findByUsername(String username);
+
 }

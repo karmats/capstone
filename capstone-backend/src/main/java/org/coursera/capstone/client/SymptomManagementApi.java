@@ -16,12 +16,15 @@ import retrofit.http.Query;
  * interactions. The interface is annotated with Retrofit annotations so that clients can automatically convert the
  * 
  * 
- * @author jules
+ * @author mats
  *
  */
 public interface SymptomManagementApi {
 
+    // Used in search for patients
     public static final String NAME_PARAMETER = "name";
+    // Used in findByUsername for doctor and patient repository
+    public static final String USERNAME_PARAMETER = "username";
 
     public static final String TOKEN_PATH = "/oauth/token";
 
@@ -31,6 +34,8 @@ public interface SymptomManagementApi {
     public static final String DOCTOR_SVC_PATH = "/doctor";
     // The path where we expect the question service to live
     public static final String QUESTION_SVC_PATH = "/question";
+    // The path where we expect the user info service to live
+    public static final String USER_SVC_PATH = "/user";
 
     // The path to search videos by title
     public static final String PATIENT_NAME_SEARCH_PATH = PATIENT_SVC_PATH + "/search/findByName";

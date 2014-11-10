@@ -144,7 +144,7 @@ public class OAuth2SecurityConfiguration {
                     .withClient("mobile").authorizedGrantTypes("password").scopes("read")
                     .resourceIds("patient", "doctor").accessTokenValiditySeconds(3600).and().build();
 
-            // Create a series of hard-coded users.
+            // Create a series of hard-coded users. These must also exist in doctor or patient tables
             UserDetailsService svc = new InMemoryUserDetailsManager(Arrays.asList(
                     User.create("drporter", "pass", User.UserAuthority.DOCTOR),
                     User.create("johndoe", "pass", User.UserAuthority.PATIENT),

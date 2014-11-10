@@ -9,6 +9,7 @@ public class Patient {
     private Long medicalRecordNumber;
     private String firstName;
     private String lastName;
+    // Date as ms
     private Long birthDate;
 
     private Doctor doctor;

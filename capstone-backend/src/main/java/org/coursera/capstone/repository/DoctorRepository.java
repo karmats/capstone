@@ -11,4 +11,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(path = SymptomManagementApi.DOCTOR_SVC_PATH)
 public interface DoctorRepository extends CrudRepository<Doctor, Long> {
 
+    // Find doctor by its username
+    Doctor findByUsername(String username);
 }

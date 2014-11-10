@@ -71,7 +71,7 @@ public class Application extends RepositoryRestMvcConfiguration {
         List<PainMedication> medications = InitialTestData.createPainMedications();
         medicationRep.save(medications);
         // Doctors
-        Doctor d = new Doctor("Doctor", "Porter");
+        Doctor d = new Doctor("drporter", "Doctor", "Porter");
         doctorRepo.save(d);
         // Patients
         List<Patient> patients = InitialTestData.createTestPatients(d, medications);

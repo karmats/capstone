@@ -18,16 +18,13 @@ import com.google.common.base.Objects;
  * 
  */
 @Entity
-public class Patient {
+public class Patient extends UserInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String username;
     private long medicalRecordNumber;
-    private String firstName;
-    private String lastName;
     private Date birthDate;
 
     @ManyToOne
@@ -41,19 +38,20 @@ public class Patient {
     }
 
     public Patient(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
     }
 
     public Patient(String username, long medicalRecordNumber, String firstName, String lastName, Date birthDate,
             Doctor doctor) {
-        this.username = username;
-        this.medicalRecordNumber = medicalRecordNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.doctor = doctor;
+        this.setUsername(username);
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
+        this.setMedicalRecordNumber(medicalRecordNumber);
+        this.setBirthDate(birthDate);
+        this.setDoctor(doctor);
     }
+
     public long getId() {
         return id;
     }
@@ -62,35 +60,12 @@ public class Patient {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public long getMedicalRecordNumber() {
         return medicalRecordNumber;
     }
 
     public void setMedicalRecordNumber(long medicalRecordNumber) {
         this.medicalRecordNumber = medicalRecordNumber;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String name) {
-        this.firstName = name;
-    }
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public Doctor getDoctor() {
@@ -119,15 +94,16 @@ public class Patient {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(firstName, lastName, medicalRecordNumber);
+        return Objects.hashCode(this.getFirstName(), this.getLastName(), this.getMedicalRecordNumber());
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Patient) {
             Patient other = (Patient) obj;
-            return Objects.equal(this.firstName, other.firstName) && Objects.equal(this.lastName, other.lastName)
-                    && this.medicalRecordNumber == other.medicalRecordNumber;
+            return Objects.equal(this.getFirstName(), other.getFirstName())
+                    && Objects.equal(this.getLastName(), other.getLastName())
+                    && this.getMedicalRecordNumber() == other.getMedicalRecordNumber();
         } else {
             return false;
         }
