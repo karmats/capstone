@@ -17,12 +17,14 @@ public class User implements Parcelable {
     private String username;
     private String firstName;
     private String lastName;
+    private String role;
     private String accessToken;
 
-    public User(String userName, String firstName, String lastName, String accessToken) {
+    public User(String userName, String firstName, String lastName, String role, String accessToken) {
         this.username = userName;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.role = role;
         this.accessToken = accessToken;
     }
 
@@ -31,6 +33,7 @@ public class User implements Parcelable {
         username = data.getString("username");
         firstName = data.getString("firstName");
         lastName = data.getString("lastName");
+        role = data.getString("role");
         accessToken = data.getString("accessToken");
     }
 
@@ -40,6 +43,7 @@ public class User implements Parcelable {
         data.putString("username", username);
         data.putString("firstName", firstName);
         data.putString("lastName", lastName);
+        data.putString("role", role);
         data.putString("accessToken", accessToken);
         dest.writeBundle(data);
     }
@@ -83,6 +87,14 @@ public class User implements Parcelable {
         this.lastName = lastName;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getAccessToken() {
         return accessToken;
     }
@@ -102,6 +114,7 @@ public class User implements Parcelable {
             json.put("username", username);
             json.put("firstName", firstName);
             json.put("lastName", lastName);
+            json.put("role", role);
             json.put("accessToken", accessToken);
         } catch (JSONException e) {
             Log.w(CapstoneConstants.LOG_TAG, "Failed to create user json string");
@@ -121,7 +134,7 @@ public class User implements Parcelable {
         try {
             JSONObject obj = new JSONObject(json);
             result = new User(obj.getString("username"), obj.getString("firstName"), obj.getString("lastName"),
-                    obj.getString("accessToken"));
+                    obj.getString("role"), obj.getString("accessToken"));
         } catch (JSONException e) {
             Log.w(CapstoneConstants.LOG_TAG, "Failed to convert string " + json + " to user");
         }

@@ -24,4 +24,14 @@ public class CapstoneConstants {
      * The oauth2 client
      */
     public static final String OAUTH_CLIENT = "mobile";
+
+    /**
+     * Doctor role name
+     */
+    public static final String DOCTOR_ROLE = "DOCTOR";
+
+    /**
+     * Patient role name
+     */
+    public static final String PATIENT_ROLE = "PATIENT";
 }

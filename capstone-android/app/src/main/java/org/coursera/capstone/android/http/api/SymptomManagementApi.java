@@ -2,6 +2,7 @@ package org.coursera.capstone.android.http.api;
 
 import org.coursera.capstone.android.parceable.Doctor;
 import org.coursera.capstone.android.parceable.Patient;
+import org.coursera.capstone.android.parceable.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,20 +31,25 @@ public interface SymptomManagementApi {
     public static final String DOCTOR_SVC_PATH = "/doctor";
     // The path where we expect the question service to live
     public static final String QUESTION_SVC_PATH = "/question";
+    // The path where we expect the user info service to live
+    public static final String USER_INFO_SVC_PATH = "/user";
 
     // The path to search videos by title
     public static final String PATIENT_NAME_SEARCH_PATH = PATIENT_SVC_PATH + "/search/findByName";
 
     @GET(PATIENT_SVC_PATH)
-    public List<Patient> getPatientList();
+    List<Patient> getPatientList();
 
     @GET(DOCTOR_SVC_PATH)
-    public List<Doctor> getDoctorList();
+    List<Doctor> getDoctorList();
+
+    @GET(USER_INFO_SVC_PATH)
+    User getUserInfo();
 
     @POST(PATIENT_SVC_PATH)
-    public Void addPatient(@Body Patient v);
+    void addPatient(@Body Patient v);
 
     @GET(PATIENT_NAME_SEARCH_PATH)
-    public Collection<Patient> findByName(@Query(NAME_PARAMETER) String name);
+    List<Patient> findByName(@Query(NAME_PARAMETER) String name);
 
 }

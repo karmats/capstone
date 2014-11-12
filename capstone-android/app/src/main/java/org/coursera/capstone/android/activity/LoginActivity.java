@@ -138,7 +138,13 @@ public class LoginActivity extends Activity implements LoginTask.LoginCallbacks 
         // Add the user object to shared preferences
         preferences.edit().putString(CapstoneConstants.PREFERENCES_USER, user.toJson()).commit();
         // Start doctor or patient activity
-        startActivity(new Intent(this, PatientMainActivity.class));
+        if (CapstoneConstants.PATIENT_ROLE.equals(user.getRole())) {
+            startActivity(new Intent(this, PatientMainActivity.class));
+        } else if (CapstoneConstants.DOCTOR_ROLE.equals(user.getRole())) {
+            startActivity(new Intent(this, DoctorMainActivity.class));
+        } else {
+            Log.e(CapstoneConstants.LOG_TAG, "Role " + user.getRole() + " is not supported");
+        }
         // Finish the login task so it won't come up on back button
         finish();
     }

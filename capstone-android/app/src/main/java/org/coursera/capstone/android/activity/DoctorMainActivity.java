@@ -11,34 +11,31 @@ import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.parceable.User;
 import org.coursera.capstone.android.task.FetchPatientTask;
 
-public class PatientMainActivity extends Activity {
+public class DoctorMainActivity extends Activity {
 
-    private User mUser;
     private TextView mWelcomeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_main);
+        setContentView(R.layout.activity_doctor_main);
 
         // Get the patient name from shared preferences
         String userJsonString = getSharedPreferences(CapstoneConstants.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
-        mUser = User.fromJsonString(userJsonString);
+        User user = User.fromJsonString(userJsonString);
 
-        mWelcomeText = (TextView) findViewById(R.id.patient_welcome_text);
-        String welcomeText = getString(R.string.welcome_patient, mUser.getFirstName() + " " + mUser.getLastName(),
-                                        mUser.getAccessToken());
+        mWelcomeText = (TextView) findViewById(R.id.doctor_welcome_text);
+        String welcomeText = getString(R.string.welcome_doctor, user.getFirstName() + " " + user.getLastName(),
+                                        user.getAccessToken());
         mWelcomeText.append(welcomeText);
-        mWelcomeText.append("\n\nPatients ftw:\n");
-        new FetchPatientTask(PatientMainActivity.this, mWelcomeText).execute();
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.patient_main, menu);
+        getMenuInflater().inflate(R.menu.doctor_main, menu);
         return true;
     }
 

@@ -15,6 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.http.api.SymptomManagementApi;
+import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
 import org.coursera.capstone.android.http.client.UnsafeHttpClient;
 import org.coursera.capstone.android.parceable.User;
 import org.json.JSONException;
@@ -82,10 +83,13 @@ public class LoginTask extends AsyncTask<Void, Void, LoginTask.Result> {
                 String respString = entity != null ? EntityUtils.toString(entity) : null;
                 try {
                     // The expected response should be of JSON type
-                    JSONObject json = respString != null ? new JSONObject(respString) : null;
+                    JSONObject json = new JSONObject(respString);
                     // Success we got the access token
                     String accessToken = json.get("access_token").toString();
-                    mUser = new User(mUsername, "", "", accessToken);
+                    // Now that we have the access token, we can fetch the user info
+                    SymptomManagementApi api = SymptomManagementApiBuilder.newInstance(accessToken);
+                    mUser = api.getUserInfo();
+                    mUser.setAccessToken(accessToken);
                     Log.i(CapstoneConstants.LOG_TAG, "Response " + json.get("access_token"));
                 } catch (JSONException e) {
                     result = Result.WRONG_USERNAME_PASSWORD;

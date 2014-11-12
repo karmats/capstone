@@ -12,7 +12,9 @@
 
     <!-- Patient main activity -->
     <string name="title_activity_patient_main">Welcome</string>
-    <string name="welcome_patient">Welcome %1$s, you have token %2$s</string>
+    <string name="welcome_patient">Welcome patient %1$s, you have token %2$s</string>
+    <string name="welcome_doctor">Welcome doctor %1$s, you have token %2$s</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_doctor_main">DoctorMainActivity</string>
 
 </resources>
