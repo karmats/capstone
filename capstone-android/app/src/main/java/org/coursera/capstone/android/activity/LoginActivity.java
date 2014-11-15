@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.parceable.Patient;
 import org.coursera.capstone.android.parceable.User;
 import org.coursera.capstone.android.task.LoginTask;
 

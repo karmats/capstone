@@ -3,30 +3,30 @@ package org.coursera.capstone.android.constant;
 /**
  * App specific constants.
  */
-public class CapstoneConstants {
+public interface CapstoneConstants {
 
     /**
      * The log tag that should be used across the application.
      */
-    public static final String LOG_TAG = "SymptomManagement";
+    static final String LOG_TAG = "SymptomManagement";
 
     /**
      * The user key in Shared preferences.
      */
-    public static final String PREFERENCES_USER = "pref_user";
+    static final String PREFERENCES_USER = "pref_user";
 
     /**
      * The oauth2 client
      */
-    public static final String OAUTH_CLIENT = "mobile";
+    static final String OAUTH_CLIENT = "mobile";
 
     /**
      * Doctor role name
      */
-    public static final String DOCTOR_ROLE = "DOCTOR";
+    static final String DOCTOR_ROLE = "DOCTOR";
 
     /**
      * Patient role name
      */
-    public static final String PATIENT_ROLE = "PATIENT";
+    static final String PATIENT_ROLE = "PATIENT";
 }

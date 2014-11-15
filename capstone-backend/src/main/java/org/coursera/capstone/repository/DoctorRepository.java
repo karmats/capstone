@@ -3,6 +3,7 @@ package org.coursera.capstone.repository;
 import org.coursera.capstone.client.SymptomManagementApi;
 import org.coursera.capstone.entity.Doctor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
@@ -12,5 +13,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface DoctorRepository extends CrudRepository<Doctor, Long> {
 
     // Find doctor by its username
-    Doctor findByUsername(String username);
+    Doctor findByUsername(@Param(SymptomManagementApi.USERNAME_PARAMETER) String username);
 }
