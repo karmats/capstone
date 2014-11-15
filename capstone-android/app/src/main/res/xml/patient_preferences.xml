@@ -4,9 +4,17 @@
 
     <PreferenceCategory android:title="@string/pref_user_title">
         <org.coursera.capstone.android.preference.PatientPreference
-            android:key="name"
+            android:key="pref_name"
             android:selectable="false"
             android:title="@string/pref_title_patient_name" />
+        <org.coursera.capstone.android.preference.PatientPreference
+            android:key="pref_dob"
+            android:selectable="false"
+            android:title="@string/pref_title_patient_dob" />
+        <org.coursera.capstone.android.preference.PatientPreference
+            android:key="pref_medical_record_no"
+            android:selectable="false"
+            android:title="@string/pref_title_patient_medical_no" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_alarms_title">
         <Preference

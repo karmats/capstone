@@ -1,13 +1,12 @@
 package org.coursera.capstone.android.preference;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import org.coursera.capstone.android.constant.CapstoneConstants;
-import org.coursera.capstone.android.parceable.User;
+
+import java.text.NumberFormat;
 
 /**
  * Patient preference class for static information about a patient, such as name.
@@ -22,15 +21,12 @@ public class PatientPreference extends Preference {
 
     @Override
     public CharSequence getSummary() {
-        String userJson = getSharedPreferences().getString(CapstoneConstants.PREFERENCES_USER, "");
-        User user = User.fromJsonString(userJson);
         String key = getKey();
-        if (key.equals("name")) {
-            return user.getFirstName() + " " + user.getLastName();
-        } else {
-            Log.e(CapstoneConstants.LOG_TAG, "Not supported patient field " + key);
+        // Medical record number is the only long setting we have
+        if (CapstoneConstants.PREFERENCES_MEDICAL_RECORD_NUMBER.equals(key)) {
+            return NumberFormat.getInstance().format(getSharedPreferences().getLong(key, -1));
         }
-        return "";
+        return getSharedPreferences().getString(key, "Failed to find " + key);
     }
 
 }

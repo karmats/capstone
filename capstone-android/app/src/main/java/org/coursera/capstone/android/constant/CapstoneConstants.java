@@ -14,6 +14,9 @@ public interface CapstoneConstants {
      * The user key in Shared preferences.
      */
     static final String PREFERENCES_USER = "pref_user";
+    static final String PREFERENCES_NAME = "pref_name";
+    static final String PREFERENCES_DATE_OF_BIRTH = "pref_dob";
+    static final String PREFERENCES_MEDICAL_RECORD_NUMBER = "pref_medical_record_no";
 
     /**
      * The oauth2 client

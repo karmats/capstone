@@ -1,8 +1,10 @@
 package org.coursera.capstone.android.activity;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,8 @@ import org.coursera.capstone.android.fragment.PatientSettingsFragment;
 import org.coursera.capstone.android.parceable.Patient;
 import org.coursera.capstone.android.parceable.User;
 import org.coursera.capstone.android.task.FetchPatientInfoTask;
+
+import java.util.Date;
 
 public class PatientMainActivity extends Activity implements FetchPatientInfoTask.UserDataCallbacks {
 
@@ -50,9 +54,16 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
 
     @Override
     public void onPatientFetched(Patient p) {
+        SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(PatientMainActivity.this).edit();
+        prefEditor.putString(CapstoneConstants.PREFERENCES_NAME, p.getFirstName() + " " + p.getLastName());
+        prefEditor.putString(CapstoneConstants.PREFERENCES_DATE_OF_BIRTH,
+                DateFormat.getDateFormat(PatientMainActivity.this).format(new Date(p.getBirthDate())));
+        prefEditor.putLong(CapstoneConstants.PREFERENCES_MEDICAL_RECORD_NUMBER, p.getMedicalRecordNumber());
+        prefEditor.commit();
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PatientSettingsFragment())
                 .commit();
+
     }
 
     @Override
