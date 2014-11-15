@@ -2,6 +2,7 @@ package org.coursera.capstone.android.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -21,14 +22,16 @@ public class DoctorMainActivity extends Activity {
         setContentView(R.layout.activity_doctor_main);
 
         // Get the patient name from shared preferences
-        String userJsonString = getSharedPreferences(CapstoneConstants.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
+        String userJsonString = PreferenceManager.getDefaultSharedPreferences(DoctorMainActivity.this)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
         User user = User.fromJsonString(userJsonString);
 
         mWelcomeText = (TextView) findViewById(R.id.doctor_welcome_text);
         String welcomeText = getString(R.string.welcome_doctor, user.getFirstName() + " " + user.getLastName(),
                                         user.getAccessToken());
-        mWelcomeText.append(welcomeText);
+        mWelcomeText.append(welcomeText);mWelcomeText.append("\n\nPatients ftw:\n");
+        new FetchPatientTask(DoctorMainActivity.this, mWelcomeText).execute();
+
     }
 
 

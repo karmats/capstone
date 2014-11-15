@@ -2,19 +2,18 @@ package org.coursera.capstone.android.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.fragment.PatientSettingsFragment;
 import org.coursera.capstone.android.parceable.User;
-import org.coursera.capstone.android.task.FetchPatientTask;
 
 public class PatientMainActivity extends Activity {
 
     private User mUser;
-    private TextView mWelcomeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +21,13 @@ public class PatientMainActivity extends Activity {
         setContentView(R.layout.activity_patient_main);
 
         // Get the patient name from shared preferences
-        String userJsonString = getSharedPreferences(CapstoneConstants.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
+        String userJsonString = PreferenceManager.getDefaultSharedPreferences(PatientMainActivity.this)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
         mUser = User.fromJsonString(userJsonString);
 
-        mWelcomeText = (TextView) findViewById(R.id.patient_welcome_text);
-        String welcomeText = getString(R.string.welcome_patient, mUser.getFirstName() + " " + mUser.getLastName(),
-                                        mUser.getAccessToken());
-        mWelcomeText.append(welcomeText);
-        mWelcomeText.append("\n\nPatients ftw:\n");
-        new FetchPatientTask(PatientMainActivity.this, mWelcomeText).execute();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new PatientSettingsFragment())
+                .commit();
     }
 
 

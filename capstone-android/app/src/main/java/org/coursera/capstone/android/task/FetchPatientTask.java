@@ -2,6 +2,7 @@ package org.coursera.capstone.android.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ public class FetchPatientTask extends AsyncTask<Void, Void, List<Patient>> {
 
     public FetchPatientTask(Context context, TextView textView) {
         this.mTextView = textView;
-        String userJsonString = context.getSharedPreferences(CapstoneConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        String userJsonString = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
         User user = User.fromJsonString(userJsonString);
         Log.d(CapstoneConstants.LOG_TAG, "Fetching patients with access token " + user.getAccessToken());

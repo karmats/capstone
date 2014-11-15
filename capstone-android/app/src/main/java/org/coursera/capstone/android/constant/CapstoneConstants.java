@@ -11,14 +11,9 @@ public class CapstoneConstants {
     public static final String LOG_TAG = "SymptomManagement";
 
     /**
-     * The name of Shared preferences
-     */
-    public static final String SHARED_PREFERENCES_NAME = "SymptomManagementPrefs";
-
-    /**
      * The user key in Shared preferences.
      */
-    public static final String PREFERENCES_USER = "UserPreferences";
+    public static final String PREFERENCES_USER = "pref_user";
 
     /**
      * The oauth2 client
