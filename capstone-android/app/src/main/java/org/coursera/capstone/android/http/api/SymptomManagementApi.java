@@ -7,6 +7,7 @@ import org.coursera.capstone.android.parceable.User;
 import java.util.List;
 
 import retrofit.http.GET;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -25,6 +26,8 @@ public interface SymptomManagementApi {
 
     // The path where we expect the patient service to live
     public static final String PATIENT_SVC_PATH = "/patient";
+    // The path where we expect the patient data service to live
+    public static final String PATIENT_INFO_SVC_PATH = PATIENT_SVC_PATH + "/{username}";
     // The path where we expect the doctor service to live
     public static final String DOCTOR_SVC_PATH = "/doctor";
     // The path where we expect the question service to live
@@ -51,8 +54,8 @@ public interface SymptomManagementApi {
     @GET(PATIENT_NAME_SEARCH_PATH)
     List<Patient> findByName(@Query(NAME_PARAMETER) String name);
 
-    @GET(PATIENT_USERNAME_SEARCH_PATH)
-    List<Patient> findPatientByUsername(@Query(USERNAME_PARAMETER) String username);
+    @GET(PATIENT_INFO_SVC_PATH)
+    Patient getPatientInformation(@Path(USERNAME_PARAMETER) String username);
 
     @GET(DOCTOR_USERNAME_SEARCH_PATH)
     List<Doctor> findDoctorByUsername(@Query(USERNAME_PARAMETER) String username);

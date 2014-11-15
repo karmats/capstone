@@ -1,6 +1,5 @@
-package org.coursera.capstone.entity;
+package org.coursera.capstone.dto;
 
-import javax.persistence.MappedSuperclass;
 
 /**
  * Describes a simple user information object that are fetched in /user. Both Doctor and Patient entity extend this
@@ -8,14 +7,20 @@ import javax.persistence.MappedSuperclass;
  * @author mats
  *
  */
-@MappedSuperclass
-public class UserInfo {
+public class UserInfoDto {
 
-    String username;
-    String firstName;
-    String lastName;
+    private String username;
+    private String firstName;
+    private String lastName;
     // User must either be doctor or patient, can't be both
     private String role;
+    
+    public UserInfoDto(String username, String firstName, String lastName, String role) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+    }
 
     public String getUsername() {
         return username;

@@ -8,14 +8,12 @@ import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
 import org.coursera.capstone.android.parceable.Patient;
 
-import java.util.List;
-
 /**
  * Fetches information for a patient.
  * <p/>
  * The task needs the username of the patient to fetch information for
  */
-public class FetchPatientInfoTask extends AsyncTask<String, Void, List<Patient>> {
+public class FetchPatientInfoTask extends AsyncTask<String, Void, Patient> {
 
     private UserDataCallbacks mCallbacks;
     private String mAccessToken;
@@ -26,20 +24,18 @@ public class FetchPatientInfoTask extends AsyncTask<String, Void, List<Patient>>
     }
 
     @Override
-    protected List<Patient> doInBackground(String... params) {
+    protected Patient doInBackground(String... params) {
         Log.i(CapstoneConstants.LOG_TAG, "Fetching patient info with username " + params[0]);
         SymptomManagementApi api = SymptomManagementApiBuilder.newInstance(mAccessToken);
-        return api.findPatientByUsername(params[0]);
+        return api.getPatientInformation(params[0]);
     }
 
     @Override
-    protected void onPostExecute(List<Patient> patients) {
-        if (patients.size() <= 0) {
+    protected void onPostExecute(Patient patient) {
+        if (patient == null) {
             mCallbacks.onPatientFetchFail("No patient found :(");
-        } else if (patients.size() > 1) {
-            mCallbacks.onPatientFetchFail("Got more than one patient");
         } else {
-            mCallbacks.onPatientFetched(patients.get(0));
+            mCallbacks.onPatientFetched(patient);
         }
     }
 

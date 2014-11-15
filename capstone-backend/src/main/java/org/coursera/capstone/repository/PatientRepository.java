@@ -7,14 +7,12 @@ import org.coursera.capstone.entity.Patient;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * An interface for a repository that can store Patient objects and allow them to be searched by name.
  * 
  * @author matros
  */
-@RepositoryRestResource(path = SymptomManagementApi.PATIENT_SVC_PATH)
 public interface PatientRepository extends CrudRepository<Patient, Long> {
 
     // Find all videos with a matching title (e.g., Video.name)
