@@ -38,16 +38,19 @@ public class InitialTestData {
     }
 
     public static List<Question> createQuestions() {
-        List<Question> questions = new ArrayList<>();
-        Question q = new Question("How bad do you want it?");
-        questions.add(q);
+        List<Question> questions = new ArrayList<Question>();
+        questions.add(new Question("How bad do you want it?"));
+        questions.add(new Question("Are you sure?"));
         return questions;
     }
 
-    public static List<Answer> createAnswers(Question q) {
-        List<Answer> answers = new ArrayList<>();
-        answers.add(new Answer("Pretty bad", q));
-        answers.add(new Answer("Not very", q));
+    public static List<Answer> createAnswers(List<Question> questions) {
+        List<Answer> answers = new ArrayList<Answer>();
+        answers.add(new Answer("Pretty bad", questions.get(0)));
+        answers.add(new Answer("Not very", questions.get(0)));
+        answers.add(new Answer("Yes", questions.get(1)));
+        answers.add(new Answer("No", questions.get(1)));
+        answers.add(new Answer("Pretty", questions.get(1)));
         return answers;
     }
 

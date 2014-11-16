@@ -3,6 +3,7 @@ package org.coursera.capstone;
 import java.util.List;
 
 import org.coursera.capstone.auth.OAuth2SecurityConfiguration;
+import org.coursera.capstone.entity.Answer;
 import org.coursera.capstone.entity.Doctor;
 import org.coursera.capstone.entity.PainMedication;
 import org.coursera.capstone.entity.Patient;
@@ -19,6 +20,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,7 +82,7 @@ public class Application extends RepositoryRestMvcConfiguration {
         List<Question> questions = InitialTestData.createQuestions();
         questionRepo.save(questions);
         // Answers
-        answerRepo.save(InitialTestData.createAnswers(questions.get(0)));
+        answerRepo.save(InitialTestData.createAnswers(questions));
 
     }
 
@@ -94,6 +96,14 @@ public class Application extends RepositoryRestMvcConfiguration {
     @Override
     public ObjectMapper halObjectMapper() {
         return new ResourcesMapper();
+    }
+
+    @Override
+    protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+        // We need to expose the ids for the answer and question class to know what question and what answer the patient
+        // answers
+        config.exposeIdsFor(Answer.class, Question.class);
+        super.configureRepositoryRestConfiguration(config);
     }
 
 }

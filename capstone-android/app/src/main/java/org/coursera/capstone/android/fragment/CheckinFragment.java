@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
@@ -14,6 +16,7 @@ import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,12 +26,19 @@ import java.util.ArrayList;
  * Use the {@link CheckInFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CheckInFragment extends Fragment {
+public class CheckInFragment extends Fragment implements View.OnClickListener {
     private static final String QUESTIONS_PARAM = "questions_param";
     private static final String PATIENT_PARAM = "patient_param";
 
-    private ArrayList<Question> mQuestions;
+    private Stack<Question> mQuestions;
     private Patient mPatient;
+    private Question mCurrentQuestion;
+
+    // Question text and answer buttons
+    private TextView mQuestionText;
+    private Button mAnswer1Btn;
+    private Button mAnswer2Btn;
+    private Button mAnswer3Btn;
 
     private OnQuestionsAnsweredListener mListener;
 
@@ -56,10 +66,10 @@ public class CheckInFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mQuestions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
+            ArrayList<Question> questions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
+            mQuestions = new Stack<Question>();
+            mQuestions.addAll(questions);
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
-            Log.i(CapstoneConstants.LOG_TAG, "Successfully started checkin fragment for patient " + mPatient.getUsername() +
-                    " with " + mQuestions.size() + " questions");
         } else {
             throw new IllegalArgumentException("Questions and Patient is required");
         }
@@ -69,7 +79,18 @@ public class CheckInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_checkin, container, false);
+        View v = inflater.inflate(R.layout.fragment_checkin, container, false);
+        // Question and answer text and buttons
+        mQuestionText = (TextView) v.findViewById(R.id.checking_question_txt);
+        mAnswer1Btn = (Button) v.findViewById(R.id.checking_answer_1);
+        mAnswer1Btn.setOnClickListener(this);
+        mAnswer2Btn = (Button) v.findViewById(R.id.checking_answer_2);
+        mAnswer2Btn.setOnClickListener(this);
+        mAnswer3Btn = (Button) v.findViewById(R.id.checking_answer_3);
+        mAnswer3Btn.setOnClickListener(this);
+        mCurrentQuestion = mQuestions.pop();
+        setupQuestion(mCurrentQuestion);
+        return v;
     }
 
     @Override
@@ -87,6 +108,47 @@ public class CheckInFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    // Setup a question with answers
+    private void setupQuestion(Question q) {
+        mQuestionText.setText(q.getText());
+        // There is always two answers, sometimes three
+        mAnswer1Btn.setText(q.getAnswers().get(0).getText());
+        mAnswer2Btn.setText(q.getAnswers().get(1).getText());
+        if (q.getAnswers().size() > 2) {
+            mAnswer3Btn.setText(q.getAnswers().get(2).getText());
+        } else {
+            // Hide button if not an answer connected to it
+            mAnswer3Btn.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * Answer click listener
+     *
+     * @param v The button the user clicked
+     */
+    @Override
+    public void onClick(View v) {
+        Button b = (Button) v;
+        switch (b.getId()) {
+            case R.id.checking_answer_1:
+                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(0).getText());
+                break;
+            case R.id.checking_answer_2:
+                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(1).getText());
+                break;
+            case R.id.checking_answer_3:
+                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(2).getText());
+                break;
+        }
+        if (mQuestions.empty()) {
+            mListener.onAllQuestionsAnswered();
+        } else {
+            mCurrentQuestion = mQuestions.pop();
+            setupQuestion(mCurrentQuestion);
+        }
     }
 
     /**

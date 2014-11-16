@@ -90,5 +90,6 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
     @Override
     public void onAllQuestionsAnswered() {
         Log.i(CapstoneConstants.LOG_TAG, "All questions answered!");
+        finish();
     }
 }

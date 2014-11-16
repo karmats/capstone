@@ -83,7 +83,7 @@ public class WelcomePatientFragment extends Fragment implements FetchQuestionsTa
         Log.i(CapstoneConstants.LOG_TAG, "Got " + questions.size() + " questions");
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, CheckInFragment.newInstance(new ArrayList<Question>(questions), mPatient))
-                .commit();
+                .addToBackStack(null).commit();
     }
 
     @Override
