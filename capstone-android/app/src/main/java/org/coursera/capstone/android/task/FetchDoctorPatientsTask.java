@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
-import org.coursera.capstone.android.parceable.Patient;
+import org.coursera.capstone.android.parcelable.Patient;
 
 import java.util.List;
 

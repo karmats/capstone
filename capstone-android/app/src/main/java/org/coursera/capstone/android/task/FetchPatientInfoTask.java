@@ -6,7 +6,7 @@ import android.util.Log;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
-import org.coursera.capstone.android.parceable.Patient;
+import org.coursera.capstone.android.parcelable.Patient;
 
 /**
  * Fetches information for a patient.

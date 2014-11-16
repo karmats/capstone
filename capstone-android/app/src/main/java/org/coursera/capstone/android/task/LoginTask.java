@@ -17,7 +17,7 @@ import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
 import org.coursera.capstone.android.http.client.UnsafeHttpClient;
-import org.coursera.capstone.android.parceable.User;
+import org.coursera.capstone.android.parcelable.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 

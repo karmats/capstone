@@ -16,7 +16,10 @@
     <string name="welcome_doctor">Welcome doctor %1$s, you have token %2$s</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_doctor_main">DoctorMainActivity</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="patient_start_btn">Start</string>
+    <string name="patient_welcome_txt">Welcome to the symptom management app</string>
+    <string name="patient_howto_txt">To start click the "Start"-button below</string>
+    <string name="patient_questions_txt">Here you will answer some questions</string>
 
     <!-- Patient preferences -->
     <string name="pref_user_title">My Information</string>
@@ -25,7 +28,7 @@
     <string name="pref_title_patient_name">Name</string>
     <string name="pref_title_patient_dob">Date of birth</string>
     <string name="pref_title_patient_medical_no">Medical record no</string>
-    <string name="pref_title_patient_doctor_name">Your doctor</string>
+    <string name="pref_title_patient_doctor_name">My doctor</string>
 
     <!-- Time picker dialog -->
     <string name="timepicker_cancel_btn">Cancel</string>

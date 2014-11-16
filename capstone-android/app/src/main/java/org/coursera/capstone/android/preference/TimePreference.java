@@ -3,7 +3,6 @@ package org.coursera.capstone.android.preference;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.text.format.DateFormat;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -19,16 +18,7 @@ public class TimePreference extends DialogPreference {
     private TimePicker picker;
 
     public TimePreference(Context ctx, String initial) {
-        this(ctx, null, initial);
-    }
-
-    public TimePreference(Context ctx, AttributeSet attrs, String initial) {
-        this(ctx, attrs, 0, initial);
-    }
-
-    public TimePreference(Context ctx, AttributeSet attrs, int defStyle, String initial) {
-        super(ctx, attrs, defStyle);
-
+        super(ctx, null);
         setPositiveButtonText(R.string.timepicker_ok_btn);
         setNegativeButtonText(R.string.timepicker_cancel_btn);
         time = getPersistedString(initial);

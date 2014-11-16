@@ -37,7 +37,7 @@ public interface SymptomManagementApi {
     // The path where we expect the doctor data service to live
     public static final String DOCTOR_INFO_SVC_PATH = DOCTOR_SVC_PATH + "/{username}";
     // The path where we expec the doctor patients to live
-    public static final String DOCTOR_PATIENTS_SVC_PATH = DOCTOR_INFO_SVC_PATH + "/patients";
+    public static final String DOCTOR_PATIENTS_SVC_PATH = DOCTOR_INFO_SVC_PATH + "/patient";
     // The path where we expect the question service to live
     public static final String QUESTION_SVC_PATH = "/question";
     // The path where we expect the user info service to live

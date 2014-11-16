@@ -1,6 +1,5 @@
-package org.coursera.capstone.android.parceable;
+package org.coursera.capstone.android.parcelable;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -20,6 +19,9 @@ public class User implements Parcelable {
     private String role;
     private String accessToken;
 
+    public User() {
+    }
+
     public User(String userName, String firstName, String lastName, String role, String accessToken) {
         this.username = userName;
         this.firstName = firstName;
@@ -29,23 +31,20 @@ public class User implements Parcelable {
     }
 
     public User(Parcel source) {
-        Bundle data = source.readBundle(User.class.getClassLoader());
-        username = data.getString("username");
-        firstName = data.getString("firstName");
-        lastName = data.getString("lastName");
-        role = data.getString("role");
-        accessToken = data.getString("accessToken");
+        username = source.readString();
+        firstName = source.readString();
+        lastName = source.readString();
+        role = source.readString();
+        accessToken = source.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        Bundle data = new Bundle();
-        data.putString("username", username);
-        data.putString("firstName", firstName);
-        data.putString("lastName", lastName);
-        data.putString("role", role);
-        data.putString("accessToken", accessToken);
-        dest.writeBundle(data);
+        dest.writeString(username);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(role);
+        dest.writeString(accessToken);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
