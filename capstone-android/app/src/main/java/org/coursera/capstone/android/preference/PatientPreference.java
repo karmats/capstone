@@ -24,9 +24,9 @@ public class PatientPreference extends Preference {
         String key = getKey();
         // Medical record number is the only long setting we have
         if (CapstoneConstants.PREFERENCES_MEDICAL_RECORD_NUMBER.equals(key)) {
-            return NumberFormat.getInstance().format(getSharedPreferences().getLong(key, -1));
+            return NumberFormat.getInstance().format(getPersistedLong(-1));
         }
-        return getSharedPreferences().getString(key, "Failed to find " + key);
+        return getPersistedString("Failed to find " + key);
     }
 
 }
