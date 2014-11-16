@@ -23,8 +23,12 @@
     <string name="pref_alarms_title">My Reminders</string>
     <string name="pref_title_alarms">Reminders</string>
     <string name="pref_title_patient_name">Name</string>
-    <string name="pref_summary_patient_name">Name summary</string>
     <string name="pref_title_patient_dob">Date of birth</string>
     <string name="pref_title_patient_medical_no">Medical record no</string>
+    <string name="pref_title_patient_doctor_name">Your doctor</string>
+
+    <!-- Time picker dialog -->
+    <string name="timepicker_cancel_btn">Cancel</string>
+    <string name="timepicker_ok_btn">Set</string>
 
 </resources>

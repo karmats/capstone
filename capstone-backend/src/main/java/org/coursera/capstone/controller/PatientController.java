@@ -1,6 +1,7 @@
 package org.coursera.capstone.controller;
 
 import org.coursera.capstone.client.SymptomManagementApi;
+import org.coursera.capstone.dto.DoctorDto;
 import org.coursera.capstone.dto.PatientDto;
 import org.coursera.capstone.entity.Patient;
 import org.coursera.capstone.repository.PatientRepository;
@@ -30,6 +31,7 @@ public class PatientController {
         PatientDto result = new PatientDto(p);
         result.setBirthDate(p.getBirthDate());
         result.setMedicalRecordNumber(p.getMedicalRecordNumber());
+        result.setDoctor(new DoctorDto(p.getDoctor()));
         return result;
     }
 }

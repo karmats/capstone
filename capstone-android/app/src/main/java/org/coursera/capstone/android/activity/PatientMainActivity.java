@@ -55,11 +55,12 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
     @Override
     public void onPatientFetched(Patient p) {
         SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(PatientMainActivity.this).edit();
-        Log.i(CapstoneConstants.LOG_TAG, "Doctor?" + p.getDoctor());
         prefEditor.putString(CapstoneConstants.PREFERENCES_NAME, p.getFirstName() + " " + p.getLastName());
         prefEditor.putString(CapstoneConstants.PREFERENCES_DATE_OF_BIRTH,
                 DateFormat.getDateFormat(PatientMainActivity.this).format(new Date(p.getBirthDate())));
         prefEditor.putLong(CapstoneConstants.PREFERENCES_MEDICAL_RECORD_NUMBER, p.getMedicalRecordNumber());
+        prefEditor.putString(CapstoneConstants.PREFERENCES_PATIENT_DOCTOR_NAME, p.getDoctor().getFirstName() +
+                " " + p.getDoctor().getLastName());
         prefEditor.commit();
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PatientSettingsFragment())

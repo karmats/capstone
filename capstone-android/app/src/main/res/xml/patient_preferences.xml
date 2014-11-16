@@ -15,11 +15,13 @@
             android:key="pref_medical_record_no"
             android:selectable="false"
             android:title="@string/pref_title_patient_medical_no" />
+        <org.coursera.capstone.android.preference.PatientPreference
+            android:key="pref_patient_doctor_name"
+            android:selectable="false"
+            android:title="@string/pref_title_patient_doctor_name" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_alarms_title">
-        <Preference
-            android:key="pref_alarms"
-            android:title="@string/pref_title_alarms" />
+        <!-- Here we add preferences programmatically in PatientSettingsFragment -->
     </PreferenceCategory>
 
 </PreferenceScreen>
