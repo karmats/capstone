@@ -18,7 +18,7 @@ import org.coursera.capstone.android.task.FetchPatientInfoTask;
 
 import java.util.Date;
 
-public class PatientMainActivity extends Activity implements FetchPatientInfoTask.UserDataCallbacks {
+public class PatientMainActivity extends Activity implements FetchPatientInfoTask.PatientInfoCallbacks {
 
     private Patient mPatient;
 

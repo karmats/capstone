@@ -3,16 +3,20 @@ package org.coursera.capstone.android.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.parceable.Patient;
 import org.coursera.capstone.android.parceable.User;
-import org.coursera.capstone.android.task.FetchPatientTask;
+import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
 
-public class DoctorMainActivity extends Activity {
+import java.util.List;
+
+public class DoctorMainActivity extends Activity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks {
 
     private TextView mWelcomeText;
 
@@ -28,10 +32,10 @@ public class DoctorMainActivity extends Activity {
 
         mWelcomeText = (TextView) findViewById(R.id.doctor_welcome_text);
         String welcomeText = getString(R.string.welcome_doctor, user.getFirstName() + " " + user.getLastName(),
-                                        user.getAccessToken());
-        mWelcomeText.append(welcomeText);mWelcomeText.append("\n\nPatients ftw:\n");
-        new FetchPatientTask(DoctorMainActivity.this, mWelcomeText).execute();
-
+                user.getAccessToken());
+        mWelcomeText.append(welcomeText);
+        mWelcomeText.append("\n\nPatients ftw:\n");
+        new FetchDoctorPatientsTask(this, user.getAccessToken()).execute(user.getUsername());
     }
 
 
@@ -52,5 +56,19 @@ public class DoctorMainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Callbacks for fetching doctor patients
+    @Override
+    public void onPatientsFetched(List<Patient> patients) {
+        Log.i(CapstoneConstants.LOG_TAG, "Success got " + patients.size() + " patients");
+        for (Patient p : patients) {
+            mWelcomeText.append(p.getFirstName() + " " + p.getLastName() + "\n");
+        }
+    }
+
+    @Override
+    public void onPatientsFetchFail(String error) {
+        Log.e(CapstoneConstants.LOG_TAG, error);
     }
 }

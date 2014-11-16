@@ -15,10 +15,10 @@ import org.coursera.capstone.android.parceable.Patient;
  */
 public class FetchPatientInfoTask extends AsyncTask<String, Void, Patient> {
 
-    private UserDataCallbacks mCallbacks;
+    private PatientInfoCallbacks mCallbacks;
     private String mAccessToken;
 
-    public FetchPatientInfoTask(UserDataCallbacks callbacks, String accessToken) {
+    public FetchPatientInfoTask(PatientInfoCallbacks callbacks, String accessToken) {
         this.mCallbacks = callbacks;
         this.mAccessToken = accessToken;
     }
@@ -42,7 +42,7 @@ public class FetchPatientInfoTask extends AsyncTask<String, Void, Patient> {
     /**
      * Interface to implement for calling context
      */
-    public interface UserDataCallbacks {
+    public interface PatientInfoCallbacks {
 
         /**
          * When patient data has been fetched.
