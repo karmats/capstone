@@ -1,8 +1,11 @@
 package org.coursera.capstone.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.coursera.capstone.auth.User;
+import org.coursera.capstone.entity.PainMedication;
 import org.coursera.capstone.entity.Patient;
 
 /**
@@ -17,6 +20,7 @@ public class PatientDto extends UserInfoDto {
     private Date birthDate;
 
     private DoctorDto doctor;
+    private List<PainMedicationDto> medications;
 
     public PatientDto(String username, String firstName, String lastName, DoctorDto doctor) {
         super(username, firstName, lastName, User.UserAuthority.PATIENT.getRole());
@@ -25,6 +29,10 @@ public class PatientDto extends UserInfoDto {
 
     public PatientDto(Patient p) {
         super(p.getUsername(), p.getFirstName(), p.getLastName(), User.UserAuthority.PATIENT.getRole());
+        this.medications = new ArrayList<PainMedicationDto>();
+        for (PainMedication pm : p.getPainMedications()) {
+            this.medications.add(new PainMedicationDto(pm));
+        }
     }
 
     public long getMedicalRecordNumber() {
@@ -49,5 +57,13 @@ public class PatientDto extends UserInfoDto {
 
     public void setDoctor(DoctorDto doctor) {
         this.doctor = doctor;
+    }
+
+    public List<PainMedicationDto> getMedications() {
+        return medications;
+    }
+
+    public void setMedications(List<PainMedicationDto> medications) {
+        this.medications = medications;
     }
 }

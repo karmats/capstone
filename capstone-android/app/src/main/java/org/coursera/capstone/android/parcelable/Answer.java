@@ -14,6 +14,10 @@ public class Answer implements Parcelable {
         // Empty constructor needed for retrofit
     }
 
+    public Answer(String text) {
+        this.text = text;
+    }
+
     public Answer(Parcel source) {
         this.text = source.readString();
     }

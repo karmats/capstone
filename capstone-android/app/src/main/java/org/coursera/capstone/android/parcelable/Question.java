@@ -17,6 +17,11 @@ public class Question implements Parcelable {
         // Empty constructor needed for retrofit
     }
 
+    public Question(String text, List<Answer> answers) {
+        this.text = text;
+        this.answers = answers;
+    }
+
     public Question(Parcel source) {
         this.text = source.readString();
         source.readTypedList(answers, Answer.CREATOR);

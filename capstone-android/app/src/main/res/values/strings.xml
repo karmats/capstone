@@ -19,7 +19,9 @@
     <string name="patient_start_btn">Start</string>
     <string name="patient_welcome_txt">Welcome to the symptom management app</string>
     <string name="patient_howto_txt">To start click the "Start"-button below</string>
-    <string name="patient_questions_txt">Here you will answer some questions</string>
+    <string name="patient_question_medication">Did you take your %1$s?</string>
+    <string name="patient_answer_yes">Yes</string>
+    <string name="patient_answer_no">No</string>
 
     <!-- Patient preferences -->
     <string name="pref_user_title">My Information</string>

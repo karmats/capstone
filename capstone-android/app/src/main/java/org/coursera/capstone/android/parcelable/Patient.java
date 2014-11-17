@@ -3,6 +3,8 @@ package org.coursera.capstone.android.parcelable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * A simple object to represent a patient.
  */
@@ -13,17 +15,19 @@ public class Patient extends User {
     private Long birthDate;
 
     private Doctor doctor;
+    private List<PainMedication> medications;
 
     public Patient() {
         super();
-        // Empty constructor needed for retrofits
+        // Empty constructor needed for retrofit
     }
 
     public Patient(Parcel source) {
         super(source);
-        source.writeLong(medicalRecordNumber);
-        source.writeLong(birthDate);
-        source.writeParcelable(doctor, 0);
+        this.medicalRecordNumber = source.readLong();
+        this.birthDate = source.readLong();
+        this.doctor = source.readParcelable(Doctor.class.getClassLoader());
+        source.readTypedList(medications, PainMedication.CREATOR);
     }
 
     @Override
@@ -31,6 +35,7 @@ public class Patient extends User {
         super.writeToParcel(dest, flags);
         dest.writeLong(medicalRecordNumber);
         dest.writeLong(birthDate);
+        dest.writeTypedList(medications);
     }
 
     public static final Parcelable.Creator<Patient> CREATOR = new Parcelable.Creator<Patient>() {
@@ -51,14 +56,6 @@ public class Patient extends User {
         this.medicalRecordNumber = medicalRecordNumber;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
     public Long getBirthDate() {
         return birthDate;
     }
@@ -67,4 +64,19 @@ public class Patient extends User {
         this.birthDate = birthDate;
     }
 
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public List<PainMedication> getMedications() {
+        return medications;
+    }
+
+    public void setMedications(List<PainMedication> medications) {
+        this.medications = medications;
+    }
 }

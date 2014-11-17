@@ -12,10 +12,13 @@ import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.parcelable.Answer;
+import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
@@ -66,10 +69,20 @@ public class CheckInFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            ArrayList<Question> questions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
-            mQuestions = new Stack<Question>();
-            mQuestions.addAll(questions);
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
+            mQuestions = new Stack<Question>();
+            ArrayList<Question> questions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
+            // Add questions about pain medications
+            ArrayList<Answer> yesNo = new ArrayList<Answer>();
+            yesNo.add(new Answer(getString(R.string.patient_answer_yes)));
+            yesNo.add(new Answer(getString(R.string.patient_answer_no)));
+            for (PainMedication pm : mPatient.getMedications()) {
+                String question = getString(R.string.patient_question_medication, pm.getName());
+                mQuestions.add(new Question(question, yesNo));
+            }
+            // Reverse the list to have it in correct order in the stack
+            Collections.reverse(questions);
+            mQuestions.addAll(questions);
         } else {
             throw new IllegalArgumentException("Questions and Patient is required");
         }
