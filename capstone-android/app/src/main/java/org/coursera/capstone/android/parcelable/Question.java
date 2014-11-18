@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Question implements Parcelable {
 
+    private Long id;
     private String text;
     private List<Answer> answers;
 
@@ -23,12 +24,14 @@ public class Question implements Parcelable {
     }
 
     public Question(Parcel source) {
+        this.id = source.readLong();
         this.text = source.readString();
         source.readTypedList(answers, Answer.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeString(text);
         dest.writeTypedList(answers);
     }
@@ -47,6 +50,14 @@ public class Question implements Parcelable {
             return new Question[size];
         }
     };
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getText() {
         return text;

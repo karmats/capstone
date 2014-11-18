@@ -99,7 +99,7 @@ public class OAuth2SecurityConfiguration {
 
             // Require all other requests to have role doctor
             // TODO Patients should be able to submit answers and doctors able to update medications
-            http.authorizeRequests().antMatchers("/**").hasRole(User.UserAuthority.DOCTOR.getRole());
+            http.authorizeRequests().antMatchers("/**").hasRole(User.UserAuthority.PATIENT.getRole());
         }
 
     }

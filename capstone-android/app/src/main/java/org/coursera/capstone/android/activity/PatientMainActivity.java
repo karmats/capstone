@@ -8,27 +8,24 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.fragment.CheckInFragment;
 import org.coursera.capstone.android.fragment.PatientSettingsFragment;
 import org.coursera.capstone.android.fragment.WelcomePatientFragment;
+import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.parcelable.Patient;
-import org.coursera.capstone.android.parcelable.Question;
 import org.coursera.capstone.android.parcelable.User;
+import org.coursera.capstone.android.task.CheckInTask;
 import org.coursera.capstone.android.task.FetchPatientInfoTask;
-import org.coursera.capstone.android.task.FetchQuestionsTask;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class PatientMainActivity extends Activity implements FetchPatientInfoTask.PatientInfoCallbacks, CheckInFragment.OnQuestionsAnsweredListener {
 
     private Patient mPatient;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +35,10 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
         // Get the patient name from shared preferences
         String userJsonString = PreferenceManager.getDefaultSharedPreferences(PatientMainActivity.this)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
-        final User user = User.fromJsonString(userJsonString);
+        mUser = User.fromJsonString(userJsonString);
 
         // Fetch information about the patient, such as medical record no and birth date
-        new FetchPatientInfoTask(this, user.getAccessToken()).execute(user.getUsername());
+        new FetchPatientInfoTask(this, mUser.getAccessToken()).execute(mUser.getUsername());
     }
 
 
@@ -88,8 +85,8 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
     }
 
     @Override
-    public void onAllQuestionsAnswered() {
-        Log.i(CapstoneConstants.LOG_TAG, "All questions answered!");
-        finish();
+    public void onAllQuestionsAnswered(CheckIn checkInData) {
+        new CheckInTask(mUser.getAccessToken()).execute(checkInData);
+        //finish();
     }
 }

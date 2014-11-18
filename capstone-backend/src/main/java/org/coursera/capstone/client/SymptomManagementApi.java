@@ -42,6 +42,8 @@ public interface SymptomManagementApi {
     public static final String QUESTION_SVC_PATH = "/question";
     // The path where we expect the user info service to live
     public static final String USER_SVC_PATH = "/user";
+    // The path where we expect the check in service to live
+    public static final String CHECK_IN_SVC_PATH = "/checkin";
 
     // The path to search videos by title
     public static final String PATIENT_NAME_SEARCH_PATH = PATIENT_SVC_PATH + "/search/findByName";

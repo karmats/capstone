@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.parcelable.Answer;
+import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
@@ -23,6 +24,7 @@ import org.coursera.capstone.android.parcelable.Question;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Stack;
 
 /**
@@ -42,6 +44,7 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
     private Patient mPatient;
     private Question mCurrentQuestion;
     private boolean mMedicationQuestion = false;
+    private CheckIn mCheckIn;
 
     // Question text and answer buttons
     private TextView mQuestionText;
@@ -76,6 +79,8 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            // The check in object to send
+            mCheckIn = new CheckIn();
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
             mQuestions = new Stack<Question>();
             ArrayList<Question> questions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
@@ -145,20 +150,26 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
      */
     @Override
     public void onClick(View v) {
+        int answerId = 0;
         switch (v.getId()) {
             case R.id.checking_answer_1:
-                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(0).getText());
+                answerId = 0;
                 // Show time picker dialog if this is a medical question and the user responded yes
                 if (mMedicationQuestion) {
                     mTimePickerDlg.show();
                 }
                 break;
             case R.id.checking_answer_2:
-                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(1).getText());
+                answerId = 1;
                 break;
             case R.id.checking_answer_3:
-                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(2).getText());
+                answerId = 2;
                 break;
+        }
+        // Add the answer to the check in
+        if (!mMedicationQuestion) {
+            mCheckIn.getPatientAnswers().add(new CheckIn.PatientAnswer(mCurrentQuestion.getId(),
+                    mCurrentQuestion.getAnswers().get(answerId).getId()));
         }
         if (!mQuestions.empty()) {
             mCurrentQuestion = mQuestions.pop();
@@ -174,7 +185,9 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Log.i(CapstoneConstants.LOG_TAG, "Time set to " + hourOfDay + ":" + minute);
         if (mMedicationQuestions.empty()) {
-            mListener.onAllQuestionsAnswered();
+            // Finish the check in and send it to the listener
+            mCheckIn.setWhen(new Date().getTime());
+            mListener.onAllQuestionsAnswered(mCheckIn);
         }
     }
 
@@ -200,7 +213,7 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
      * <p/>
      */
     public interface OnQuestionsAnsweredListener {
-        public void onAllQuestionsAnswered();
+        public void onAllQuestionsAnswered(CheckIn checkInData);
     }
 
 }

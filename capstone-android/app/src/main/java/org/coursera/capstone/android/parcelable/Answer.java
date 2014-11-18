@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 public class Answer implements Parcelable {
 
+    private Long id;
     private String text;
 
     public Answer() {
@@ -19,11 +20,13 @@ public class Answer implements Parcelable {
     }
 
     public Answer(Parcel source) {
+        this.id = source.readLong();
         this.text = source.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeString(text);
     }
 
@@ -41,6 +44,14 @@ public class Answer implements Parcelable {
             return new Answer[size];
         }
     };
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getText() {
         return text;

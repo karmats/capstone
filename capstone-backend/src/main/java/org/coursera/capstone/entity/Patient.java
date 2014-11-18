@@ -35,7 +35,7 @@ public class Patient {
     @ManyToMany
     private Collection<PainMedication> painMedications;
     @OneToMany(mappedBy = "patient")
-    private Collection<PatientAnswer> patientAnswers;
+    private Collection<CheckIn> patientCheckIns;
 
     public Patient() {
     }
@@ -116,6 +116,14 @@ public class Patient {
 
     public void setPainMedications(Collection<PainMedication> painMedications) {
         this.painMedications = painMedications;
+    }
+
+    public Collection<CheckIn> getPatientCheckIns() {
+        return patientCheckIns;
+    }
+
+    public void setPatientCheckIns(Collection<CheckIn> patientCheckIns) {
+        this.patientCheckIns = patientCheckIns;
     }
 
     @Override
