@@ -2,13 +2,16 @@ package org.coursera.capstone.android.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
@@ -18,6 +21,7 @@ import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Stack;
 
@@ -29,19 +33,22 @@ import java.util.Stack;
  * Use the {@link CheckInFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CheckInFragment extends Fragment implements View.OnClickListener {
+public class CheckInFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
     private static final String QUESTIONS_PARAM = "questions_param";
     private static final String PATIENT_PARAM = "patient_param";
 
     private Stack<Question> mQuestions;
+    private Stack<Question> mMedicationQuestions;
     private Patient mPatient;
     private Question mCurrentQuestion;
+    private boolean mMedicationQuestion = false;
 
     // Question text and answer buttons
     private TextView mQuestionText;
     private Button mAnswer1Btn;
     private Button mAnswer2Btn;
     private Button mAnswer3Btn;
+    private TimePickerDialog mTimePickerDlg;
 
     private OnQuestionsAnsweredListener mListener;
 
@@ -72,17 +79,20 @@ public class CheckInFragment extends Fragment implements View.OnClickListener {
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
             mQuestions = new Stack<Question>();
             ArrayList<Question> questions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
+            // Reverse the list to have it in correct order in the stack
+            Collections.reverse(questions);
+            mQuestions.addAll(questions);
+
+            // Mediacation questions
+            mMedicationQuestions = new Stack<Question>();
             // Add questions about pain medications
             ArrayList<Answer> yesNo = new ArrayList<Answer>();
             yesNo.add(new Answer(getString(R.string.patient_answer_yes)));
             yesNo.add(new Answer(getString(R.string.patient_answer_no)));
             for (PainMedication pm : mPatient.getMedications()) {
                 String question = getString(R.string.patient_question_medication, pm.getName());
-                mQuestions.add(new Question(question, yesNo));
+                mMedicationQuestions.add(new Question(question, yesNo));
             }
-            // Reverse the list to have it in correct order in the stack
-            Collections.reverse(questions);
-            mQuestions.addAll(questions);
         } else {
             throw new IllegalArgumentException("Questions and Patient is required");
         }
@@ -101,6 +111,11 @@ public class CheckInFragment extends Fragment implements View.OnClickListener {
         mAnswer2Btn.setOnClickListener(this);
         mAnswer3Btn = (Button) v.findViewById(R.id.checking_answer_3);
         mAnswer3Btn.setOnClickListener(this);
+        // Setup time picker
+        Calendar c = Calendar.getInstance();
+        mTimePickerDlg = new TimePickerDialog(getActivity(), this, c.get(Calendar.HOUR_OF_DAY),
+                c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
+        // Setup first question
         mCurrentQuestion = mQuestions.pop();
         setupQuestion(mCurrentQuestion);
         return v;
@@ -123,6 +138,46 @@ public class CheckInFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
+    /**
+     * Answer click listener
+     *
+     * @param v The button the user clicked
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.checking_answer_1:
+                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(0).getText());
+                // Show time picker dialog if this is a medical question and the user responded yes
+                if (mMedicationQuestion) {
+                    mTimePickerDlg.show();
+                }
+                break;
+            case R.id.checking_answer_2:
+                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(1).getText());
+                break;
+            case R.id.checking_answer_3:
+                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(2).getText());
+                break;
+        }
+        if (!mQuestions.empty()) {
+            mCurrentQuestion = mQuestions.pop();
+            setupQuestion(mCurrentQuestion);
+        } else if (!mMedicationQuestions.empty()) {
+            mCurrentQuestion = mMedicationQuestions.pop();
+            mMedicationQuestion = true;
+            setupQuestion(mCurrentQuestion);
+        }
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Log.i(CapstoneConstants.LOG_TAG, "Time set to " + hourOfDay + ":" + minute);
+        if (mMedicationQuestions.empty()) {
+            mListener.onAllQuestionsAnswered();
+        }
+    }
+
     // Setup a question with answers
     private void setupQuestion(Question q) {
         mQuestionText.setText(q.getText());
@@ -134,33 +189,6 @@ public class CheckInFragment extends Fragment implements View.OnClickListener {
         } else {
             // Hide button if not an answer connected to it
             mAnswer3Btn.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    /**
-     * Answer click listener
-     *
-     * @param v The button the user clicked
-     */
-    @Override
-    public void onClick(View v) {
-        Button b = (Button) v;
-        switch (b.getId()) {
-            case R.id.checking_answer_1:
-                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(0).getText());
-                break;
-            case R.id.checking_answer_2:
-                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(1).getText());
-                break;
-            case R.id.checking_answer_3:
-                Log.i(CapstoneConstants.LOG_TAG, "You answered" + mCurrentQuestion.getAnswers().get(2).getText());
-                break;
-        }
-        if (mQuestions.empty()) {
-            mListener.onAllQuestionsAnswered();
-        } else {
-            mCurrentQuestion = mQuestions.pop();
-            setupQuestion(mCurrentQuestion);
         }
     }
 
