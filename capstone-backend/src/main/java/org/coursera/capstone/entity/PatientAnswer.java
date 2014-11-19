@@ -26,6 +26,11 @@ public class PatientAnswer {
     public PatientAnswer() {
     }
 
+    public PatientAnswer(Question question, Answer answer) {
+        this.question = question;
+        this.answer = answer;
+    }
+
     public long getId() {
         return id;
     }

@@ -8,6 +8,7 @@ import org.coursera.capstone.android.parcelable.User;
 
 import java.util.List;
 
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -73,6 +74,6 @@ public interface SymptomManagementApi {
     List<Question> getQuestions();
 
     @POST(CHECK_IN_SVC_PATH)
-    CheckIn checkIn(@Body CheckIn checkIn);
+    Response checkIn(@Body CheckIn checkIn);
 
 }

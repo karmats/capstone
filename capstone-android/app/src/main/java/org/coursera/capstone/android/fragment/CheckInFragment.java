@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -40,9 +41,10 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
     private static final String PATIENT_PARAM = "patient_param";
 
     private Stack<Question> mQuestions;
-    private Stack<Question> mMedicationQuestions;
+    private Stack<PainMedication> mMedications;
     private Patient mPatient;
     private Question mCurrentQuestion;
+    private PainMedication mCurrentPainMedication;
     private boolean mMedicationQuestion = false;
     private CheckIn mCheckIn;
 
@@ -79,25 +81,21 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mPatient = getArguments().getParcelable(PATIENT_PARAM);
             // The check in object to send
             mCheckIn = new CheckIn();
-            mPatient = getArguments().getParcelable(PATIENT_PARAM);
+            mCheckIn.setPatientMedicalRecordNumber(mPatient.getMedicalRecordNumber());
             mQuestions = new Stack<Question>();
             ArrayList<Question> questions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
             // Reverse the list to have it in correct order in the stack
             Collections.reverse(questions);
             mQuestions.addAll(questions);
 
-            // Mediacation questions
-            mMedicationQuestions = new Stack<Question>();
-            // Add questions about pain medications
-            ArrayList<Answer> yesNo = new ArrayList<Answer>();
-            yesNo.add(new Answer(getString(R.string.patient_answer_yes)));
-            yesNo.add(new Answer(getString(R.string.patient_answer_no)));
-            for (PainMedication pm : mPatient.getMedications()) {
-                String question = getString(R.string.patient_question_medication, pm.getName());
-                mMedicationQuestions.add(new Question(question, yesNo));
-            }
+            // Medications questions
+            mMedications = new Stack<PainMedication>();
+            List<PainMedication> painMedications = mPatient.getMedications();
+            Collections.reverse(painMedications);
+            mMedications.addAll(painMedications);
         } else {
             throw new IllegalArgumentException("Questions and Patient is required");
         }
@@ -167,28 +165,45 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
                 break;
         }
         // Add the answer to the check in
-        if (!mMedicationQuestion) {
+        if (mMedicationQuestion && answerId == 1) {
+            // User choose no, since the time picker dlg shows when choosing yes
+            mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(mCurrentPainMedication.getMedicationId(), false, null));
+        } else {
             mCheckIn.getPatientAnswers().add(new CheckIn.PatientAnswer(mCurrentQuestion.getId(),
                     mCurrentQuestion.getAnswers().get(answerId).getId()));
         }
         if (!mQuestions.empty()) {
             mCurrentQuestion = mQuestions.pop();
             setupQuestion(mCurrentQuestion);
-        } else if (!mMedicationQuestions.empty()) {
-            mCurrentQuestion = mMedicationQuestions.pop();
+        } else if (!mMedications.empty()) {
+            PainMedication pm = mMedications.pop();
+            mCurrentQuestion = createMedicationQuestion(pm);
             mMedicationQuestion = true;
+            mCurrentPainMedication = pm;
             setupQuestion(mCurrentQuestion);
         }
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Log.i(CapstoneConstants.LOG_TAG, "Time set to " + hourOfDay + ":" + minute);
-        if (mMedicationQuestions.empty()) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        Log.i(CapstoneConstants.LOG_TAG, "Adding check in time " + hourOfDay + ":" + minute);
+        mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(mCurrentPainMedication.getMedicationId(), true, calendar.getTimeInMillis()));
+        if (mMedications.empty()) {
             // Finish the check in and send it to the listener
             mCheckIn.setWhen(new Date().getTime());
             mListener.onAllQuestionsAnswered(mCheckIn);
         }
+    }
+
+    private Question createMedicationQuestion(PainMedication painMedication) {
+        ArrayList<Answer> yesNo = new ArrayList<Answer>();
+        yesNo.add(new Answer(getString(R.string.patient_answer_yes)));
+        yesNo.add(new Answer(getString(R.string.patient_answer_no)));
+        String question = getString(R.string.patient_question_medication, painMedication.getName());
+        return new Question(question, yesNo);
     }
 
     // Setup a question with answers

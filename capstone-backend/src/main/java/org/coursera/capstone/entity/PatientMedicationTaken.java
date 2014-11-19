@@ -21,7 +21,7 @@ public class PatientMedicationTaken {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date when;
+    private Date medicationTime;
 
     @ManyToOne
     private PainMedication medication;
@@ -31,16 +31,21 @@ public class PatientMedicationTaken {
     public PatientMedicationTaken() {
     }
 
+    public PatientMedicationTaken(Date medicationTime, PainMedication medication) {
+        this.medicationTime = medicationTime;
+        this.medication = medication;
+    }
+
     public PainMedication getMedication() {
         return medication;
     }
 
-    public Date getWhen() {
-        return when;
+    public Date getMedicationTime() {
+        return medicationTime;
     }
 
-    public void setWhen(Date when) {
-        this.when = when;
+    public void setMedicationTime(Date medicationTime) {
+        this.medicationTime = medicationTime;
     }
 
     public void setMedication(PainMedication medication) {

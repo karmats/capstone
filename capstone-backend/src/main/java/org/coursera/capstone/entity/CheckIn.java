@@ -18,7 +18,7 @@ public class CheckIn {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private Date when;
+    private Date checkInTime;
 
     @OneToMany(mappedBy = "answerCheckIn")
     private Collection<PatientAnswer> patientAnswers;
@@ -30,9 +30,12 @@ public class CheckIn {
     public CheckIn() {
     }
 
-    public CheckIn(List<PatientAnswer> patientAnswers, Date when) {
+    public CheckIn(Patient patient, List<PatientAnswer> patientAnswers, List<PatientMedicationTaken> medicationsTaken,
+            Date checkInTime) {
+        this.patient = patient;
         this.patientAnswers = patientAnswers;
-        this.when = when;
+        this.patientMedicationsTaken = medicationsTaken;
+        this.checkInTime = checkInTime;
     }
 
     public long getId() {
@@ -43,12 +46,12 @@ public class CheckIn {
         this.id = id;
     }
 
-    public Date getWhen() {
-        return when;
+    public Date getCheckInTime() {
+        return checkInTime;
     }
 
-    public void setWhen(Date when) {
-        this.when = when;
+    public void setWhen(Date checkInTime) {
+        this.checkInTime = checkInTime;
     }
 
     public Collection<PatientAnswer> getPatientAnswers() {

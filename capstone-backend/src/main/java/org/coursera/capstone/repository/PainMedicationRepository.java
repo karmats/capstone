@@ -11,4 +11,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface PainMedicationRepository extends CrudRepository<PainMedication, Long> {
 
+    PainMedication findByMedicationId(String medicationId);
 }

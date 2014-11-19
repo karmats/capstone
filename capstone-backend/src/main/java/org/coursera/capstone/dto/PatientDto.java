@@ -14,7 +14,7 @@ import org.coursera.capstone.entity.Patient;
  * @author matros
  *
  */
-public class PatientDto extends UserInfoDto {
+public class PatientDto extends UserDto {
 
     private long medicalRecordNumber;
     private Date birthDate;

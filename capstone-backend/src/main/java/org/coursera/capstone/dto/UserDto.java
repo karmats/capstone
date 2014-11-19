@@ -7,7 +7,7 @@ package org.coursera.capstone.dto;
  * @author mats
  *
  */
-public class UserInfoDto {
+public class UserDto {
 
     private String username;
     private String firstName;
@@ -15,7 +15,7 @@ public class UserInfoDto {
     // User must either be doctor or patient, can't be both
     private String role;
     
-    public UserInfoDto(String username, String firstName, String lastName, String role) {
+    public UserDto(String username, String firstName, String lastName, String role) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;

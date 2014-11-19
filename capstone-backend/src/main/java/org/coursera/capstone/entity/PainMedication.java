@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,6 +24,9 @@ public class PainMedication {
     @JsonIgnore
     @ManyToMany
     private Collection<Patient> patients;
+    @JsonIgnore
+    @OneToMany(mappedBy = "medication")
+    private Collection<PatientMedicationTaken> patientMedicationsTaken;
 
     public PainMedication() {
     }

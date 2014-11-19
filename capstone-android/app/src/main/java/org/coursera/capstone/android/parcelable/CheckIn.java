@@ -1,14 +1,14 @@
 package org.coursera.capstone.android.parcelable;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Created by matros on 18/11/14.
+ * Describes a patient check-in
  */
 public class CheckIn {
 
+    private Long patientMedicalRecordNumber;
     private List<PatientAnswer> patientAnswers;
     private List<MedicationTaken> medicationsTaken;
     private Long when;
@@ -16,6 +16,14 @@ public class CheckIn {
     public CheckIn() {
         this.patientAnswers = new ArrayList<PatientAnswer>();
         this.medicationsTaken = new ArrayList<MedicationTaken>();
+    }
+
+    public Long getPatientMedicalRecordNumber() {
+        return patientMedicalRecordNumber;
+    }
+
+    public void setPatientMedicalRecordNumber(Long patientMedicalRecordNumber) {
+        this.patientMedicalRecordNumber = patientMedicalRecordNumber;
     }
 
     public List<PatientAnswer> getPatientAnswers() {
@@ -84,12 +92,12 @@ public class CheckIn {
 
         private String medicationId;
         private boolean taken;
-        private Date when;
+        private Long when;
 
         public MedicationTaken() {
         }
 
-        public MedicationTaken(String medicationId, boolean taken, Date when) {
+        public MedicationTaken(String medicationId, boolean taken, Long when) {
             this.medicationId = medicationId;
             this.taken = taken;
             this.when = when;
@@ -111,11 +119,11 @@ public class CheckIn {
             this.taken = taken;
         }
 
-        public Date getWhen() {
+        public Long getWhen() {
             return when;
         }
 
-        public void setWhen(Date when) {
+        public void setWhen(Long when) {
             this.when = when;
         }
 

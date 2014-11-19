@@ -6,7 +6,7 @@ import org.coursera.capstone.auth.User.UserAuthority;
 import org.coursera.capstone.client.SymptomManagementApi;
 import org.coursera.capstone.dto.DoctorDto;
 import org.coursera.capstone.dto.PatientDto;
-import org.coursera.capstone.dto.UserInfoDto;
+import org.coursera.capstone.dto.UserDto;
 import org.coursera.capstone.entity.Doctor;
 import org.coursera.capstone.entity.Patient;
 import org.coursera.capstone.repository.DoctorRepository;
@@ -33,17 +33,17 @@ public class UserInfoController {
     PatientRepository patientRepo;
 
     @RequestMapping(value = SymptomManagementApi.USER_SVC_PATH, method = RequestMethod.GET)
-    public @ResponseBody UserInfoDto getUserInfo(Principal p) {
+    public @ResponseBody UserDto getUserInfo(Principal p) {
         String username = p.getName();
         // Check if the user exists in patient db
         Patient patient = patientRepo.findByUsername(username);
         if (patient != null) {
-            return new UserInfoDto(patient.getUsername(), patient.getFirstName(), patient.getLastName(),
+            return new UserDto(patient.getUsername(), patient.getFirstName(), patient.getLastName(),
                     UserAuthority.PATIENT.getRole());
         } else {
             // This is a doctor
             Doctor doctor = doctorRepo.findByUsername(username);
-            return new UserInfoDto(doctor.getUsername(), doctor.getFirstName(), doctor.getLastName(),
+            return new UserDto(doctor.getUsername(), doctor.getFirstName(), doctor.getLastName(),
                     UserAuthority.DOCTOR.getRole());
         }
     }

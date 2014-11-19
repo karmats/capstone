@@ -9,7 +9,7 @@ import org.coursera.capstone.entity.Doctor;
  * @author matros
  *
  */
-public class DoctorDto extends UserInfoDto {
+public class DoctorDto extends UserDto {
 
     public DoctorDto(String username, String firstName, String lastName) {
         super(username, firstName, lastName, User.UserAuthority.DOCTOR.getRole());

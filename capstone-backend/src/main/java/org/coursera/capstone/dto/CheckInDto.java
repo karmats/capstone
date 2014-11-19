@@ -5,9 +5,18 @@ import java.util.List;
 
 public class CheckInDto {
 
+    private Long patientMedicalRecordNumber;
     private List<PatientAnswerDto> patientAnswers;
     private List<MedicationTakenDto> medicationsTaken;
     private Date when;
+
+    public Long getPatientMedicalRecordNumber() {
+        return patientMedicalRecordNumber;
+    }
+
+    public void setPatientMedicalRecordNumber(Long patientMedicalRecordNumber) {
+        this.patientMedicalRecordNumber = patientMedicalRecordNumber;
+    }
 
     public List<PatientAnswerDto> getPatientAnswers() {
         return patientAnswers;
