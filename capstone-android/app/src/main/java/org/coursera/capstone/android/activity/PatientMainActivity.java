@@ -1,6 +1,9 @@
 package org.coursera.capstone.android.activity;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.coursera.capstone.android.R;
+import org.coursera.capstone.android.alarm.CheckInAlarmReceiver;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.fragment.CheckInFragment;
 import org.coursera.capstone.android.fragment.PatientSettingsFragment;
@@ -20,12 +24,18 @@ import org.coursera.capstone.android.parcelable.User;
 import org.coursera.capstone.android.task.CheckInTask;
 import org.coursera.capstone.android.task.FetchPatientInfoTask;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class PatientMainActivity extends Activity implements FetchPatientInfoTask.PatientInfoCallbacks, CheckInFragment.OnQuestionsAnsweredListener {
 
     private Patient mPatient;
     private User mUser;
+    private CheckInAlarmReceiver mCheckInAlarm = new CheckInAlarmReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,9 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
 
         // Fetch information about the patient, such as medical record no and birth date
         new FetchPatientInfoTask(this, mUser.getAccessToken()).execute(mUser.getUsername());
+        // Setup the check-in alarms
+        setupCheckInAlarms();
+        Log.i(CapstoneConstants.LOG_TAG, "PatientMainActivity created");
     }
 
 
@@ -88,5 +101,47 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
     public void onAllQuestionsAnswered(CheckIn checkInData) {
         new CheckInTask(mUser.getAccessToken()).execute(checkInData);
         //finish();
+    }
+
+    /**
+     * Sets up the check in alarms based on the users preference
+     */
+    private void setupCheckInAlarms() {
+        List<Calendar> alarms = getAlarms(this);
+        for (int i = 0; i < alarms.size(); i++) {
+            // The pending intent with id to execute on the selected time
+            Intent intent = new Intent(this, CheckInAlarmReceiver.class);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            mCheckInAlarm.setAlarm(this, alarmIntent, alarms.get(i));
+        }
+    }
+
+    /**
+     * Get a list with alarm dates
+     *
+     * @param ctx
+     * @return A list of Calendar objects
+     */
+    public static List<Calendar> getAlarms(Context ctx) {
+        List<Calendar> result = new ArrayList<Calendar>();
+        Set<String> alarmSet = PreferenceManager.getDefaultSharedPreferences(ctx)
+                .getStringSet(CapstoneConstants.PREFERENCES_PATIENT_REMINDERS, new HashSet<String>());
+        String[] alarms = alarmSet.toArray(new String[alarmSet.size()]);
+        for (int i = 0; i < alarms.length; i++) {
+            Log.i(CapstoneConstants.LOG_TAG, "Setting up alarm at " + alarms[i]);
+
+            // The time is in format HH:mm
+            String[] hourMinute = alarms[i].split(":");
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hourMinute[0]));
+            c.set(Calendar.MINUTE, Integer.parseInt(hourMinute[1]));
+            // If the time is in the pass, we need to add an extra day so the intent won't be executed
+            // right away
+            if (c.before(Calendar.getInstance())) {
+                c.add(Calendar.DATE, c.get(Calendar.DATE) + 1);
+            }
+            result.add(c);
+        }
+        return result;
     }
 }

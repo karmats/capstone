@@ -32,6 +32,10 @@
     <string name="pref_title_patient_medical_no">Medical record no</string>
     <string name="pref_title_patient_doctor_name">My doctor</string>
 
+    <!-- Patient notification -->
+    <string name="alarm_notification_title">Time for check-in</string>
+    <string name="alarm_notification_msg">Click to answer the questions</string>
+
     <!-- Time picker dialog -->
     <string name="timepicker_cancel_btn">Cancel</string>
     <string name="timepicker_ok_btn">Set</string>
