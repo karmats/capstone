@@ -23,6 +23,11 @@
     <string name="patient_answer_yes">Yes</string>
     <string name="patient_answer_no">No</string>
 
+    <!-- Doctor main activity -->
+    <string name="doctor_patient_alerts_title">Alerts</string>
+    <string name="doctor_patient_check_ins_title">Check-ins</string>
+    <string name="doctor_patient_medications_title">Medication</string>
+
     <!-- Patient preferences -->
     <string name="pref_user_title">My Information</string>
     <string name="pref_alarms_title">My Reminders</string>
@@ -39,5 +44,6 @@
     <!-- Time picker dialog -->
     <string name="timepicker_cancel_btn">Cancel</string>
     <string name="timepicker_ok_btn">Set</string>
+    <string name="title_activity_doctor_patient_details_fragment">DoctorPatientDetailsFragment</string>
 
 </resources>

@@ -1,8 +1,8 @@
 package org.coursera.capstone.android.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +44,6 @@ public class ListDoctorPatientsFragment extends Fragment implements AbsListView.
      */
     private ListAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
     public static ListDoctorPatientsFragment newInstance(ArrayList<Patient> patients) {
         ListDoctorPatientsFragment fragment = new ListDoctorPatientsFragment();
         Bundle args = new Bundle();
@@ -68,7 +67,6 @@ public class ListDoctorPatientsFragment extends Fragment implements AbsListView.
             mPatients = getArguments().getParcelableArrayList(PATIENTS_PARAM);
         }
 
-        // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<Patient>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, mPatients);
     }
@@ -135,7 +133,6 @@ public class ListDoctorPatientsFragment extends Fragment implements AbsListView.
      * activity.
      */
     public interface OnPatientSelectedListener {
-        // TODO: Update argument type and name
         public void onPatientSelected(Patient patient);
     }
 

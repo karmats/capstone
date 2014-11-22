@@ -1,14 +1,15 @@
 package org.coursera.capstone.android.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.fragment.DoctorPatientDetailsFragment;
 import org.coursera.capstone.android.fragment.ListDoctorPatientsFragment;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.User;
@@ -17,7 +18,7 @@ import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorMainActivity extends Activity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks, ListDoctorPatientsFragment.OnPatientSelectedListener {
+public class DoctorMainActivity extends FragmentActivity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks, ListDoctorPatientsFragment.OnPatientSelectedListener {
 
     private User mUser;
 
@@ -30,7 +31,6 @@ public class DoctorMainActivity extends Activity implements FetchDoctorPatientsT
         String userJsonString = PreferenceManager.getDefaultSharedPreferences(DoctorMainActivity.this)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
         mUser = User.fromJsonString(userJsonString);
-
 
         new FetchDoctorPatientsTask(this, mUser.getAccessToken()).execute(mUser.getUsername());
     }
@@ -59,8 +59,9 @@ public class DoctorMainActivity extends Activity implements FetchDoctorPatientsT
     @Override
     public void onPatientsFetched(List<Patient> patients) {
         Log.i(CapstoneConstants.LOG_TAG, "Success got " + patients.size() + " patients");
-        getFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
-                ListDoctorPatientsFragment.newInstance(new ArrayList<Patient>(patients))).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
+                ListDoctorPatientsFragment.newInstance(new ArrayList<Patient>(patients))).addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -71,5 +72,7 @@ public class DoctorMainActivity extends Activity implements FetchDoctorPatientsT
     @Override
     public void onPatientSelected(Patient patient) {
         Log.i(CapstoneConstants.LOG_TAG, patient.getFirstName() + " selected");
+        getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
+                DoctorPatientDetailsFragment.newInstance(patient)).addToBackStack(null).commit();
     }
 }
