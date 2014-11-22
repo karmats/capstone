@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -121,7 +122,7 @@ public class DoctorPatientDetailsFragment extends Fragment implements ActionBar.
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         private static final int TOTAL_PAGES = 3;
 
@@ -141,23 +142,25 @@ public class DoctorPatientDetailsFragment extends Fragment implements ActionBar.
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            Log.i(CapstoneConstants.LOG_TAG, "Will return item at position" + position);
             switch (position) {
                 case ALERTS_PAGE:
                     if (mAlertsFragment == null) {
-                        mAlertsFragment = PlaceholderFragment.newInstance(position + 1);
+                        mAlertsFragment = PlaceholderFragment.newInstance(
+                                getString(R.string.doctor_patient_alerts_title));
                     }
                     Log.i(CapstoneConstants.LOG_TAG, "Returning alerts");
                     return mAlertsFragment;
                 case CHECK_IN_PAGE:
                     if (mCheckInsFragment == null) {
-                        mCheckInsFragment = PlaceholderFragment.newInstance(position + 1);
+                        mCheckInsFragment = PlaceholderFragment.newInstance(
+                                getString(R.string.doctor_patient_check_ins_title));
                     }
                     Log.i(CapstoneConstants.LOG_TAG, "Returning check ins");
                     return mCheckInsFragment;
                 case MEDICATIONS_PAGE:
                     if (mMedicationsFragment == null) {
-                        mMedicationsFragment = PlaceholderFragment.newInstance(position + 1);
+                        mMedicationsFragment = PlaceholderFragment.newInstance(
+                                getString(R.string.doctor_patient_medications_title));
                     }
                     Log.i(CapstoneConstants.LOG_TAG, "Returning medications");
                     return mMedicationsFragment;
@@ -194,16 +197,16 @@ public class DoctorPatientDetailsFragment extends Fragment implements ActionBar.
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String SECTION_TEXT_PARAM = "section_text_param";
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(String sectionText) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putString(SECTION_TEXT_PARAM, sectionText);
             fragment.setArguments(args);
             return fragment;
         }
@@ -216,7 +219,7 @@ public class DoctorPatientDetailsFragment extends Fragment implements ActionBar.
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_doctor_patient_details, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText("Section: " + getArguments().getInt(ARG_SECTION_NUMBER));
+            textView.setText("Section: " + getArguments().getString(SECTION_TEXT_PARAM));
             return rootView;
         }
     }
