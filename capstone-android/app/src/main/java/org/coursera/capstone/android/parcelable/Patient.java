@@ -79,4 +79,9 @@ public class Patient extends User {
     public void setMedications(List<PainMedication> medications) {
         this.medications = medications;
     }
+
+    @Override
+    public String toString() {
+        return this.getFirstName() + " " + this.getLastName();
+    }
 }

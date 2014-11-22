@@ -82,7 +82,7 @@ public class WelcomePatientFragment extends Fragment implements FetchQuestionsTa
     public void onQuestionSuccess(List<Question> questions) {
         Log.i(CapstoneConstants.LOG_TAG, "Got " + questions.size() + " questions");
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, CheckInFragment.newInstance(new ArrayList<Question>(questions), mPatient))
+                .replace(R.id.patient_fragment_container, CheckInFragment.newInstance(new ArrayList<Question>(questions), mPatient))
                 .addToBackStack(null).commit();
     }
 

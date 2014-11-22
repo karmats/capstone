@@ -42,7 +42,7 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_main);
 
-        // Get the patient name from shared preferences
+        // Get the user information from shared preferences
         String userJsonString = PreferenceManager.getDefaultSharedPreferences(PatientMainActivity.this)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
         mUser = User.fromJsonString(userJsonString);
@@ -67,7 +67,7 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new PatientSettingsFragment())
+                    .replace(R.id.patient_fragment_container, new PatientSettingsFragment())
                     .addToBackStack(null).commit();
             return true;
         }
@@ -88,7 +88,7 @@ public class PatientMainActivity extends Activity implements FetchPatientInfoTas
         prefEditor.commit();
         // Start the welcome fragment
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, WelcomePatientFragment.newInstance(mPatient))
+                .replace(R.id.patient_fragment_container, WelcomePatientFragment.newInstance(mPatient))
                 .commit();
     }
 

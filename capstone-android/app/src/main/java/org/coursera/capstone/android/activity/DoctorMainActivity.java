@@ -6,36 +6,33 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.fragment.ListDoctorPatientsFragment;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.User;
 import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorMainActivity extends Activity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks {
+public class DoctorMainActivity extends Activity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks, ListDoctorPatientsFragment.OnPatientSelectedListener {
 
-    private TextView mWelcomeText;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_main);
 
-        // Get the patient name from shared preferences
+        // Get the user information from shared preferences
         String userJsonString = PreferenceManager.getDefaultSharedPreferences(DoctorMainActivity.this)
                 .getString(CapstoneConstants.PREFERENCES_USER, "");
-        User user = User.fromJsonString(userJsonString);
+        mUser = User.fromJsonString(userJsonString);
 
-        mWelcomeText = (TextView) findViewById(R.id.doctor_welcome_text);
-        String welcomeText = getString(R.string.welcome_doctor, user.getFirstName() + " " + user.getLastName(),
-                user.getAccessToken());
-        mWelcomeText.append(welcomeText);
-        mWelcomeText.append("\n\nPatients ftw:\n");
-        new FetchDoctorPatientsTask(this, user.getAccessToken()).execute(user.getUsername());
+
+        new FetchDoctorPatientsTask(this, mUser.getAccessToken()).execute(mUser.getUsername());
     }
 
 
@@ -62,13 +59,17 @@ public class DoctorMainActivity extends Activity implements FetchDoctorPatientsT
     @Override
     public void onPatientsFetched(List<Patient> patients) {
         Log.i(CapstoneConstants.LOG_TAG, "Success got " + patients.size() + " patients");
-        for (Patient p : patients) {
-            mWelcomeText.append(p.getFirstName() + " " + p.getLastName() + "\n");
-        }
+        getFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
+                ListDoctorPatientsFragment.newInstance(new ArrayList<Patient>(patients))).commit();
     }
 
     @Override
     public void onPatientsFetchFail(String error) {
         Log.e(CapstoneConstants.LOG_TAG, error);
+    }
+
+    @Override
+    public void onPatientSelected(Patient patient) {
+        Log.i(CapstoneConstants.LOG_TAG, patient.getFirstName() + " selected");
     }
 }
