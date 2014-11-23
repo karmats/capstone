@@ -27,6 +27,8 @@
     <string name="doctor_patient_alerts_title">Alerts</string>
     <string name="doctor_patient_check_ins_title">Check-ins</string>
     <string name="doctor_patient_medications_title">Medication</string>
+    <string name="doctor_patient_status_ok_title">All good</string>
+    <string name="doctor_patient_status_ok_text">This patient feels ok</string>
 
     <!-- Patient preferences -->
     <string name="pref_user_title">My Information</string>
