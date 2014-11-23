@@ -57,7 +57,6 @@ public class CheckInController {
     @RequestMapping(value = SymptomManagementApi.CHECK_IN_SVC_PATH, method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     public void checkIn(@RequestBody CheckInDto checkIn) {
-        System.out.println("Got check in data for " + checkIn.getPatientMedicalRecordNumber());
         CheckIn checkInEntity = new CheckIn();
         checkInEntity.setWhen(checkIn.getWhen());
         // The patient made the check-in
