@@ -38,33 +38,37 @@ public class CheckInAlarmReceiver extends WakefulBroadcastReceiver {
     }
 
     /**
-     * Sets a repeating alarm that runs once a day at approximately 8:30 a.m. When the
-     * alarm fires, the app broadcasts an Intent to this WakefulBroadcastReceiver.
+     * Sets a repeating alarm that runs once a day at approximately given time. When the
+     * alarm fires, the app broadcasts an the given alarmIntent.
      *
      * @param context     The context
      * @param alarmIntent The pending intent that is triggered when the alarm fires.
      * @param calendar    When the intent should be executed
      */
     public void setAlarm(Context context, PendingIntent alarmIntent, Calendar calendar) {
-        Log.i(CapstoneConstants.LOG_TAG, "Setting up the alarm");
-
-        alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+        if (alarmMgr == null) {
+            alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        }
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
                 calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
-        // Enable {@code SampleBootReceiver} to automatically restart the alarm when the
+        // Enable AlarmBootReceiver to automatically restart the alarm when the
         // device is rebooted.
         ComponentName receiver = new ComponentName(context, AlarmBootReceiver.class);
         PackageManager pm = context.getPackageManager();
+        if (pm.getComponentEnabledSetting(receiver) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
 
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP);
     }
 
     private void sendNotification(Context ctx) {
-        mNotificationManager = (NotificationManager)
-                ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (mNotificationManager == null) {
+            mNotificationManager = (NotificationManager)
+                    ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
 
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
                 new Intent(ctx, PatientMainActivity.class), 0);

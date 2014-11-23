@@ -1,6 +1,5 @@
 package org.coursera.capstone.android.activity;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -37,22 +36,35 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
     private Patient mPatient;
     private User mUser;
     private CheckInAlarmReceiver mCheckInAlarm = new CheckInAlarmReceiver();
+    // Listener for patient reminders changes
+    private SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_main);
 
+        // Register a listener for shared preference updates, there is a need for setting up the alarms
+        // again if the user has changed the times
+        mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (CapstoneConstants.PREFERENCES_PATIENT_REMINDERS.equals(key)) {
+                    Log.i(CapstoneConstants.LOG_TAG, "Patient has changed the reminders, resetting the alarms");
+                    setupCheckInAlarms();
+                }
+            }
+        };
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
         // Get the user information from shared preferences
-        String userJsonString = PreferenceManager.getDefaultSharedPreferences(PatientMainActivity.this)
-                .getString(CapstoneConstants.PREFERENCES_USER, "");
+        String userJsonString = sharedPreferences.getString(CapstoneConstants.PREFERENCES_USER, "");
         mUser = User.fromJsonString(userJsonString);
 
         // Fetch information about the patient, such as medical record no and birth date
         new FetchPatientInfoTask(this, mUser.getAccessToken()).execute(mUser.getUsername());
         // Setup the check-in alarms
         setupCheckInAlarms();
-        Log.i(CapstoneConstants.LOG_TAG, "PatientMainActivity created");
     }
 
 
@@ -79,7 +91,7 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
     public void onPatientFetched(Patient p) {
         mPatient = p;
         // Store the patient in preference editor
-        SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(PatientMainActivity.this).edit();
+        SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         prefEditor.putString(CapstoneConstants.PREFERENCES_NAME, p.getFirstName() + " " + p.getLastName());
         prefEditor.putString(CapstoneConstants.PREFERENCES_DATE_OF_BIRTH,
                 DateFormat.getDateFormat(PatientMainActivity.this).format(new Date(p.getBirthDate())));
@@ -104,6 +116,16 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
         //finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
     /**
      * Sets up the check in alarms based on the users preference
      */
@@ -112,7 +134,7 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
         for (int i = 0; i < alarms.size(); i++) {
             // The pending intent with id to execute on the selected time
             Intent intent = new Intent(this, CheckInAlarmReceiver.class);
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(this, i, intent, 0);
             mCheckInAlarm.setAlarm(this, alarmIntent, alarms.get(i));
         }
     }
@@ -129,8 +151,6 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
                 .getStringSet(CapstoneConstants.PREFERENCES_PATIENT_REMINDERS, new HashSet<String>());
         String[] alarms = alarmSet.toArray(new String[alarmSet.size()]);
         for (int i = 0; i < alarms.length; i++) {
-            Log.i(CapstoneConstants.LOG_TAG, "Setting up alarm at " + alarms[i]);
-
             // The time is in format HH:mm
             String[] hourMinute = alarms[i].split(":");
             Calendar c = Calendar.getInstance();
