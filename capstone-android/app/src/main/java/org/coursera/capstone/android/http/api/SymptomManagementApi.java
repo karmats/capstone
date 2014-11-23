@@ -2,6 +2,7 @@ package org.coursera.capstone.android.http.api;
 
 import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.parcelable.Doctor;
+import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
 import org.coursera.capstone.android.parcelable.User;
@@ -24,7 +25,7 @@ public interface SymptomManagementApi {
     public static final String USERNAME_PARAMETER = "username";
 
     // Service host
-    public static final String HOST = "https://192.168.1.76:8443";
+    public static final String HOST = "https://192.168.1.77:8443";
 
     // Login service oauth2
     public static final String TOKEN_PATH = "/oauth/token";
@@ -45,6 +46,8 @@ public interface SymptomManagementApi {
     public static final String USER_INFO_SVC_PATH = "/user";
     // The path where we expect the check in service to live
     public static final String CHECK_IN_SVC_PATH = "/checkin";
+    // The path where we expect the pain medication service to live
+    public static final String PAIN_MEDICATION_SVC_PATH = "/medication";
 
     // The path to search patients by name
     public static final String PATIENT_NAME_SEARCH_PATH = PATIENT_SVC_PATH + "/search/findByName";
@@ -75,5 +78,8 @@ public interface SymptomManagementApi {
 
     @POST(CHECK_IN_SVC_PATH)
     Response checkIn(@Body CheckIn checkIn);
+
+    @GET(PAIN_MEDICATION_SVC_PATH)
+    List<PainMedication> getPainMedications();
 
 }

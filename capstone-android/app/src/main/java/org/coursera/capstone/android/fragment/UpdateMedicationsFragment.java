@@ -15,6 +15,8 @@ import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -25,8 +27,10 @@ import org.coursera.capstone.android.parcelable.Patient;
  */
 public class UpdateMedicationsFragment extends Fragment {
     private static final String PATIENT_PARAM = "patient_param";
+    private static final String PAIN_MEDICATIONS_PARAM = "pain_medications_param";
 
     private Patient mPatient;
+    private ArrayList<PainMedication> mAvailableMedications;
 
     private OnUpdateMedicationsListener mListener;
 
@@ -34,13 +38,15 @@ public class UpdateMedicationsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param patient The patient to update the medications for.
+     * @param patient         The patient to update the medications for.
+     * @param painMedications All available pain medications
      * @return A new instance of fragment UpdateMedicationsFragment.
      */
-    public static UpdateMedicationsFragment newInstance(Patient patient) {
+    public static UpdateMedicationsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications) {
         UpdateMedicationsFragment fragment = new UpdateMedicationsFragment();
         Bundle args = new Bundle();
         args.putParcelable(PATIENT_PARAM, patient);
+        args.putParcelableArrayList(PAIN_MEDICATIONS_PARAM, painMedications);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,6 +59,7 @@ public class UpdateMedicationsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
+            mAvailableMedications = getArguments().getParcelableArrayList(PAIN_MEDICATIONS_PARAM);
         }
     }
 
@@ -62,10 +69,11 @@ public class UpdateMedicationsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_update_medications, container, false);
         LinearLayout checkboxContainer = (LinearLayout) v.findViewById(R.id.update_medication_checkbox_container);
         Log.i(CapstoneConstants.LOG_TAG, "Adding " + mPatient.getMedications().size());
-        for (PainMedication pm : mPatient.getMedications()) {
+        for (PainMedication pm : mAvailableMedications) {
             CheckBox cb = new CheckBox(getActivity());
             cb.setText(pm.getName());
-            cb.setChecked(true);
+            // Set to checked if the patient takes this medication
+            cb.setChecked(mPatient.getMedications().contains(pm));
             checkboxContainer.addView(cb);
         }
         return v;

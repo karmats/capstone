@@ -56,4 +56,13 @@ public class PainMedication implements Parcelable {
     public void setMedicationId(String medicationId) {
         this.medicationId = medicationId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof PainMedication) {
+            PainMedication that = (PainMedication) o;
+            return that.getMedicationId().equals(this.getMedicationId());
+        }
+        return super.equals(o);
+    }
 }

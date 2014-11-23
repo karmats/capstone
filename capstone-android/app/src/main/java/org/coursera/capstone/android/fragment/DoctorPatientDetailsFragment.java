@@ -15,14 +15,18 @@ import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class DoctorPatientDetailsFragment extends Fragment {
     private static String PATIENT_PARAM = "patient_param";
+    private static String PAIN_MEDICATIONS_PARAM = "pain_medications_param";
 
     private Patient mPatient;
+    private ArrayList<PainMedication> mAllPainMedications;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -31,10 +35,11 @@ public class DoctorPatientDetailsFragment extends Fragment {
      */
     ViewPager mViewPager;
 
-    public static DoctorPatientDetailsFragment newInstance(Patient patient) {
+    public static DoctorPatientDetailsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications) {
         DoctorPatientDetailsFragment fragment = new DoctorPatientDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(PATIENT_PARAM, patient);
+        args.putParcelableArrayList(PAIN_MEDICATIONS_PARAM, painMedications);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,6 +53,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
 
         if (getArguments() != null) {
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
+            mAllPainMedications = getArguments().getParcelableArrayList(PAIN_MEDICATIONS_PARAM);
         }
     }
 
@@ -104,7 +110,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
                     return mCheckInsFragment;
                 case MEDICATIONS_PAGE:
                     if (mMedicationsFragment == null) {
-                        mMedicationsFragment = UpdateMedicationsFragment.newInstance(mPatient);
+                        mMedicationsFragment = UpdateMedicationsFragment.newInstance(mPatient, mAllPainMedications);
                     }
                     Log.i(CapstoneConstants.LOG_TAG, "Returning medications");
                     return mMedicationsFragment;
