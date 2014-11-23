@@ -9,6 +9,7 @@ import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.fragment.DoctorPatientDetailsFragment;
 import org.coursera.capstone.android.fragment.ListDoctorPatientsFragment;
+import org.coursera.capstone.android.fragment.UpdateMedicationsFragment;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.User;
 import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
@@ -16,7 +17,8 @@ import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorMainActivity extends FragmentActivity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks, ListDoctorPatientsFragment.OnPatientSelectedListener {
+public class DoctorMainActivity extends FragmentActivity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks,
+                    ListDoctorPatientsFragment.OnPatientSelectedListener, UpdateMedicationsFragment.OnUpdateMedicationsListener {
 
     private User mUser;
 
@@ -53,4 +55,10 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
         getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
                 DoctorPatientDetailsFragment.newInstance(patient)).addToBackStack(null).commit();
     }
+
+    @Override
+    public void onMedicationUpdate(Patient patient) {
+        Log.i(CapstoneConstants.LOG_TAG, "Medications update");
+    }
+
 }

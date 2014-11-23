@@ -11,11 +11,9 @@
     <string name="error_server">There seems to be something wrong with the server, please try again later</string>
 
     <!-- Patient main activity -->
-    <string name="title_activity_patient_main">My Settings</string>
     <string name="welcome_patient">Welcome patient %1$s, you have token %2$s</string>
     <string name="welcome_doctor">Welcome doctor %1$s, you have token %2$s</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_doctor_main">DoctorMainActivity</string>
     <string name="patient_start_btn">Start</string>
     <string name="patient_welcome_txt">Welcome to the symptom management app</string>
     <string name="patient_howto_txt">To start click the "Start"-button below</string>
@@ -29,6 +27,9 @@
     <string name="doctor_patient_medications_title">Medication</string>
     <string name="doctor_patient_status_ok_title">All good</string>
     <string name="doctor_patient_status_ok_text">This patient feels ok</string>
+
+    <!-- Update medications fragment -->
+    <string name="update_medications_ok_btn">Update</string>
 
     <!-- Patient preferences -->
     <string name="pref_user_title">My Information</string>
@@ -46,6 +47,6 @@
     <!-- Time picker dialog -->
     <string name="timepicker_cancel_btn">Cancel</string>
     <string name="timepicker_ok_btn">Set</string>
-    <string name="title_activity_doctor_patient_details_fragment">DoctorPatientDetailsFragment</string>
+    <string name="title_activity_doctor_patient_details_fragment">Patient details</string>
 
 </resources>

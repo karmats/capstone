@@ -1,6 +1,5 @@
 package org.coursera.capstone.android.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -85,7 +84,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
         private static final int MEDICATIONS_PAGE = 1;
 
         private PlaceholderFragment mCheckInsFragment;
-        private PlaceholderFragment mMedicationsFragment;
+        private UpdateMedicationsFragment mMedicationsFragment;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -105,8 +104,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
                     return mCheckInsFragment;
                 case MEDICATIONS_PAGE:
                     if (mMedicationsFragment == null) {
-                        mMedicationsFragment = PlaceholderFragment.newInstance(
-                                getString(R.string.doctor_patient_medications_title));
+                        mMedicationsFragment = UpdateMedicationsFragment.newInstance(mPatient);
                     }
                     Log.i(CapstoneConstants.LOG_TAG, "Returning medications");
                     return mMedicationsFragment;

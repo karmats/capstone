@@ -25,6 +25,7 @@
 
     <Button
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        style="@style/GreenButton"
         android:id="@+id/patient_next_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

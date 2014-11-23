@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="pager_tab_indicator">#33b5e5</color>
+    <color name="white">#fff</color>
+    <color name="green_btn">#429b46</color>
 </resources>
