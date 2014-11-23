@@ -22,6 +22,7 @@ import org.coursera.capstone.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -92,5 +93,12 @@ public class CheckInController {
     @RequestMapping(value = SymptomManagementApi.CHECK_IN_SVC_PATH, method = RequestMethod.GET)
     public @ResponseBody Collection<CheckIn> getAllCheckIns() {
         return Lists.newArrayList(checkInRepo.findAll());
+    }
+
+    @RequestMapping(value = SymptomManagementApi.CHECK_IN_PATIENT_SVC_PATH, method = RequestMethod.GET)
+    public @ResponseBody Collection<CheckIn> getCheckInsForPatient(
+            @PathVariable(SymptomManagementApi.USERNAME_PARAMETER) String username) {
+        Collection<CheckIn> checkIns = checkInRepo.findByPatientUsername(username);
+        return checkIns;
     }
 }

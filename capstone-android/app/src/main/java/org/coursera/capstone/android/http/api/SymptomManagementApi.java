@@ -47,6 +47,8 @@ public interface SymptomManagementApi {
     public static final String USER_INFO_SVC_PATH = "/user";
     // The path where we expect the check in service to live
     public static final String CHECK_IN_SVC_PATH = "/checkin";
+    // The path where we expect the check in patient service to live
+    public static final String CHECK_IN_PATIENT_SVC_PATH = "/checkin" + "/{username}";
     // The path where we expect the pain medication service to live
     public static final String PAIN_MEDICATION_SVC_PATH = "/medication";
     // The path where we expect the update pain medication service to live
