@@ -6,6 +6,8 @@ import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
 import org.coursera.capstone.android.parcelable.CheckIn;
 
+import retrofit.client.Response;
+
 /**
  * Task for posting a check in
  */
@@ -20,8 +22,7 @@ public class CheckInTask extends AsyncTask<CheckIn, Void, Boolean> {
     @Override
     protected Boolean doInBackground(CheckIn... params) {
         SymptomManagementApi api = SymptomManagementApiBuilder.newInstance(mAccessToken);
-        api.checkIn(params[0]);
-        // TODO Return something else
-        return true;
+        Response response = api.checkIn(params[0]);
+        return response.getStatus() == 200;
     }
 }

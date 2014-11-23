@@ -30,6 +30,7 @@
 
     <!-- Update medications fragment -->
     <string name="update_medications_ok_btn">Update</string>
+    <string name="update_medications_success">Patient medication plan has been updated</string>
 
     <!-- Patient preferences -->
     <string name="pref_user_title">My Information</string>

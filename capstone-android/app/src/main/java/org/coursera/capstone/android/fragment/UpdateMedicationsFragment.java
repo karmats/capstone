@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
@@ -16,6 +17,7 @@ import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,8 +69,7 @@ public class UpdateMedicationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_update_medications, container, false);
-        LinearLayout checkboxContainer = (LinearLayout) v.findViewById(R.id.update_medication_checkbox_container);
-        Log.i(CapstoneConstants.LOG_TAG, "Adding " + mPatient.getMedications().size());
+        final LinearLayout checkboxContainer = (LinearLayout) v.findViewById(R.id.update_medication_checkbox_container);
         for (PainMedication pm : mAvailableMedications) {
             CheckBox cb = new CheckBox(getActivity());
             cb.setText(pm.getName());
@@ -76,6 +77,26 @@ public class UpdateMedicationsFragment extends Fragment {
             cb.setChecked(mPatient.getMedications().contains(pm));
             checkboxContainer.addView(cb);
         }
+        Button submitBtn = (Button) v.findViewById(R.id.update_medications_btn);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<PainMedication> updatedPainMedications = new ArrayList<PainMedication>();
+                // See which checkboxes that are checked
+                for (int i = 0; i < checkboxContainer.getChildCount(); i++) {
+                    CheckBox cb = (CheckBox) checkboxContainer.getChildAt(i);
+                    if (cb.isChecked()) {
+                        for (PainMedication pm : mAvailableMedications) {
+                            if (pm.getName().equals(cb.getText())) {
+                                updatedPainMedications.add(pm);
+                                break;
+                            }
+                        }
+                    }
+                }
+                mListener.onMedicationUpdate(mPatient, updatedPainMedications);
+            }
+        });
         return v;
     }
 
@@ -103,7 +124,7 @@ public class UpdateMedicationsFragment extends Fragment {
      * activity.
      */
     public interface OnUpdateMedicationsListener {
-        public void onMedicationUpdate(Patient patient);
+        public void onMedicationUpdate(Patient patient, List<PainMedication> painMedications);
     }
 
 }

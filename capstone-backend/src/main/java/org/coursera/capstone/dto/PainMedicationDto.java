@@ -7,6 +7,9 @@ public class PainMedicationDto {
     private String name;
     private String medicationId;
 
+    public PainMedicationDto() {
+    }
+
     public PainMedicationDto(String name, String medicationId) {
         this.name = name;
         this.medicationId = medicationId;

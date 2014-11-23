@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"></LinearLayout>
 
     <Button
+        android:id="@+id/update_medications_btn"
         android:layout_alignParentBottom="true"
         android:text="@string/update_medications_ok_btn"
         style="@style/GreenButton"

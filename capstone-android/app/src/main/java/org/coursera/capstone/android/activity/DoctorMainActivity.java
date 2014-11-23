@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
@@ -15,13 +16,14 @@ import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.User;
 import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
 import org.coursera.capstone.android.task.FetchPainMedicationsTask;
+import org.coursera.capstone.android.task.UpdatePainMedicationsTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DoctorMainActivity extends FragmentActivity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks,
         ListDoctorPatientsFragment.OnPatientSelectedListener, UpdateMedicationsFragment.OnUpdateMedicationsListener,
-        FetchPainMedicationsTask.FetchPainMedicationsCallback {
+        FetchPainMedicationsTask.FetchPainMedicationsCallback, UpdatePainMedicationsTask.UpdatePainMedicationsCallback {
 
     private User mUser;
     private Patient mCurrentPatient;
@@ -79,8 +81,19 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     }
 
     @Override
-    public void onMedicationUpdate(Patient patient) {
-        Log.i(CapstoneConstants.LOG_TAG, "Medications update");
+    public void onMedicationUpdate(Patient patient, List<PainMedication> painMedications) {
+        new UpdatePainMedicationsTask(mUser.getAccessToken(), this).execute(
+                new UpdatePainMedicationsTask.UpdatePainMedicationRequest(patient.getUsername(), painMedications));
     }
 
+    @Override
+    public void onUpdateMedicationsSuccess() {
+        Log.i(CapstoneConstants.LOG_TAG, "Yay, medication update was a success");
+        Toast.makeText(this, getString(R.string.update_medications_success), Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onUpdateMedicationsFailure(String error) {
+        Log.e(CapstoneConstants.LOG_TAG, error);
+    }
 }

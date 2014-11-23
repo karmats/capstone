@@ -13,6 +13,7 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -48,6 +49,8 @@ public interface SymptomManagementApi {
     public static final String CHECK_IN_SVC_PATH = "/checkin";
     // The path where we expect the pain medication service to live
     public static final String PAIN_MEDICATION_SVC_PATH = "/medication";
+    // The path where we expect the update pain medication service to live
+    public static final String PAIN_MEDICATION_UPDATE_SVC_PATH = PAIN_MEDICATION_SVC_PATH + "/{username}";
 
     // The path to search patients by name
     public static final String PATIENT_NAME_SEARCH_PATH = PATIENT_SVC_PATH + "/search/findByName";
@@ -81,5 +84,9 @@ public interface SymptomManagementApi {
 
     @GET(PAIN_MEDICATION_SVC_PATH)
     List<PainMedication> getPainMedications();
+
+    @PUT(PAIN_MEDICATION_UPDATE_SVC_PATH)
+    Response updatePainMedications(@Path(USERNAME_PARAMETER) String username,
+                                   @Body List<PainMedication> updatedPainMedications);
 
 }

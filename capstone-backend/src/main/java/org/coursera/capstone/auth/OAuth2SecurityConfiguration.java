@@ -94,6 +94,8 @@ public class OAuth2SecurityConfiguration {
             // Only doctors should have access to doctor api
             http.authorizeRequests().antMatchers(HttpMethod.GET, "/doctor")
                     .hasRole(User.UserAuthority.DOCTOR.getRole());
+            http.authorizeRequests().antMatchers(HttpMethod.PUT, "/medication/*")
+                    .hasRole(User.UserAuthority.DOCTOR.getRole());
             // Require all other GET requests to have client "read" scope
             http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasScope('read')");
 
