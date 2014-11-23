@@ -32,7 +32,9 @@ public class InitialTestData {
     public static List<Patient> createTestPatients(Doctor doctor, List<PainMedication> meds) {
         List<Patient> patients = new ArrayList<Patient>();
         patients.add(new Patient("janedoe", 100, "Jane", "Doe", new Date(), doctor));
-        patients.get(0).setPainMedications(meds);
+        List<PainMedication> pm = new ArrayList<>();
+        pm.add(meds.get(0));
+        patients.get(0).setPainMedications(pm);
         patients.add(new Patient("johndoe", 101, "John", "Doe", new Date(), doctor));
         return patients;
     }
@@ -57,6 +59,8 @@ public class InitialTestData {
     public static List<PainMedication> createPainMedications() {
         List<PainMedication> medications = new ArrayList<PainMedication>();
         medications.add(new PainMedication("abc123", "Treo"));
+        medications.add(new PainMedication("def456", "Lortab"));
+        medications.add(new PainMedication("ghi789", "OxyContin"));
         return medications;
     }
 }
