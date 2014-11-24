@@ -3,12 +3,29 @@ package org.coursera.capstone.dto;
 import java.util.Date;
 import java.util.List;
 
-public class CheckInDto {
+/**
+ * Request for a patient check-in
+ * 
+ * @author matros
+ *
+ */
+public class CheckInRequestDto {
 
     private Long patientMedicalRecordNumber;
     private List<PatientAnswerDto> patientAnswers;
     private List<MedicationTakenDto> medicationsTaken;
     private Date when;
+
+    public CheckInRequestDto() {
+    }
+
+    public CheckInRequestDto(Long patientMedicationRecordNumber, List<PatientAnswerDto> patientAnswers,
+            List<MedicationTakenDto> medicationsTaken, Date when) {
+        this.patientMedicalRecordNumber = patientMedicationRecordNumber;
+        this.patientAnswers = patientAnswers;
+        this.medicationsTaken = medicationsTaken;
+        this.when = when;
+    }
 
     public Long getPatientMedicalRecordNumber() {
         return patientMedicalRecordNumber;
@@ -53,6 +70,14 @@ public class CheckInDto {
         private Long questionId;
         private Long answerId;
 
+        public PatientAnswerDto() {
+        }
+
+        public PatientAnswerDto(Long questionId, Long answerId) {
+            this.questionId = questionId;
+            this.answerId = answerId;
+        }
+
         public Long getQuestionId() {
             return questionId;
         }
@@ -83,6 +108,15 @@ public class CheckInDto {
         private String medicationId;
         private boolean taken;
         private Date when;
+
+        public MedicationTakenDto() {
+        }
+
+        public MedicationTakenDto(String medicationId, boolean taken, Date when) {
+            this.medicationId = medicationId;
+            this.taken = taken;
+            this.when = when;
+        }
 
         public String getMedicationId() {
             return medicationId;

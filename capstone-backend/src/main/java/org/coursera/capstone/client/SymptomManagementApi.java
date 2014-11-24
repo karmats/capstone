@@ -1,14 +1,18 @@
 package org.coursera.capstone.client;
 
 import java.util.Collection;
+import java.util.List;
 
-import org.coursera.capstone.entity.Doctor;
-import org.coursera.capstone.entity.Patient;
+import org.coursera.capstone.dto.CheckInPatientResponseDto;
+import org.coursera.capstone.dto.CheckInRequestDto;
+import org.coursera.capstone.dto.PatientDto;
 import org.coursera.capstone.entity.Question;
 
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -54,19 +58,19 @@ public interface SymptomManagementApi {
     // The path to search videos by title
     public static final String PATIENT_NAME_SEARCH_PATH = PATIENT_SVC_PATH + "/search/findByName";
 
-    @GET(PATIENT_SVC_PATH)
-    public Collection<Patient> getPatientList();
-
-    @GET(DOCTOR_SVC_PATH)
-    public Collection<Doctor> getDoctorList();
-
-    @GET(QUESTION_SVC_PATH)
-    public Collection<Question> getQuestionList();
-
-    @POST(PATIENT_SVC_PATH)
-    public Void addPatient(@Body Patient v);
+    @GET(DOCTOR_PATIENTS_SVC_PATH)
+    public List<PatientDto> getPatientList(@Path(USERNAME_PARAMETER) String username);
 
     @GET(PATIENT_NAME_SEARCH_PATH)
-    public Collection<Patient> findByName(@Query(NAME_PARAMETER) String name);
+    public List<PatientDto> findByName(@Query(NAME_PARAMETER) String name);
+
+    @GET(QUESTION_SVC_PATH)
+    public List<Question> getQuestions();
+
+    @POST(CHECK_IN_SVC_PATH)
+    public Response checkIn(@Body CheckInRequestDto checkIn);
+
+    @GET(CHECK_IN_PATIENT_SVC_PATH)
+    public List<CheckInPatientResponseDto> getPatientCheckIn(@Path(USERNAME_PARAMETER) String username);
 
 }

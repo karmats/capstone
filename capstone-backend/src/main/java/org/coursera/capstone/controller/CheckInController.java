@@ -5,9 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.coursera.capstone.client.SymptomManagementApi;
-import org.coursera.capstone.dto.CheckInDto;
-import org.coursera.capstone.dto.CheckInDto.MedicationTakenDto;
-import org.coursera.capstone.dto.CheckInDto.PatientAnswerDto;
+import org.coursera.capstone.dto.CheckInPatientResponseDto;
+import org.coursera.capstone.dto.CheckInRequestDto;
+import org.coursera.capstone.dto.CheckInRequestDto.MedicationTakenDto;
+import org.coursera.capstone.dto.CheckInRequestDto.PatientAnswerDto;
 import org.coursera.capstone.entity.CheckIn;
 import org.coursera.capstone.entity.Patient;
 import org.coursera.capstone.entity.PatientAnswer;
@@ -53,24 +54,23 @@ public class CheckInController {
      * Saves a patient check-in
      * 
      * @param checkIn
-     *            The {@link CheckInDto} to persist
+     *            The {@link CheckInRequestDto} to persist
      */
     @RequestMapping(value = SymptomManagementApi.CHECK_IN_SVC_PATH, method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void checkIn(@RequestBody CheckInDto checkIn) {
+    public void checkIn(@RequestBody CheckInRequestDto checkIn) {
         CheckIn checkInEntity = new CheckIn();
         checkInEntity.setWhen(checkIn.getWhen());
+        checkInRepo.save(checkInEntity);
         // The patient made the check-in
         Patient p = patientRepo.findByMedicalRecordNumber(checkIn.getPatientMedicalRecordNumber());
         checkInEntity.setPatient(p);
         // The answers
         List<PatientAnswer> patientAnswers = new ArrayList<PatientAnswer>();
         for (PatientAnswerDto paDto : checkIn.getPatientAnswers()) {
-            if (paDto.getAnswerId() == null) {
-                continue;
-            }
             PatientAnswer pa = new PatientAnswer(questionRepo.findOne(paDto.getQuestionId()), answerRepo.findOne(paDto
                     .getAnswerId()));
+            pa.setAnswerCheckIn(checkInEntity);
             patientAnswerRepo.save(pa);
             patientAnswers.add(pa);
         }
@@ -81,6 +81,7 @@ public class CheckInController {
             if (mtDto.isTaken()) {
                 PatientMedicationTaken pmt = new PatientMedicationTaken(mtDto.getWhen(),
                         painMedicationRepo.findByMedicationId(mtDto.getMedicationId()));
+                pmt.setMedicationCheckIn(checkInEntity);
                 patientMedicationTakenRepo.save(pmt);
                 medicationsTaken.add(pmt);
             }
@@ -96,9 +97,13 @@ public class CheckInController {
     }
 
     @RequestMapping(value = SymptomManagementApi.CHECK_IN_PATIENT_SVC_PATH, method = RequestMethod.GET)
-    public @ResponseBody Collection<CheckIn> getCheckInsForPatient(
+    public @ResponseBody Collection<CheckInPatientResponseDto> getCheckInsForPatient(
             @PathVariable(SymptomManagementApi.USERNAME_PARAMETER) String username) {
+        List<CheckInPatientResponseDto> result = new ArrayList<>();
         Collection<CheckIn> checkIns = checkInRepo.findByPatientUsername(username);
-        return checkIns;
+        for (CheckIn checkIn : checkIns) {
+            result.add(new CheckInPatientResponseDto(checkIn));
+        }
+        return result;
     }
 }

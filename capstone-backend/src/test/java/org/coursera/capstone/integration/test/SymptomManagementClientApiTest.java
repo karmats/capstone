@@ -5,21 +5,27 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
+import java.util.Date;
+import java.util.List;
 
-import org.coursera.capstone.TestData;
+import org.coursera.capstone.InitialTestData;
 import org.coursera.capstone.client.SecuredRestBuilder;
 import org.coursera.capstone.client.SecuredRestException;
 import org.coursera.capstone.client.SymptomManagementApi;
-import org.coursera.capstone.entity.Patient;
+import org.coursera.capstone.dto.CheckInPatientResponseDto;
+import org.coursera.capstone.dto.CheckInRequestDto;
+import org.coursera.capstone.dto.PatientDto;
+import org.coursera.capstone.entity.Answer;
+import org.coursera.capstone.entity.PainMedication;
+import org.coursera.capstone.entity.Question;
 import org.junit.Test;
 
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
 import retrofit.client.ApacheClient;
-
-import com.google.gson.JsonObject;
+import retrofit.client.Response;
 
 /**
  * 
@@ -47,103 +53,61 @@ public class SymptomManagementClientApiTest {
     private final String CLIENT_ID = "mobile";
     private final String USERNAME_PATIENT = "janedoe";
     private final String PASSWORD_PATIENT = "pass";
+    private final Long PATIENT_MEDICAL_RECORD_NO = 100L;
 
     private final String TEST_URL = "https://localhost:8443";
 
-    private SymptomManagementApi smService = new SecuredRestBuilder()
+    private SymptomManagementApi doctorService = new SecuredRestBuilder()
             .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(USERNAME_DOCTOR)
             .setPassword(PASSWORD_DOCTOR).setClientId(CLIENT_ID)
             .setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient())).setEndpoint(TEST_URL)
             .setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
 
-    private SymptomManagementApi readOnlySmService = new SecuredRestBuilder()
+    private SymptomManagementApi patientService = new SecuredRestBuilder()
             .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(USERNAME_PATIENT)
             .setPassword(PASSWORD_PATIENT).setClientId(CLIENT_ID)
             .setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient())).setEndpoint(TEST_URL)
             .setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
 
-    private SymptomManagementApi invalidClientVideoService = new SecuredRestBuilder()
-            .setLoginEndpoint(TEST_URL + SymptomManagementApi.TOKEN_PATH).setUsername(UUID.randomUUID().toString())
-            .setPassword(UUID.randomUUID().toString()).setClientId(UUID.randomUUID().toString())
-            .setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient())).setEndpoint(TEST_URL)
-            .setLogLevel(LogLevel.FULL).build().create(SymptomManagementApi.class);
-
-    private Patient patient = TestData.randomPatient();
-
-    /**
-     * This test creates a Patient, adds the Patient to the SymptomManagementApi, and then checks that the Patient is
-     * included in the list when getPatientList() is called.
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testPatientAddAndList() throws Exception {
-        // Add the patient
-        smService.addPatient(patient);
-
-        // We should get back the patients that we added above
-        Collection<Patient> patients = smService.getPatientList();
-        assertTrue(patients.contains(patient));
-    }
-
     @Test
     public void onlyDoctorsShouldHaveAccessToDoctorApi() throws Exception {
         // Should be fine
-        smService.getDoctorList();
+        doctorService.getPatientList(USERNAME_DOCTOR);
         // Should fail
         try {
-            readOnlySmService.getDoctorList();
+            patientService.getPatientList(USERNAME_PATIENT);
             fail("Server should denied patient from accessing doctor api");
         } catch (RetrofitError e) {
             assert (e.getCause() instanceof SecuredRestException);
         }
     }
 
-    /**
-     * This test ensures that clients with invalid credentials cannot get access to patients.
-     * 
-     * @throws Exception
-     */
     @Test
-    public void testAccessDeniedWithIncorrectCredentials() throws Exception {
+    public void testCheckInFlow() throws Exception {
+        // Medications
+        List<PainMedication> painMedicationsInDb = InitialTestData.createPainMedications();
+        List<CheckInRequestDto.MedicationTakenDto> medications = new ArrayList<CheckInRequestDto.MedicationTakenDto>();
+        medications.add(new CheckInRequestDto.MedicationTakenDto(painMedicationsInDb.get(0).getMedicationId(), true,
+                new Date()));
+        // Questions
+        List<Question> questionsFromWs = patientService.getQuestions();
+        Question answeredQuestion = questionsFromWs.get(0);
+        Answer questionAnswer = new ArrayList<>(answeredQuestion.getAnswers()).get(0);
+        List<CheckInRequestDto.PatientAnswerDto> patientAnswers = new ArrayList<>();
+        patientAnswers.add(new CheckInRequestDto.PatientAnswerDto(answeredQuestion.getId(), questionAnswer.getId()));
+        // Patient submits a check-in
+        Response response = patientService.checkIn(new CheckInRequestDto(PATIENT_MEDICAL_RECORD_NO, patientAnswers,
+                medications, new Date()));
+        assertEquals(200, response.getStatus());
 
-        try {
-            // Add the video
-            invalidClientVideoService.addPatient(patient);
-
-            fail("The server should have prevented the client from adding a video"
-                    + " because it presented invalid client/user credentials");
-        } catch (RetrofitError e) {
-            assert (e.getCause() instanceof SecuredRestException);
-        }
-    }
-
-    /**
-     * This test ensures that read-only clients can access the patient list but not add new patients.
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testReadOnlyClientAccess() throws Exception {
-
-        Collection<Patient> videos = readOnlySmService.getPatientList();
-        assertNotNull(videos);
-
-        try {
-            // Add the patient
-            readOnlySmService.addPatient(patient);
-
-            fail("The server should have prevented the client from adding a video"
-                    + " because it is using a read-only client ID");
-        } catch (RetrofitError e) {
-            JsonObject body = (JsonObject) e.getBodyAs(JsonObject.class);
-            assertEquals("access_denied", body.get("error").getAsString());
-        }
+        // Get the created request, need the doctor service for this
+        Collection<CheckInPatientResponseDto> checkInResponse = doctorService.getPatientCheckIn(USERNAME_PATIENT);
+        assertTrue(checkInResponse.size() > 0);
     }
 
     @Test
     public void testSearchByName() throws Exception {
-        Collection<Patient> patients = smService.findByName("name");
+        Collection<PatientDto> patients = doctorService.findByName("name");
         assertNotNull(patients);
     }
 
