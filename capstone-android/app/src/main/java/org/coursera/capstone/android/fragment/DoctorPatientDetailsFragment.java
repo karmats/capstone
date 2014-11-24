@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.parcelable.CheckInResponse;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 
@@ -24,9 +25,11 @@ import java.util.Locale;
 public class DoctorPatientDetailsFragment extends Fragment {
     private static String PATIENT_PARAM = "patient_param";
     private static String PAIN_MEDICATIONS_PARAM = "pain_medications_param";
+    private static String CHECK_INS_PARAM = "check_ins_param";
 
     private Patient mPatient;
     private ArrayList<PainMedication> mAllPainMedications;
+    private ArrayList<CheckInResponse> mCheckIns;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -35,11 +38,12 @@ public class DoctorPatientDetailsFragment extends Fragment {
      */
     ViewPager mViewPager;
 
-    public static DoctorPatientDetailsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications) {
+    public static DoctorPatientDetailsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications, ArrayList<CheckInResponse> checkIns) {
         DoctorPatientDetailsFragment fragment = new DoctorPatientDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(PATIENT_PARAM, patient);
         args.putParcelableArrayList(PAIN_MEDICATIONS_PARAM, painMedications);
+        args.putParcelableArrayList(CHECK_INS_PARAM, checkIns);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,6 +58,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
         if (getArguments() != null) {
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
             mAllPainMedications = getArguments().getParcelableArrayList(PAIN_MEDICATIONS_PARAM);
+            mCheckIns = getArguments().getParcelableArrayList(CHECK_INS_PARAM);
         }
     }
 
@@ -89,7 +94,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
         private static final int CHECK_IN_PAGE = 0;
         private static final int MEDICATIONS_PAGE = 1;
 
-        private PlaceholderFragment mCheckInsFragment;
+        private ListCheckInsFragment mCheckInsFragment;
         private UpdateMedicationsFragment mMedicationsFragment;
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -103,16 +108,13 @@ public class DoctorPatientDetailsFragment extends Fragment {
             switch (position) {
                 case CHECK_IN_PAGE:
                     if (mCheckInsFragment == null) {
-                        mCheckInsFragment = PlaceholderFragment.newInstance(
-                                getString(R.string.doctor_patient_check_ins_title));
+                        mCheckInsFragment = ListCheckInsFragment.newInstance(mCheckIns);
                     }
-                    Log.i(CapstoneConstants.LOG_TAG, "Returning check ins");
                     return mCheckInsFragment;
                 case MEDICATIONS_PAGE:
                     if (mMedicationsFragment == null) {
                         mMedicationsFragment = UpdateMedicationsFragment.newInstance(mPatient, mAllPainMedications);
                     }
-                    Log.i(CapstoneConstants.LOG_TAG, "Returning medications");
                     return mMedicationsFragment;
                 default:
                     return null;

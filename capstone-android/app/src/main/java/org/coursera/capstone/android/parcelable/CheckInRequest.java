@@ -6,14 +6,14 @@ import java.util.List;
 /**
  * Describes a patient check-in
  */
-public class CheckIn {
+public class CheckInRequest {
 
     private Long patientMedicalRecordNumber;
     private List<PatientAnswer> patientAnswers;
     private List<MedicationTaken> medicationsTaken;
     private Long when;
 
-    public CheckIn() {
+    public CheckInRequest() {
         this.patientAnswers = new ArrayList<PatientAnswer>();
         this.medicationsTaken = new ArrayList<MedicationTaken>();
     }

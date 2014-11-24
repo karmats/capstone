@@ -9,11 +9,14 @@ import android.widget.Toast;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.fragment.DoctorPatientDetailsFragment;
+import org.coursera.capstone.android.fragment.ListCheckInsFragment;
 import org.coursera.capstone.android.fragment.ListDoctorPatientsFragment;
 import org.coursera.capstone.android.fragment.UpdateMedicationsFragment;
+import org.coursera.capstone.android.parcelable.CheckInResponse;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.User;
+import org.coursera.capstone.android.task.CheckInsForPatientTask;
 import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
 import org.coursera.capstone.android.task.FetchPainMedicationsTask;
 import org.coursera.capstone.android.task.UpdatePainMedicationsTask;
@@ -23,11 +26,13 @@ import java.util.List;
 
 public class DoctorMainActivity extends FragmentActivity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks,
         ListDoctorPatientsFragment.OnPatientSelectedListener, UpdateMedicationsFragment.OnUpdateMedicationsListener,
-        FetchPainMedicationsTask.FetchPainMedicationsCallback, UpdatePainMedicationsTask.UpdatePainMedicationsCallback {
+        FetchPainMedicationsTask.FetchPainMedicationsCallback, UpdatePainMedicationsTask.UpdatePainMedicationsCallback,
+        ListCheckInsFragment.OnCheckInSelectedListener, CheckInsForPatientTask.CheckInsForPatientCallback {
 
     private User mUser;
     private Patient mCurrentPatient;
     private ArrayList<PainMedication> mAllPainMedications;
+    private ArrayList<CheckInResponse> mCheckIns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,19 +65,13 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     public void onPatientSelected(Patient patient) {
         Log.i(CapstoneConstants.LOG_TAG, patient.getFirstName() + " selected");
         this.mCurrentPatient = patient;
-        if (mAllPainMedications == null) {
-            new FetchPainMedicationsTask(mUser.getAccessToken(), this).execute();
-        } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
-                    DoctorPatientDetailsFragment.newInstance(mCurrentPatient, mAllPainMedications)).addToBackStack(null).commit();
-        }
+        createDoctorPatientDetailsFragment();
     }
 
     @Override
     public void onPainMedicationsSuccess(List<PainMedication> medications) {
         mAllPainMedications = new ArrayList<PainMedication>(medications);
-        getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
-                DoctorPatientDetailsFragment.newInstance(mCurrentPatient, mAllPainMedications)).addToBackStack(null).commit();
+        createDoctorPatientDetailsFragment();
     }
 
     @Override
@@ -95,5 +94,27 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     @Override
     public void onUpdateMedicationsFailure(String error) {
         Log.e(CapstoneConstants.LOG_TAG, error);
+    }
+
+    @Override
+    public void onCheckInSelected(CheckInResponse checkIn) {
+        Log.i(CapstoneConstants.LOG_TAG, checkIn.getWhen() + " selected");
+    }
+
+    @Override
+    public void onCheckInsForPatientSuccess(List<CheckInResponse> checkInResponseList) {
+        this.mCheckIns = new ArrayList<CheckInResponse>(checkInResponseList);
+        createDoctorPatientDetailsFragment();
+    }
+
+    private void createDoctorPatientDetailsFragment() {
+        if (mAllPainMedications == null) {
+            new FetchPainMedicationsTask(mUser.getAccessToken(), this).execute();
+        } else if (mCheckIns == null) {
+            new CheckInsForPatientTask(mUser.getAccessToken(), this).execute(mCurrentPatient.getUsername());
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
+                    DoctorPatientDetailsFragment.newInstance(mCurrentPatient, mAllPainMedications, mCheckIns)).addToBackStack(null).commit();
+        }
     }
 }

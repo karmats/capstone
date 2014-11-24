@@ -16,7 +16,7 @@ import android.widget.TimePicker;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.parcelable.Answer;
-import org.coursera.capstone.android.parcelable.CheckIn;
+import org.coursera.capstone.android.parcelable.CheckInRequest;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
@@ -46,7 +46,7 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
     private Question mCurrentQuestion;
     private PainMedication mCurrentPainMedication;
     private boolean mMedicationQuestion = false;
-    private CheckIn mCheckIn;
+    private CheckInRequest mCheckIn;
 
     // Question text and answer buttons
     private TextView mQuestionText;
@@ -83,7 +83,7 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
         if (getArguments() != null) {
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
             // The check in object to send
-            mCheckIn = new CheckIn();
+            mCheckIn = new CheckInRequest();
             mCheckIn.setPatientMedicalRecordNumber(mPatient.getMedicalRecordNumber());
             mQuestions = new Stack<Question>();
             ArrayList<Question> questions = getArguments().getParcelableArrayList(QUESTIONS_PARAM);
@@ -105,7 +105,7 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_checkin, container, false);
+        View v = inflater.inflate(R.layout.fragment_patient_checkin, container, false);
         // Question and answer text and buttons
         mQuestionText = (TextView) v.findViewById(R.id.checking_question_txt);
         mAnswer1Btn = (Button) v.findViewById(R.id.checking_answer_1);
@@ -167,9 +167,9 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
         // Add the answer to the check in
         if (mMedicationQuestion && answerId == 1) {
             // User choose no, since the time picker dlg shows when choosing yes
-            mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(mCurrentPainMedication.getMedicationId(), false, null));
+            mCheckIn.getMedicationsTaken().add(new CheckInRequest.MedicationTaken(mCurrentPainMedication.getMedicationId(), false, null));
         } else {
-            mCheckIn.getPatientAnswers().add(new CheckIn.PatientAnswer(mCurrentQuestion.getId(),
+            mCheckIn.getPatientAnswers().add(new CheckInRequest.PatientAnswer(mCurrentQuestion.getId(),
                     mCurrentQuestion.getAnswers().get(answerId).getId()));
         }
         if (!mQuestions.empty()) {
@@ -190,7 +190,7 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
         Log.i(CapstoneConstants.LOG_TAG, "Adding check in time " + hourOfDay + ":" + minute);
-        mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(mCurrentPainMedication.getMedicationId(), true, calendar.getTimeInMillis()));
+        mCheckIn.getMedicationsTaken().add(new CheckInRequest.MedicationTaken(mCurrentPainMedication.getMedicationId(), true, calendar.getTimeInMillis()));
         if (mMedications.empty()) {
             // Finish the check in and send it to the listener
             mCheckIn.setWhen(new Date().getTime());
@@ -228,7 +228,7 @@ public class CheckInFragment extends Fragment implements View.OnClickListener, T
      * <p/>
      */
     public interface OnQuestionsAnsweredListener {
-        public void onAllQuestionsAnswered(CheckIn checkInData);
+        public void onAllQuestionsAnswered(CheckInRequest checkInData);
     }
 
 }

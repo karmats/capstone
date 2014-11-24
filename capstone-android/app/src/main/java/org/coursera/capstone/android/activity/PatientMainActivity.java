@@ -16,12 +16,13 @@ import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.alarm.CheckInAlarmReceiver;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.fragment.CheckInFragment;
+import org.coursera.capstone.android.fragment.ListCheckInsFragment;
 import org.coursera.capstone.android.fragment.PatientSettingsFragment;
 import org.coursera.capstone.android.fragment.WelcomePatientFragment;
-import org.coursera.capstone.android.parcelable.CheckIn;
+import org.coursera.capstone.android.parcelable.CheckInRequest;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.User;
-import org.coursera.capstone.android.task.CheckInTask;
+import org.coursera.capstone.android.task.CheckInRequestTask;
 import org.coursera.capstone.android.task.FetchPatientInfoTask;
 
 import java.util.ArrayList;
@@ -111,8 +112,8 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
     }
 
     @Override
-    public void onAllQuestionsAnswered(CheckIn checkInData) {
-        new CheckInTask(mUser.getAccessToken()).execute(checkInData);
+    public void onAllQuestionsAnswered(CheckInRequest checkInRequestData) {
+        new CheckInRequestTask(mUser.getAccessToken()).execute(checkInRequestData);
         //finish();
     }
 
