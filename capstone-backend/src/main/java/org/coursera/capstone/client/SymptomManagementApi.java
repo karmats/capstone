@@ -48,7 +48,9 @@ public interface SymptomManagementApi {
     // The path where we expect the check in service to live
     public static final String CHECK_IN_SVC_PATH = "/checkin";
     // The path where we expect the check in patient service to live
-    public static final String CHECK_IN_PATIENT_SVC_PATH = "/checkin" + "/{username}";
+    public static final String CHECK_IN_PATIENT_SVC_PATH = CHECK_IN_SVC_PATH + "/{username}";
+    // The path where we expect the check in patient alerts service to live
+    public static final String CHECK_IN_PATIENT_ALERTS_SVC_PATH = CHECK_IN_PATIENT_SVC_PATH + "/alerts";
     // The path where we expect the pain medication service to live
     public static final String PAIN_MEDICATION_SVC_PATH = "/medication";
     // The path where we expect the update pain medication service to live
@@ -71,5 +73,8 @@ public interface SymptomManagementApi {
 
     @GET(CHECK_IN_PATIENT_SVC_PATH)
     public List<CheckInPatientResponseDto> getPatientCheckIn(@Path(USERNAME_PARAMETER) String username);
+
+    @GET(CHECK_IN_PATIENT_ALERTS_SVC_PATH)
+    public List<String> getPatientAlerts(@Path(USERNAME_PARAMETER) String username);
 
 }

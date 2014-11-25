@@ -1,6 +1,7 @@
 package org.coursera.capstone.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -62,7 +63,7 @@ public class CheckInController {
     @ResponseStatus(value = HttpStatus.OK)
     public void checkIn(@RequestBody CheckInRequestDto checkIn) {
         CheckIn checkInEntity = new CheckIn();
-        checkInEntity.setCheckInTime(checkIn.getWhen());
+        checkInEntity.setCheckInTime(new Date(checkIn.getWhen()));
         checkInRepo.save(checkInEntity);
         // The patient made the check-in
         Patient p = patientRepo.findByMedicalRecordNumber(checkIn.getPatientMedicalRecordNumber());
@@ -160,5 +161,20 @@ public class CheckInController {
             result.add(new CheckInPatientResponseDto(checkIn));
         }
         return result;
+    }
+
+    @RequestMapping(value = SymptomManagementApi.CHECK_IN_PATIENT_ALERTS_SVC_PATH, method = RequestMethod.GET)
+    public @ResponseBody Collection<String> getAlertsForPatient(
+            @PathVariable(SymptomManagementApi.USERNAME_PARAMETER) String username) {
+        List<String> alerts = new ArrayList<>();
+        Collection<CheckIn> checkIns = checkInRepo.findByPatientUsername(username);
+        // Since the check-ins are ordered by date, we are only interested of the first
+        if (!checkIns.isEmpty()) {
+            CheckIn latestCheckIn = new ArrayList<>(checkIns).get(0);
+            if (latestCheckIn.getAlert() != null) {
+                alerts = Arrays.asList(latestCheckIn.getAlert().split(CheckIn.AlERTS_DELIMITER));
+            }
+        }
+        return alerts;
     }
 }

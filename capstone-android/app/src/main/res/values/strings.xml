@@ -25,8 +25,9 @@
     <string name="doctor_patient_alerts_title">Alerts</string>
     <string name="doctor_patient_check_ins_title">Check-ins</string>
     <string name="doctor_patient_medications_title">Medication</string>
-    <string name="doctor_patient_status_ok_title">All good</string>
-    <string name="doctor_patient_status_ok_text">This patient feels ok</string>
+    <string name="doctor_patient_status_ok_title">Good</string>
+    <string name="doctor_patient_status_alert_title">Alerts</string>
+    <string name="doctor_patient_status_ok_text">No problems</string>
 
     <!-- Update medications fragment -->
     <string name="update_medications_ok_btn">Update</string>

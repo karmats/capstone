@@ -85,8 +85,7 @@ public class CheckInResponse implements Parcelable {
 
     @Override
     public String toString() {
-        return new SimpleDateFormat("yyyy-MM-dd").format(new Date(this.when)) + " Questions: " + this.questionAnswers.size() +
-                " Medications taken: " + this.medicationsTaken.size();
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(this.when));
     }
 
     /**

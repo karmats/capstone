@@ -94,21 +94,20 @@ public class SymptomManagementClientApiTest {
 
     @Test
     public void shouldBeAlerted() throws Exception {
-        // Submit an "alert check-in" last day
+        // Submit an "alert check-in" six hours ago
         Calendar c = Calendar.getInstance();
         c.add(Calendar.HOUR_OF_DAY, -6);
         CheckInRequestDto firstCheckInRequest = TestData.createCheckInRequest(patientService,
                 PATIENT_MEDICAL_RECORD_NO, c.getTime());
         patientService.checkIn(firstCheckInRequest);
-        List<CheckInPatientResponseDto> checkInResponse = doctorService.getPatientCheckIn(USERNAME_PATIENT);
 
         // Submit another today
         CheckInRequestDto secondCheckInRequest = TestData.createCheckInRequest(patientService,
                 PATIENT_MEDICAL_RECORD_NO, new Date());
         patientService.checkIn(secondCheckInRequest);
-        checkInResponse = doctorService.getPatientCheckIn(USERNAME_PATIENT);
+        List<String> alerts = doctorService.getPatientAlerts(USERNAME_PATIENT);
         // Should have an alert
-        assertTrue(checkInResponse.get(0).getAlerts().size() > 0);
+        assertTrue(alerts.size() > 0);
     }
 
     @Test

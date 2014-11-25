@@ -26,6 +26,6 @@ public class TestData {
         Answer questionAnswer = new ArrayList<>(answeredQuestion.getAnswers()).get(0);
         List<CheckInRequestDto.PatientAnswerDto> patientAnswers = new ArrayList<>();
         patientAnswers.add(new CheckInRequestDto.PatientAnswerDto(answeredQuestion.getId(), questionAnswer.getId()));
-        return new CheckInRequestDto(patientMedicalRecordNo, patientAnswers, medications, checkInTime);
+        return new CheckInRequestDto(patientMedicalRecordNo, patientAnswers, medications, checkInTime.getTime());
     }
 }

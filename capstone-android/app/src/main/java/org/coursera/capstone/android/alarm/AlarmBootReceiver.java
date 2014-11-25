@@ -15,7 +15,7 @@ import java.util.List;
  * rebooted.
  */
 public class AlarmBootReceiver extends BroadcastReceiver {
-    CheckInAlarmReceiver alarm = new CheckInAlarmReceiver();
+    CheckInAlarmReceiver mAlarm = new CheckInAlarmReceiver();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -25,7 +25,7 @@ public class AlarmBootReceiver extends BroadcastReceiver {
                 // The pending intent with id to execute on the selected time
                 Intent alarmIntent = new Intent(context, CheckInAlarmReceiver.class);
                 PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarm.setAlarm(context, pendingAlarmIntent, alarms.get(i));
+                mAlarm.setAlarm(context, pendingAlarmIntent, alarms.get(i));
             }
         }
     }

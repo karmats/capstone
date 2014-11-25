@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.coursera.capstone.android.R;
+import org.coursera.capstone.android.alarm.CheckAlertsReceiver;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.fragment.DoctorPatientDetailsFragment;
 import org.coursera.capstone.android.fragment.ListCheckInsFragment;
@@ -34,6 +35,8 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     private ArrayList<PainMedication> mAllPainMedications;
     private ArrayList<CheckInResponse> mCheckIns;
 
+    private CheckAlertsReceiver mCheckAlerts = new CheckAlertsReceiver();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +53,13 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     // Callbacks for fetching doctor patients
     @Override
     public void onPatientsFetched(List<Patient> patients) {
+        ArrayList<Patient> patientArray = new ArrayList<Patient>(patients);
         Log.i(CapstoneConstants.LOG_TAG, "Success got " + patients.size() + " patients");
         getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
-                ListDoctorPatientsFragment.newInstance(new ArrayList<Patient>(patients))).addToBackStack(null)
+                ListDoctorPatientsFragment.newInstance(patientArray)).addToBackStack(null)
                 .commit();
+        // Now when patients are fetched we can start the polling for alerts service
+        mCheckAlerts.setAlarm(this, patientArray, mUser.getAccessToken());
     }
 
     @Override

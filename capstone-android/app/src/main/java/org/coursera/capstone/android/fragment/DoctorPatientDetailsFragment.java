@@ -87,6 +87,8 @@ public class DoctorPatientDetailsFragment extends Fragment {
             for (String alert : latestCheckInAlerts) {
                 alertString += alert + "\n";
             }
+            TextView statusTitle = (TextView) v.findViewById(R.id.doctor_patient_status_title);
+            statusTitle.setText(getString(R.string.doctor_patient_status_alert_title));
             TextView statusText = (TextView) v.findViewById(R.id.doctor_patient_status_text);
             statusText.setText(alertString);
             ImageView statusImage = (ImageView) v.findViewById(R.id.doctor_patient_status_icon);

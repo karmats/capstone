@@ -29,6 +29,8 @@ public class PatientDto extends UserDto {
 
     public PatientDto(Patient p) {
         super(p.getUsername(), p.getFirstName(), p.getLastName(), User.UserAuthority.PATIENT.getRole());
+        this.birthDate = p.getBirthDate();
+        this.medicalRecordNumber = p.getMedicalRecordNumber();
         this.medications = new ArrayList<PainMedicationDto>();
         for (PainMedication pm : p.getPainMedications()) {
             this.medications.add(new PainMedicationDto(pm));

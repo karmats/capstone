@@ -14,13 +14,13 @@ public class CheckInRequestDto {
     private Long patientMedicalRecordNumber;
     private List<PatientAnswerDto> patientAnswers;
     private List<MedicationTakenDto> medicationsTaken;
-    private Date when;
+    private Long when;
 
     public CheckInRequestDto() {
     }
 
     public CheckInRequestDto(Long patientMedicationRecordNumber, List<PatientAnswerDto> patientAnswers,
-            List<MedicationTakenDto> medicationsTaken, Date when) {
+            List<MedicationTakenDto> medicationsTaken, Long when) {
         this.patientMedicalRecordNumber = patientMedicationRecordNumber;
         this.patientAnswers = patientAnswers;
         this.medicationsTaken = medicationsTaken;
@@ -51,11 +51,11 @@ public class CheckInRequestDto {
         this.medicationsTaken = medicationsTaken;
     }
 
-    public Date getWhen() {
+    public Long getWhen() {
         return when;
     }
 
-    public void setWhen(Date when) {
+    public void setWhen(Long when) {
         this.when = when;
     }
 

@@ -34,8 +34,6 @@ public class PatientController {
             @PathVariable(SymptomManagementApi.USERNAME_PARAMETER) String username) {
         Patient p = patientRepo.findByUsername(username);
         PatientDto result = new PatientDto(p);
-        result.setBirthDate(p.getBirthDate());
-        result.setMedicalRecordNumber(p.getMedicalRecordNumber());
         result.setDoctor(new DoctorDto(p.getDoctor()));
         return result;
     }
