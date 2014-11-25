@@ -19,6 +19,10 @@ public class Answer {
     private long id;
 
     private String text;
+    // The number of hours before an alert will be triggered
+    private Integer hoursBeforeAlert;
+    // The text when an alert is triggered
+    private String alertText;
 
     @JsonIgnore
     @ManyToOne
@@ -27,8 +31,10 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(String text, Question question) {
+    public Answer(String text, Integer hoursBeforeAlert, String alertText, Question question) {
         this.text = text;
+        this.hoursBeforeAlert = hoursBeforeAlert;
+        this.alertText = alertText; 
         this.question = question;
     }
 
@@ -46,6 +52,22 @@ public class Answer {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Integer getHoursBeforeAlert() {
+        return hoursBeforeAlert;
+    }
+
+    public void setHoursBeforeAlert(Integer hoursForAlert) {
+        this.hoursBeforeAlert = hoursForAlert;
+    }
+
+    public String getAlertText() {
+        return alertText;
+    }
+
+    public void setAlertText(String alertText) {
+        this.alertText = alertText;
     }
 
     public Question getQuestion() {

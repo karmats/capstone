@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.google.common.base.Objects;
+
 /**
  * A simple object to represent a Question
  */
@@ -52,5 +54,20 @@ public class Question {
 
     public void setAnswers(Collection<Answer> answers) {
         this.answers = answers;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.getId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Question) {
+            Question other = (Question) obj;
+            return Objects.equal(this.getId(), other.getId());
+        } else {
+            return false;
+        }
     }
 }

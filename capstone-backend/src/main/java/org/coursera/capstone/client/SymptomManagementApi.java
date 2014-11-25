@@ -1,6 +1,5 @@
 package org.coursera.capstone.client;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.coursera.capstone.dto.CheckInPatientResponseDto;

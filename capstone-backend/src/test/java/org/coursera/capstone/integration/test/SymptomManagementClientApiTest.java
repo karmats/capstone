@@ -5,21 +5,18 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.coursera.capstone.InitialTestData;
+import org.coursera.capstone.TestData;
 import org.coursera.capstone.client.SecuredRestBuilder;
 import org.coursera.capstone.client.SecuredRestException;
 import org.coursera.capstone.client.SymptomManagementApi;
 import org.coursera.capstone.dto.CheckInPatientResponseDto;
 import org.coursera.capstone.dto.CheckInRequestDto;
 import org.coursera.capstone.dto.PatientDto;
-import org.coursera.capstone.entity.Answer;
-import org.coursera.capstone.entity.PainMedication;
-import org.coursera.capstone.entity.Question;
 import org.junit.Test;
 
 import retrofit.RestAdapter.LogLevel;
@@ -84,25 +81,34 @@ public class SymptomManagementClientApiTest {
 
     @Test
     public void testCheckInFlow() throws Exception {
-        // Medications
-        List<PainMedication> painMedicationsInDb = InitialTestData.createPainMedications();
-        List<CheckInRequestDto.MedicationTakenDto> medications = new ArrayList<CheckInRequestDto.MedicationTakenDto>();
-        medications.add(new CheckInRequestDto.MedicationTakenDto(painMedicationsInDb.get(0).getMedicationId(), true,
-                new Date()));
-        // Questions
-        List<Question> questionsFromWs = patientService.getQuestions();
-        Question answeredQuestion = questionsFromWs.get(0);
-        Answer questionAnswer = new ArrayList<>(answeredQuestion.getAnswers()).get(0);
-        List<CheckInRequestDto.PatientAnswerDto> patientAnswers = new ArrayList<>();
-        patientAnswers.add(new CheckInRequestDto.PatientAnswerDto(answeredQuestion.getId(), questionAnswer.getId()));
+        CheckInRequestDto checkInRequest = TestData.createCheckInRequest(patientService, PATIENT_MEDICAL_RECORD_NO,
+                new Date());
         // Patient submits a check-in
-        Response response = patientService.checkIn(new CheckInRequestDto(PATIENT_MEDICAL_RECORD_NO, patientAnswers,
-                medications, new Date()));
+        Response response = patientService.checkIn(checkInRequest);
         assertEquals(200, response.getStatus());
 
         // Get the created request, need the doctor service for this
-        Collection<CheckInPatientResponseDto> checkInResponse = doctorService.getPatientCheckIn(USERNAME_PATIENT);
+        List<CheckInPatientResponseDto> checkInResponse = doctorService.getPatientCheckIn(USERNAME_PATIENT);
         assertTrue(checkInResponse.size() > 0);
+    }
+
+    @Test
+    public void shouldBeAlerted() throws Exception {
+        // Submit an "alert check-in" last day
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.HOUR_OF_DAY, -6);
+        CheckInRequestDto firstCheckInRequest = TestData.createCheckInRequest(patientService,
+                PATIENT_MEDICAL_RECORD_NO, c.getTime());
+        patientService.checkIn(firstCheckInRequest);
+        List<CheckInPatientResponseDto> checkInResponse = doctorService.getPatientCheckIn(USERNAME_PATIENT);
+
+        // Submit another today
+        CheckInRequestDto secondCheckInRequest = TestData.createCheckInRequest(patientService,
+                PATIENT_MEDICAL_RECORD_NO, new Date());
+        patientService.checkIn(secondCheckInRequest);
+        checkInResponse = doctorService.getPatientCheckIn(USERNAME_PATIENT);
+        // Should have an alert
+        assertTrue(checkInResponse.get(0).getAlerts().size() > 0);
     }
 
     @Test

@@ -48,11 +48,11 @@ public class InitialTestData {
 
     public static List<Answer> createAnswers(List<Question> questions) {
         List<Answer> answers = new ArrayList<Answer>();
-        answers.add(new Answer("Pretty bad", questions.get(0)));
-        answers.add(new Answer("Not very", questions.get(0)));
-        answers.add(new Answer("Yes", questions.get(1)));
-        answers.add(new Answer("No", questions.get(1)));
-        answers.add(new Answer("Pretty", questions.get(1)));
+        answers.add(new Answer("Pretty bad", 1, "w00t! pretty bad?", questions.get(0)));
+        answers.add(new Answer("Not very", 0, null, questions.get(0)));
+        answers.add(new Answer("Yes", 1, "omg! really sure :(", questions.get(1)));
+        answers.add(new Answer("No", 0, null, questions.get(1)));
+        answers.add(new Answer("Pretty", 0, null, questions.get(1)));
         return answers;
     }
 

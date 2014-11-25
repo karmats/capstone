@@ -1,7 +1,9 @@
 package org.coursera.capstone.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.coursera.capstone.client.SymptomManagementApi;
@@ -60,7 +62,7 @@ public class CheckInController {
     @ResponseStatus(value = HttpStatus.OK)
     public void checkIn(@RequestBody CheckInRequestDto checkIn) {
         CheckIn checkInEntity = new CheckIn();
-        checkInEntity.setWhen(checkIn.getWhen());
+        checkInEntity.setCheckInTime(checkIn.getWhen());
         checkInRepo.save(checkInEntity);
         // The patient made the check-in
         Patient p = patientRepo.findByMedicalRecordNumber(checkIn.getPatientMedicalRecordNumber());
@@ -79,6 +81,8 @@ public class CheckInController {
             patientAnswers.add(pa);
         }
         checkInEntity.setPatientAnswers(patientAnswers);
+        // Check if an alert is necessary.
+        checkInEntity.setAlert(checkAlert(patientAnswers, checkIn.getPatientMedicalRecordNumber()));
         // The pain medications taken
         List<PatientMedicationTaken> medicationsTaken = new ArrayList<PatientMedicationTaken>();
         for (MedicationTakenDto mtDto : checkIn.getMedicationsTaken()) {
@@ -93,6 +97,53 @@ public class CheckInController {
         checkInEntity.setPatientMedicationsTaken(medicationsTaken);
         // Save to db
         checkInRepo.save(checkInEntity);
+    }
+
+    /**
+     * Checks if an alert is necessary by getting past check in answers and see if they are "alert" answers
+     * 
+     * @param patientAnswers
+     *            The new patient check-in answer
+     * @param patientMedicalRecordNo
+     *            The patient medical record number
+     * @return The alert text or null if this doesn't trigger an alert
+     */
+    private String checkAlert(List<PatientAnswer> patientAnswers, Long patientMedicalRecordNo) {
+        Date now = new Date();
+        Calendar from = Calendar.getInstance();
+        from.add(Calendar.DATE, -1);
+        Collection<CheckIn> last24HoursCheckIns = checkInRepo.findByCheckInTime(patientMedicalRecordNo, from.getTime(),
+                now);
+        String alert = "";
+        for (PatientAnswer pa : patientAnswers) {
+            int hoursBeforeAlert = pa.getAnswer().getHoursBeforeAlert();
+            if (hoursBeforeAlert > 0) {
+                int timePast = 0;
+                // Check previous answers to see what the patient has answered
+                // The check-ins comes as sorted descending, i.e. newest first
+                for (CheckIn pastCi : last24HoursCheckIns) {
+                    for (PatientAnswer pastPa : pastCi.getPatientAnswers()) {
+                        if (pastPa.getQuestion().equals(pa.getQuestion())) {
+                            // Patient answered bad this question as well, add the time that has
+                            // passed since this check-in
+                            if (pastPa.getAnswer().getHoursBeforeAlert() > 0) {
+                                timePast += (int) (now.getTime() - pastCi.getCheckInTime().getTime())
+                                        / (1000 * 60 * 60);
+                                if (timePast >= pa.getAnswer().getHoursBeforeAlert()) {
+                                    // The time has passed return the answer alert text
+                                    alert += alert.isEmpty() ? pa.getAnswer().getAlertText() : CheckIn.AlERTS_DELIMITER
+                                            + pa.getAnswer().getAlertText();
+                                    break;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return alert;
     }
 
     @RequestMapping(value = SymptomManagementApi.CHECK_IN_SVC_PATH, method = RequestMethod.GET)

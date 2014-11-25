@@ -1,46 +1,31 @@
 package org.coursera.capstone;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.coursera.capstone.entity.Patient;
+import org.coursera.capstone.client.SymptomManagementApi;
+import org.coursera.capstone.dto.CheckInRequestDto;
+import org.coursera.capstone.entity.Answer;
+import org.coursera.capstone.entity.PainMedication;
+import org.coursera.capstone.entity.Question;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * This is a utility class to aid in the construction of Video objects with
- * random names, urls, and durations. The class also provides a facility to
- * convert objects into JSON using Jackson, which is the format that the
- * VideoSvc controller is going to expect data in for integration testing.
- * 
- * @author jules
- *
- */
 public class TestData {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    /**
-     * Construct and return a Patient object with a random name
-     * 
-     * @return
-     */
-    public static Patient randomPatient() {
-        // Information about the video
-        // Construct a random identifier using Java's UUID class
-        String id = UUID.randomUUID().toString();
-        String name = "Name-" + id;
-        String lastName = "Surname-" + id;
-        return new Patient(name, lastName);
-    }
-
-    /**
-     * Convert an object to JSON using Jackson's ObjectMapper
-     * 
-     * @param o
-     * @return
-     * @throws Exception
-     */
-    public static String toJson(Object o) throws Exception {
-        return objectMapper.writeValueAsString(o);
+    public static CheckInRequestDto createCheckInRequest(SymptomManagementApi api, Long patientMedicalRecordNo, Date checkInTime) {
+        // Medications
+        List<PainMedication> painMedicationsInDb = InitialTestData.createPainMedications();
+        List<CheckInRequestDto.MedicationTakenDto> medications = new ArrayList<CheckInRequestDto.MedicationTakenDto>();
+        medications.add(new CheckInRequestDto.MedicationTakenDto(painMedicationsInDb.get(0).getMedicationId(), true,
+                new Date()));
+        // Questions
+        List<Question> questionsFromWs = api.getQuestions();
+        Question answeredQuestion = questionsFromWs.get(0);
+        Answer questionAnswer = new ArrayList<>(answeredQuestion.getAnswers()).get(0);
+        List<CheckInRequestDto.PatientAnswerDto> patientAnswers = new ArrayList<>();
+        patientAnswers.add(new CheckInRequestDto.PatientAnswerDto(answeredQuestion.getId(), questionAnswer.getId()));
+        return new CheckInRequestDto(patientMedicalRecordNo, patientAnswers, medications, checkInTime);
     }
 }

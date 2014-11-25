@@ -1,6 +1,7 @@
 package org.coursera.capstone.dto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class CheckInPatientResponseDto {
 
     private List<QuestionAnswerDto> questionAnswers;
     private List<MedicationTakenDto> medicationsTaken;
+    private List<String> alerts;
     private Date when;
 
     public CheckInPatientResponseDto() {
@@ -28,14 +30,19 @@ public class CheckInPatientResponseDto {
     public CheckInPatientResponseDto(CheckIn checkInEntity) {
         this.when = checkInEntity.getCheckInTime();
         // Question answers
-        this.questionAnswers = new ArrayList<CheckInPatientResponseDto.QuestionAnswerDto>();
+        this.questionAnswers = new ArrayList<>();
         for (PatientAnswer pa : checkInEntity.getPatientAnswers()) {
             this.questionAnswers.add(new QuestionAnswerDto(pa.getQuestion(), pa.getAnswer()));
         }
         // Medications taken
-        this.medicationsTaken = new ArrayList<MedicationTakenDto>();
+        this.medicationsTaken = new ArrayList<>();
         for (PatientMedicationTaken pmt : checkInEntity.getPatientMedicationsTaken()) {
             this.medicationsTaken.add(new MedicationTakenDto(pmt));
+        }
+        // Alerts
+        this.alerts = new ArrayList<>();
+        if (checkInEntity.getAlert() != null && !checkInEntity.getAlert().isEmpty()) {
+            this.alerts = Arrays.asList(checkInEntity.getAlert().split(CheckIn.AlERTS_DELIMITER));
         }
 
     }
@@ -53,6 +60,14 @@ public class CheckInPatientResponseDto {
 
     public void setMedicationsTaken(List<MedicationTakenDto> medicationsTaken) {
         this.medicationsTaken = medicationsTaken;
+    }
+
+    public List<String> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<String> alerts) {
+        this.alerts = alerts;
     }
 
     public Date getWhen() {

@@ -13,12 +13,17 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class CheckIn {
+    // Since a check in can have more than one alert but is stored as a String
+    // we have a delimiter for seperating them
+    public static final String AlERTS_DELIMITER = ";";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private Date checkInTime;
+    // If an alert is present for this check-in
+    private String alert;
 
     @OneToMany(mappedBy = "answerCheckIn")
     private Collection<PatientAnswer> patientAnswers;
@@ -50,8 +55,16 @@ public class CheckIn {
         return checkInTime;
     }
 
-    public void setWhen(Date checkInTime) {
+    public void setCheckInTime(Date checkInTime) {
         this.checkInTime = checkInTime;
+    }
+
+    public String getAlert() {
+        return alert;
+    }
+
+    public void setAlert(String alert) {
+        this.alert = alert;
     }
 
     public Collection<PatientAnswer> getPatientAnswers() {
