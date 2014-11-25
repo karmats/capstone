@@ -65,6 +65,8 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     public void onPatientSelected(Patient patient) {
         Log.i(CapstoneConstants.LOG_TAG, patient.getFirstName() + " selected");
         this.mCurrentPatient = patient;
+        // Since a new patient is selected, there is a need for reset the cached check-ins
+        this.mCheckIns = null;
         createDoctorPatientDetailsFragment();
     }
 
@@ -82,13 +84,14 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     @Override
     public void onMedicationUpdate(Patient patient, List<PainMedication> painMedications) {
         new UpdatePainMedicationsTask(mUser.getAccessToken(), this).execute(
-                new UpdatePainMedicationsTask.UpdatePainMedicationRequest(patient.getUsername(), painMedications));
+                new UpdatePainMedicationsTask.UpdatePainMedicationRequest(patient, painMedications));
     }
 
     @Override
-    public void onUpdateMedicationsSuccess() {
+    public void onUpdateMedicationsSuccess(Patient patient, List<PainMedication> updatedPainMedications) {
         Log.i(CapstoneConstants.LOG_TAG, "Yay, medication update was a success");
-        Toast.makeText(this, getString(R.string.update_medications_success), Toast.LENGTH_SHORT);
+        Toast.makeText(this, getString(R.string.update_medications_success), Toast.LENGTH_SHORT).show();
+        patient.setMedications(updatedPainMedications);
     }
 
     @Override

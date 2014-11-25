@@ -42,6 +42,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:layout_toRightOf="@id/doctor_patient_status_icon" />
             <TextView
+                android:id="@+id/doctor_patient_status_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/doctor_patient_status_ok_text"

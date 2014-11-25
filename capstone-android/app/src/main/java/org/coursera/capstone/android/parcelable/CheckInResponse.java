@@ -14,6 +14,7 @@ public class CheckInResponse implements Parcelable {
 
     private List<QuestionAnswerResponse> questionAnswers;
     private List<MedicationTaken> medicationsTaken;
+    private List<String> alerts;
     private Long when;
 
     public CheckInResponse() {
@@ -22,6 +23,7 @@ public class CheckInResponse implements Parcelable {
     public CheckInResponse(Parcel source) {
         source.readTypedList(this.questionAnswers, QuestionAnswerResponse.CREATOR);
         source.readTypedList(this.medicationsTaken, MedicationTaken.CREATOR);
+        source.readStringList(this.alerts);
         this.when = source.readLong();
     }
 
@@ -44,6 +46,7 @@ public class CheckInResponse implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeTypedList(this.questionAnswers);
         parcel.writeTypedList(this.medicationsTaken);
+        parcel.writeStringList(this.alerts);
         parcel.writeLong(this.when);
     }
 
@@ -62,6 +65,14 @@ public class CheckInResponse implements Parcelable {
 
     public void setMedicationsTaken(List<MedicationTaken> medicationsTaken) {
         this.medicationsTaken = medicationsTaken;
+    }
+
+    public List<String> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<String> alerts) {
+        this.alerts = alerts;
     }
 
     public Long getWhen() {

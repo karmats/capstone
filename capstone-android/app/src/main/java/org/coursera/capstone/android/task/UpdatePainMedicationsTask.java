@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
 import org.coursera.capstone.android.parcelable.PainMedication;
+import org.coursera.capstone.android.parcelable.Patient;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import retrofit.client.Response;
 /**
  * Task to update pain medications for a patient
  */
-public class UpdatePainMedicationsTask extends AsyncTask<UpdatePainMedicationsTask.UpdatePainMedicationRequest, Void, Integer> {
+public class UpdatePainMedicationsTask extends AsyncTask<UpdatePainMedicationsTask.UpdatePainMedicationRequest, Void, UpdatePainMedicationsTask.UpdatePainMedicationRequest> {
 
     private String mAccessToken;
     private UpdatePainMedicationsCallback mCallback;
@@ -24,18 +25,21 @@ public class UpdatePainMedicationsTask extends AsyncTask<UpdatePainMedicationsTa
     }
 
     @Override
-    protected Integer doInBackground(UpdatePainMedicationRequest... params) {
+    protected UpdatePainMedicationRequest doInBackground(UpdatePainMedicationRequest... params) {
         SymptomManagementApi api = SymptomManagementApiBuilder.newInstance(mAccessToken);
-        Response response = api.updatePainMedications(params[0].mPatientUsername, params[0].mUpdatedPainMedications);
-        return response.getStatus();
+        Response response = api.updatePainMedications(params[0].mPatient.getUsername(), params[0].mUpdatedPainMedications);
+        if (response.getStatus() >= 200 || response.getStatus() < 300) {
+            return params[0];
+        }
+        return null;
     }
 
     @Override
-    protected void onPostExecute(Integer status) {
-        if(status >= 200 || status < 300) {
-            mCallback.onUpdateMedicationsSuccess();
+    protected void onPostExecute(UpdatePainMedicationRequest request) {
+        if (request != null) {
+            mCallback.onUpdateMedicationsSuccess(request.mPatient, request.mUpdatedPainMedications);
         } else {
-            mCallback.onUpdateMedicationsFailure("Failed to update medications got http status " + status);
+            mCallback.onUpdateMedicationsFailure("Failed to update medications");
         }
     }
 
@@ -43,17 +47,18 @@ public class UpdatePainMedicationsTask extends AsyncTask<UpdatePainMedicationsTa
      * Simple class to hold the sending data
      */
     public static class UpdatePainMedicationRequest {
-        private final String mPatientUsername;
+        private final Patient mPatient;
         private final List<PainMedication> mUpdatedPainMedications;
 
-        public UpdatePainMedicationRequest(String patientUsername, List<PainMedication> painMedications) {
-            this.mPatientUsername = patientUsername;
+        public UpdatePainMedicationRequest(Patient patient, List<PainMedication> painMedications) {
+            this.mPatient = patient;
             this.mUpdatedPainMedications = painMedications;
         }
     }
 
     public interface UpdatePainMedicationsCallback {
-        void onUpdateMedicationsSuccess();
+        void onUpdateMedicationsSuccess(Patient patient, List<PainMedication> painMedications);
+
         void onUpdateMedicationsFailure(String error);
     }
 }

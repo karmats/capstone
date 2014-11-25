@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface CheckInRepository extends CrudRepository<CheckIn, Long> {
 
-    @Query("select ci from CheckIn ci where ci.patient.username = :patientUsername")
+    @Query("select ci from CheckIn ci where ci.patient.username = :patientUsername order by checkInTime desc")
     public Collection<CheckIn> findByPatientUsername(@Param("patientUsername") String patientUsername);
 
     @Query("select ci from CheckIn ci where ci.patient.medicalRecordNumber = :medicalRecordNumber and ci.checkInTime between :from and :to order by checkInTime desc")
