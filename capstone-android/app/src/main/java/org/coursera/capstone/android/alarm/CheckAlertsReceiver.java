@@ -5,7 +5,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 
+import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.service.CheckAlertsService;
 
@@ -25,6 +27,7 @@ public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Intent service = new Intent(context, CheckAlertsService.class);
         service.putExtras(intent);
+        Log.i(CapstoneConstants.LOG_TAG, "Receiving intent and starting service..");
 
         // Start the service, keeping the device awake while it is launching.
         startWakefulService(context, service);
@@ -37,14 +40,15 @@ public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
      * @param context
      */
     public void setAlarm(Context context, ArrayList<Patient> patients, String accessToken) {
+        Log.i(CapstoneConstants.LOG_TAG, "Setting up check alerts");
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, CheckAlertsReceiver.class);
         intent.putExtra(CheckAlertsService.PATIENTS_PARAM, patients);
         intent.putExtra(CheckAlertsService.ACCESS_TOKEN_PARAM, accessToken);
-        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmIntent = PendingIntent.getBroadcast(context, 10, intent, 0);
 
         // Set the alarm to fire every hour
-        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+        alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmManager.INTERVAL_FIFTEEN_MINUTES,
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
 
         // Enable {@code AlarmBootReceiver} to automatically restart the alarm when the

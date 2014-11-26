@@ -38,6 +38,7 @@ public class CheckAlertsService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.i(CapstoneConstants.LOG_TAG, "Handling intent " + intent.getAction());
         if (intent != null) {
             mApi = SymptomManagementApiBuilder.newInstance(intent.getStringExtra(ACCESS_TOKEN_PARAM));
             final ArrayList<Patient> patients = intent.getParcelableArrayListExtra(PATIENTS_PARAM);

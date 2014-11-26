@@ -38,11 +38,11 @@ public class PatientController {
         return result;
     }
 
-    @RequestMapping(value = SymptomManagementApi.PATIENT_NAME_SEARCH_PATH, method = RequestMethod.GET)
+    @RequestMapping(value = SymptomManagementApi.PATIENT_SEARCH_PATH, method = RequestMethod.GET)
     public @ResponseBody Collection<PatientDto> getPatientByName(
             @RequestParam(SymptomManagementApi.NAME_PARAMETER) String name) {
         List<PatientDto> result = new ArrayList<>();
-        Collection<Patient> dbResult = patientRepo.findByName(name);
+        Collection<Patient> dbResult = patientRepo.findByName(name.toUpperCase());
         for (Patient p : dbResult) {
             result.add(new PatientDto(p));
         }

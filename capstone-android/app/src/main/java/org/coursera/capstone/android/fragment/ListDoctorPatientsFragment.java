@@ -3,13 +3,19 @@ package org.coursera.capstone.android.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
@@ -62,6 +68,8 @@ public class ListDoctorPatientsFragment extends Fragment implements AbsListView.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Search options menu
+        setHasOptionsMenu(true);
 
         if (getArguments() != null) {
             mPatients = getArguments().getParcelableArrayList(PATIENTS_PARAM);
@@ -84,6 +92,33 @@ public class ListDoctorPatientsFragment extends Fragment implements AbsListView.
         mListView.setOnItemClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the options menu from XML
+        inflater.inflate(R.menu.list_patients_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.doctor_patient_menu_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                // Start the search patient fragment when query text is submitted
+                SearchPatientsFragment searchPatientsFragment = SearchPatientsFragment.newInstance(s);
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.doctor_fragment_container, searchPatientsFragment)
+                        .addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // No autocompletion or live search
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

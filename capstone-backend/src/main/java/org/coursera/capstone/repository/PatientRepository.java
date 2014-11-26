@@ -16,7 +16,7 @@ import org.springframework.data.repository.query.Param;
 public interface PatientRepository extends CrudRepository<Patient, Long> {
 
     // Find all videos with a matching title (e.g., Video.name)
-    @Query("select p from Patient p where p.firstName = :name or p.lastName = :name")
+    @Query("select p from Patient p where upper(p.firstName) = :name or upper(p.lastName) = :name")
     Collection<Patient> findByName(
     // The @Param annotation tells Spring Data Rest which HTTP request
     // parameter it should use to fill in the "name" variable used to

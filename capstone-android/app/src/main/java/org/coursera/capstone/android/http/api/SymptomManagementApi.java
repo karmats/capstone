@@ -56,9 +56,8 @@ public interface SymptomManagementApi {
     public static final String PAIN_MEDICATION_SVC_PATH = "/medication";
     // The path where we expect the update pain medication service to live
     public static final String PAIN_MEDICATION_UPDATE_SVC_PATH = PAIN_MEDICATION_SVC_PATH + "/{username}";
-
     // The path to search patients by name
-    public static final String PATIENT_NAME_SEARCH_PATH = PATIENT_SVC_PATH + "/search/findByName";
+    public static final String PATIENT_SEARCH_PATH = PATIENT_SVC_PATH + "/search";
 
     @GET(PATIENT_SVC_PATH)
     List<Patient> getPatientList();
@@ -69,8 +68,8 @@ public interface SymptomManagementApi {
     @GET(USER_INFO_SVC_PATH)
     User getUserInfo();
 
-    @GET(PATIENT_NAME_SEARCH_PATH)
-    List<Patient> findByName(@Query(NAME_PARAMETER) String name);
+    @GET(PATIENT_SEARCH_PATH)
+    List<Patient> findPatientsByName(@Query(NAME_PARAMETER) String name);
 
     @GET(PATIENT_INFO_SVC_PATH)
     Patient getPatientInformation(@Path(USERNAME_PARAMETER) String username);

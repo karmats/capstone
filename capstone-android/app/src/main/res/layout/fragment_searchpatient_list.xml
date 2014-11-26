@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.coursera.capstone.android.fragment.ListCheckInsFragment">
+    tools:context="org.coursera.capstone.android.fragment.SearchPatientsFragment">
 
     <ListView
         android:id="@android:id/list"
@@ -14,7 +14,7 @@
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="@dimen/text_h2" />
+        android:textSize="@dimen/text_h2"
+        android:gravity="center" />
 
 </FrameLayout>

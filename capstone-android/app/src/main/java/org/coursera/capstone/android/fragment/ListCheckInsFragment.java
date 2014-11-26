@@ -80,10 +80,14 @@ public class ListCheckInsFragment extends Fragment implements AbsListView.OnItem
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
+        mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-
+        // Set empty text if there are no check-ins
+        if (mCheckIns.size() <= 0) {
+            setEmptyText(getString(R.string.doctor_patient_no_check_ins));
+        }
         return view;
     }
 
@@ -121,10 +125,7 @@ public class ListCheckInsFragment extends Fragment implements AbsListView.OnItem
      */
     public void setEmptyText(CharSequence emptyText) {
         View emptyView = mListView.getEmptyView();
-
-        if (emptyText instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
+        ((TextView) emptyView).setText(emptyText);
     }
 
     /**

@@ -28,6 +28,9 @@
     <string name="doctor_patient_status_ok_title">Good</string>
     <string name="doctor_patient_status_alert_title">Alerts</string>
     <string name="doctor_patient_status_ok_text">No problems</string>
+    <string name="doctor_patient_no_check_ins">No check-ins found</string>
+    <string name="doctor_search_patients_no_results">No patients found</string>
+    <string name="doctor_search_menu_title">Search patients</string>
 
     <!-- Update medications fragment -->
     <string name="update_medications_ok_btn">Update</string>

@@ -12,6 +12,7 @@ import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.fragment.DoctorPatientDetailsFragment;
 import org.coursera.capstone.android.fragment.ListCheckInsFragment;
 import org.coursera.capstone.android.fragment.ListDoctorPatientsFragment;
+import org.coursera.capstone.android.fragment.SearchPatientsFragment;
 import org.coursera.capstone.android.fragment.UpdateMedicationsFragment;
 import org.coursera.capstone.android.parcelable.CheckInResponse;
 import org.coursera.capstone.android.parcelable.PainMedication;
@@ -28,7 +29,8 @@ import java.util.List;
 public class DoctorMainActivity extends FragmentActivity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks,
         ListDoctorPatientsFragment.OnPatientSelectedListener, UpdateMedicationsFragment.OnUpdateMedicationsListener,
         FetchPainMedicationsTask.FetchPainMedicationsCallback, UpdatePainMedicationsTask.UpdatePainMedicationsCallback,
-        ListCheckInsFragment.OnCheckInSelectedListener, CheckInsForPatientTask.CheckInsForPatientCallback {
+        ListCheckInsFragment.OnCheckInSelectedListener, CheckInsForPatientTask.CheckInsForPatientCallback,
+        SearchPatientsFragment.OnSearchPatientSelectedListener {
 
     private User mUser;
     private Patient mCurrentPatient;
@@ -71,15 +73,13 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     public void onPatientSelected(Patient patient) {
         Log.i(CapstoneConstants.LOG_TAG, patient.getFirstName() + " selected");
         this.mCurrentPatient = patient;
-        // Since a new patient is selected, there is a need for reset the cached check-ins
-        this.mCheckIns = null;
-        createDoctorPatientDetailsFragment();
+        createDoctorPatientDetailsFragment(true);
     }
 
     @Override
     public void onPainMedicationsSuccess(List<PainMedication> medications) {
         mAllPainMedications = new ArrayList<PainMedication>(medications);
-        createDoctorPatientDetailsFragment();
+        createDoctorPatientDetailsFragment(false);
     }
 
     @Override
@@ -113,13 +113,21 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     @Override
     public void onCheckInsForPatientSuccess(List<CheckInResponse> checkInResponseList) {
         this.mCheckIns = new ArrayList<CheckInResponse>(checkInResponseList);
-        createDoctorPatientDetailsFragment();
+        createDoctorPatientDetailsFragment(false);
     }
 
-    private void createDoctorPatientDetailsFragment() {
+    @Override
+    public void onSearchedPatientSelected(Patient patient) {
+        Log.i(CapstoneConstants.LOG_TAG, patient.getUsername() + " selected from search");
+        // Selected show the details fragment
+        this.mCurrentPatient = patient;
+        createDoctorPatientDetailsFragment(true);
+    }
+
+    private void createDoctorPatientDetailsFragment(boolean updateCheckIns) {
         if (mAllPainMedications == null) {
             new FetchPainMedicationsTask(mUser.getAccessToken(), this).execute();
-        } else if (mCheckIns == null) {
+        } else if (mCheckIns == null || updateCheckIns) {
             new CheckInsForPatientTask(mUser.getAccessToken(), this).execute(mCurrentPatient.getUsername());
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
