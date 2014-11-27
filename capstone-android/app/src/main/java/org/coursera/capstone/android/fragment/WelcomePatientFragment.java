@@ -1,8 +1,8 @@
 package org.coursera.capstone.android.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,7 +82,7 @@ public class WelcomePatientFragment extends Fragment implements FetchQuestionsTa
     public void onQuestionSuccess(List<Question> questions) {
         Log.i(CapstoneConstants.LOG_TAG, "Got " + questions.size() + " questions");
         getFragmentManager().beginTransaction()
-                .replace(R.id.patient_fragment_container, CheckInFragment.newInstance(new ArrayList<Question>(questions), mPatient))
+                .replace(R.id.patient_fragment_container, PatientCheckInFragment.newInstance(mPatient, new ArrayList<Question>(questions)), PatientCheckInFragment.TAG)
                 .addToBackStack(null).commit();
     }
 
