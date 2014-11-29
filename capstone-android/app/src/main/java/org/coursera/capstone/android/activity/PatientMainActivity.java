@@ -15,12 +15,13 @@ import android.view.MenuItem;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.alarm.CheckInAlarmReceiver;
 import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.fragment.CheckIn;
+import org.coursera.capstone.android.fragment.CheckInSummaryFragment;
 import org.coursera.capstone.android.fragment.PatientCheckInFragment;
 import org.coursera.capstone.android.fragment.PatientSettingsFragment;
 import org.coursera.capstone.android.fragment.QuestionFragment;
 import org.coursera.capstone.android.fragment.WelcomePatientFragment;
 import org.coursera.capstone.android.parcelable.Answer;
-import org.coursera.capstone.android.parcelable.CheckInRequest;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
@@ -36,12 +37,12 @@ import java.util.List;
 import java.util.Set;
 
 public class PatientMainActivity extends FragmentActivity implements FetchPatientInfoTask.PatientInfoCallbacks, QuestionFragment.OnQuestionAnsweredListener,
-        PatientCheckInFragment.OnCheckInSubmitListener {
+        CheckInSummaryFragment.OnCheckInSubmitListener {
 
     private Patient mPatient;
     private User mUser;
-    // The check in request to send
-    private CheckInRequest mCheckInRequest;
+    // The check in
+    private CheckIn mCheckIn;
     // The check in alarms
     private CheckInAlarmReceiver mCheckInAlarm = new CheckInAlarmReceiver();
     // Listener for patient reminders changes
@@ -74,7 +75,7 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
         // Setup the check-in alarms
         setupCheckInAlarms();
         // Initialise the check in request
-        mCheckInRequest = new CheckInRequest();
+        mCheckIn = new CheckIn();
     }
 
 
@@ -122,30 +123,44 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
 
     @Override
     public void onCheckInSubmit() {
-        // Complete the check in request and send it to
-        mCheckInRequest.setPatientMedicalRecordNumber(mPatient.getMedicalRecordNumber());
-        new CheckInRequestTask(mUser.getAccessToken()).execute(mCheckInRequest);
-        //finish();
+        mCheckIn.setPatient(mPatient);
+        new CheckInRequestTask(mUser.getAccessToken()).execute(mCheckIn.toRequest());
+        // Close the app
+        finish();
     }
 
     @Override
     public void onQuestionAnswered(Question question, Answer answer) {
-        mCheckInRequest.getPatientAnswers().add(new CheckInRequest.PatientAnswer(question.getId(), answer.getId()));
+        CheckIn.QuestionAnswer qa = new CheckIn.QuestionAnswer(question, answer);
+        // Update answer if this already exists
+        if (mCheckIn.getQuestionAnswers().contains(qa)) {
+            int idx = mCheckIn.getQuestionAnswers().indexOf(qa);
+            mCheckIn.getQuestionAnswers().set(idx, qa);
+        } else {
+            mCheckIn.getQuestionAnswers().add(new CheckIn.QuestionAnswer(question, answer));
+        }
         // Next question
         PatientCheckInFragment checkInFragment = (PatientCheckInFragment)
                 getSupportFragmentManager().findFragmentByTag(PatientCheckInFragment.TAG);
-        checkInFragment.nextQuestion();
+        checkInFragment.nextQuestion(mCheckIn);
 
     }
 
     @Override
     public void onMedicalQuestionAnswered(PainMedication painMedication, Date when) {
-        mCheckInRequest.getMedicationsTaken().add(new CheckInRequest.MedicationTaken(painMedication.getMedicationId(),
-                when != null, when != null ? when.getTime() : null));
+        CheckIn.MedicationTaken mt = new CheckIn.MedicationTaken(painMedication,
+                when != null ? when.getTime() : null);
+        // Replace if already exists
+        if (mCheckIn.getMedicationsTaken().contains(mt)) {
+            int idx = mCheckIn.getMedicationsTaken().indexOf(mt);
+            mCheckIn.getMedicationsTaken().set(idx, mt);
+        } else {
+            mCheckIn.getMedicationsTaken().add(mt);
+        }
         // Next question
         PatientCheckInFragment checkInFragment = (PatientCheckInFragment)
                 getSupportFragmentManager().findFragmentByTag(PatientCheckInFragment.TAG);
-        checkInFragment.nextQuestion();
+        checkInFragment.nextQuestion(mCheckIn);
     }
 
     @Override

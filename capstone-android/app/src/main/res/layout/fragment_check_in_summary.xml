@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.coursera.capstone.android.fragment.CheckInSummaryFragment">
+
+    <TextView
+        android:id="@+id/patient_check_in_summary_text"
+        android:textSize="@dimen/text_h1"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/patient_check_in_summary_title" />
+    <TextView
+        android:id="@+id/patient_check_in_summary_desc"
+        android:layout_below="@id/patient_check_in_summary_text"
+        android:textSize="@dimen/text_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/patient_check_in_summary_desc" />
+
+     <!-- Questions -->
+    <TextView
+        android:id="@+id/patient_check_in_summary_questions_title"
+        android:layout_below="@id/patient_check_in_summary_desc"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/text_h2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/patient_check_in_summary_questions_text" />
+    <LinearLayout
+        android:id="@+id/patient_check_in_summary_questions"
+        android:layout_below="@id/patient_check_in_summary_questions_title"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </LinearLayout>
+
+    <!-- Pain medications -->
+    <TextView
+        android:id="@+id/patient_check_in_summary_medications_title"
+        android:layout_below="@id/patient_check_in_summary_questions"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/text_h2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/patient_check_in_summary_medications_text" />
+    <LinearLayout
+        android:id="@+id/patient_check_in_summary_medications"
+        android:layout_below="@id/patient_check_in_summary_medications_title"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/patient_check_in_summary_submit"
+        android:layout_alignParentBottom="true"
+        style="@style/GreenButton"
+        android:text="@string/patient_check_in_summary_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

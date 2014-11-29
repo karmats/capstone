@@ -20,6 +20,11 @@
     <string name="patient_question_medication">Did you take your %1$s?</string>
     <string name="patient_answer_yes">Yes</string>
     <string name="patient_answer_no">No</string>
+    <string name="patient_check_in_summary_title">Summary</string>
+    <string name="patient_check_in_summary_submit">Submit and close app</string>
+    <string name="patient_check_in_summary_desc">Go through your check-in. If all is correct, press the submit button and close this app</string>
+    <string name="patient_check_in_summary_questions_text">Questions</string>
+    <string name="patient_check_in_summary_medications_text">Pain medications</string>
 
     <!-- Doctor main activity -->
     <string name="doctor_patient_alerts_title">Alerts</string>
