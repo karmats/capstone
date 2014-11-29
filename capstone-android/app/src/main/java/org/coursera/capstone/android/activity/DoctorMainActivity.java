@@ -34,6 +34,7 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
 
     private User mUser;
     private Patient mCurrentPatient;
+    private ArrayList<Patient> mDoctorsPatients;
     private ArrayList<PainMedication> mAllPainMedications;
     private ArrayList<CheckInResponse> mCheckIns;
 
@@ -56,6 +57,7 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     @Override
     public void onPatientsFetched(List<Patient> patients) {
         ArrayList<Patient> patientArray = new ArrayList<Patient>(patients);
+        this.mDoctorsPatients = patientArray;
         Log.i(CapstoneConstants.LOG_TAG, "Success got " + patients.size() + " patients");
         getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
                 ListDoctorPatientsFragment.newInstance(patientArray)).addToBackStack(null)
@@ -131,7 +133,8 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
             new CheckInsForPatientTask(mUser.getAccessToken(), this).execute(mCurrentPatient.getUsername());
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
-                    DoctorPatientDetailsFragment.newInstance(mCurrentPatient, mAllPainMedications, mCheckIns)).addToBackStack(null).commit();
+                    DoctorPatientDetailsFragment.newInstance(mCurrentPatient, mAllPainMedications, mCheckIns, mDoctorsPatients))
+                    .addToBackStack(null).commit();
         }
     }
 }

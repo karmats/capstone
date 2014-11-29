@@ -30,9 +30,11 @@ import java.util.List;
 public class UpdateMedicationsFragment extends Fragment {
     private static final String PATIENT_PARAM = "patient_param";
     private static final String PAIN_MEDICATIONS_PARAM = "pain_medications_param";
+    private static final String IS_DOCTOR_PATIENT_PARAM = "is_doctor_patient_param";
 
     private Patient mPatient;
     private ArrayList<PainMedication> mAvailableMedications;
+    private boolean mIsDoctorPatient;
 
     private OnUpdateMedicationsListener mListener;
 
@@ -42,13 +44,16 @@ public class UpdateMedicationsFragment extends Fragment {
      *
      * @param patient         The patient to update the medications for.
      * @param painMedications All available pain medications
+     * @param isDoctorPatient True if the patient is a patient for the logged in doctor
      * @return A new instance of fragment UpdateMedicationsFragment.
      */
-    public static UpdateMedicationsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications) {
+    public static UpdateMedicationsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications,
+                                                        boolean isDoctorPatient) {
         UpdateMedicationsFragment fragment = new UpdateMedicationsFragment();
         Bundle args = new Bundle();
         args.putParcelable(PATIENT_PARAM, patient);
         args.putParcelableArrayList(PAIN_MEDICATIONS_PARAM, painMedications);
+        args.putBoolean(IS_DOCTOR_PATIENT_PARAM, isDoctorPatient);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +67,7 @@ public class UpdateMedicationsFragment extends Fragment {
         if (getArguments() != null) {
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
             mAvailableMedications = getArguments().getParcelableArrayList(PAIN_MEDICATIONS_PARAM);
+            mIsDoctorPatient = getArguments().getBoolean(IS_DOCTOR_PATIENT_PARAM);
         }
     }
 
@@ -75,9 +81,14 @@ public class UpdateMedicationsFragment extends Fragment {
             cb.setText(pm.getName());
             // Set to checked if the patient takes this medication
             cb.setChecked(mPatient.getMedications().contains(pm));
+            // Only enabled if this patient is a patient to the doctor
+            cb.setEnabled(mIsDoctorPatient);
             checkboxContainer.addView(cb);
         }
         Button submitBtn = (Button) v.findViewById(R.id.update_medications_btn);
+        if (!mIsDoctorPatient) {
+            submitBtn.setVisibility(View.GONE);
+        }
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

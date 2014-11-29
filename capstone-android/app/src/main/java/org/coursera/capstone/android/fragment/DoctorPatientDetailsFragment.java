@@ -26,10 +26,12 @@ public class DoctorPatientDetailsFragment extends Fragment {
     private static String PATIENT_PARAM = "patient_param";
     private static String PAIN_MEDICATIONS_PARAM = "pain_medications_param";
     private static String CHECK_INS_PARAM = "check_ins_param";
+    private static String DOCTOR_PATIENTS_PARAM = "doctor_patients_param";
 
     private Patient mPatient;
     private ArrayList<PainMedication> mAllPainMedications;
     private ArrayList<CheckInResponse> mCheckIns;
+    private ArrayList<Patient> mDoctorPatients;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -38,12 +40,14 @@ public class DoctorPatientDetailsFragment extends Fragment {
      */
     ViewPager mViewPager;
 
-    public static DoctorPatientDetailsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications, ArrayList<CheckInResponse> checkIns) {
+    public static DoctorPatientDetailsFragment newInstance(Patient patient, ArrayList<PainMedication> painMedications,
+                                                           ArrayList<CheckInResponse> checkIns, ArrayList<Patient> doctorPatients) {
         DoctorPatientDetailsFragment fragment = new DoctorPatientDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(PATIENT_PARAM, patient);
         args.putParcelableArrayList(PAIN_MEDICATIONS_PARAM, painMedications);
         args.putParcelableArrayList(CHECK_INS_PARAM, checkIns);
+        args.putParcelableArrayList(DOCTOR_PATIENTS_PARAM, doctorPatients);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,6 +63,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
             mPatient = getArguments().getParcelable(PATIENT_PARAM);
             mAllPainMedications = getArguments().getParcelableArrayList(PAIN_MEDICATIONS_PARAM);
             mCheckIns = getArguments().getParcelableArrayList(CHECK_INS_PARAM);
+            mDoctorPatients = getArguments().getParcelableArrayList(DOCTOR_PATIENTS_PARAM);
         }
     }
 
@@ -126,7 +131,8 @@ public class DoctorPatientDetailsFragment extends Fragment {
                     return mCheckInsFragment;
                 case MEDICATIONS_PAGE:
                     if (mMedicationsFragment == null) {
-                        mMedicationsFragment = UpdateMedicationsFragment.newInstance(mPatient, mAllPainMedications);
+                        mMedicationsFragment = UpdateMedicationsFragment.newInstance(mPatient, mAllPainMedications,
+                                mDoctorPatients.contains(mPatient));
                     }
                     return mMedicationsFragment;
                 default:

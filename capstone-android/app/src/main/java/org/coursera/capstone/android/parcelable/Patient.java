@@ -84,4 +84,13 @@ public class Patient extends User {
     public String toString() {
         return this.getFirstName() + " " + this.getLastName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof Patient) {
+            Patient that = (Patient) o;
+            return that.getMedicalRecordNumber().equals(this.getMedicalRecordNumber());
+        }
+        return false;
+    }
 }
