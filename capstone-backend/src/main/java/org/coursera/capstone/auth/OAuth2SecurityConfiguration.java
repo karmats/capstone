@@ -93,21 +93,16 @@ public class OAuth2SecurityConfiguration {
 
             http.authorizeRequests().antMatchers("/oauth/token").anonymous();
 
-            // If you were going to reuse this class in another
-            // application, this is one of the key sections that you
-            // would want to change
-
-            // Only doctors should have access to doctor api
-            http.authorizeRequests().antMatchers(HttpMethod.GET, "/doctor")
+            // Only doctors should have access to doctor api, and medication put
+            http.authorizeRequests().antMatchers(HttpMethod.GET, "/doctor/**")
                     .hasRole(User.UserAuthority.DOCTOR.getRole());
-            http.authorizeRequests().antMatchers(HttpMethod.PUT, "/medication/*")
+            http.authorizeRequests().antMatchers(HttpMethod.PUT, "/medication/**")
                     .hasRole(User.UserAuthority.DOCTOR.getRole());
+            // Only patients can submit checkins
+            http.authorizeRequests().antMatchers(HttpMethod.POST, "/checkin/**")
+                    .hasRole(User.UserAuthority.PATIENT.getRole());
             // Require all other GET requests to have client "read" scope
             http.authorizeRequests().antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasScope('read')");
-
-            // Require all other requests to have role doctor
-            // TODO Patients should be able to submit answers and doctors able to update medications
-            http.authorizeRequests().antMatchers("/**").hasRole(User.UserAuthority.PATIENT.getRole());
         }
 
     }

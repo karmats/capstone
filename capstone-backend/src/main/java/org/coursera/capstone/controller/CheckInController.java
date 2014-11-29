@@ -71,10 +71,6 @@ public class CheckInController {
         // The answers
         List<PatientAnswer> patientAnswers = new ArrayList<PatientAnswer>();
         for (PatientAnswerDto paDto : checkIn.getPatientAnswers()) {
-            // TODO This should be removed when fixing stuffs in client
-            if (paDto.getAnswerId() == null) {
-                continue;
-            }
             PatientAnswer pa = new PatientAnswer(questionRepo.findOne(paDto.getQuestionId()), answerRepo.findOne(paDto
                     .getAnswerId()));
             pa.setAnswerCheckIn(checkInEntity);
