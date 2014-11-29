@@ -157,12 +157,14 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        Log.i(CapstoneConstants.LOG_TAG, "Adding check in time " + hourOfDay + ":" + minute);
-        // Notify listener with date and medication
-        mListener.onMedicalQuestionAnswered(mPainMedication, calendar.getTime());
+        if (view.isShown()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            Log.i(CapstoneConstants.LOG_TAG, "Adding check in time " + hourOfDay + ":" + minute);
+            // Notify listener with date and medication
+            mListener.onMedicalQuestionAnswered(mPainMedication, calendar.getTime());
+        }
     }
 
     private Question createMedicationQuestion(PainMedication painMedication) {
