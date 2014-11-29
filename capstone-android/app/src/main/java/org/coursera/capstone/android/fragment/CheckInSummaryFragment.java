@@ -1,6 +1,7 @@
 package org.coursera.capstone.android.fragment;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -105,19 +106,20 @@ public class CheckInSummaryFragment extends Fragment {
         LinearLayout holderView = new LinearLayout(getActivity());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         holderView.setLayoutParams(params);
-        holderView.setOrientation(LinearLayout.HORIZONTAL);
+        holderView.setOrientation(LinearLayout.VERTICAL);
+        int padding = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
+        holderView.setPadding(0, padding, 0, 0);
 
         LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         TextView text1View = new TextView(getActivity());
         text1View.setText(text1);
-        text1View.setPadding(0, 0, getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin), 0);
+        text1View.setTypeface(null, Typeface.BOLD);
         text1View.setLayoutParams(textViewParams);
         holderView.addView(text1View);
 
         TextView text2View = new TextView(getActivity());
         text2View.setText(text2);
-        text2View.setPadding(getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin), 0, 0, 0);
         text2View.setLayoutParams(textViewParams);
         holderView.addView(text2View);
         return holderView;

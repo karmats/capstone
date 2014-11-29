@@ -33,7 +33,6 @@
         android:id="@+id/patient_check_in_summary_questions"
         android:layout_below="@id/patient_check_in_summary_questions_title"
         android:orientation="vertical"
-        android:paddingTop="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </LinearLayout>
@@ -51,7 +50,6 @@
         android:id="@+id/patient_check_in_summary_medications"
         android:layout_below="@id/patient_check_in_summary_medications_title"
         android:orientation="vertical"
-        android:paddingTop="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </LinearLayout>

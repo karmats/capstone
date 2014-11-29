@@ -1,5 +1,6 @@
 package org.coursera.capstone;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.coursera.capstone.auth.OAuth2SecurityConfiguration;
@@ -72,17 +73,20 @@ public class Application extends RepositoryRestMvcConfiguration {
         // Pain medications
         List<PainMedication> medications = InitialTestData.createPainMedications();
         medicationRep.save(medications);
-        // Doctors
-        Doctor d = new Doctor("drporter", "Doctor", "Porter");
-        doctorRepo.save(d);
-        // Patients
-        List<Patient> patients = InitialTestData.createTestPatients(d, medications);
-        patients = (List<Patient>) patientRepo.save(patients);
-        // Questions
+        // Doctors and patients
+        List<Doctor> doctors = InitialTestData.createTestDoctorAndPatients(medications);
+        for (Doctor d : doctors) {
+            doctorRepo.save(d);
+            Collection<Patient> patients = d.getPatients();
+            patientRepo.save(patients);
+        }
+
+        // Questions and answers
         List<Question> questions = InitialTestData.createQuestions();
-        questionRepo.save(questions);
-        // Answers
-        answerRepo.save(InitialTestData.createAnswers(questions));
+        for (Question q : questions) {
+            questionRepo.save(q);
+            answerRepo.save(q.getAnswers());
+        }
 
     }
 

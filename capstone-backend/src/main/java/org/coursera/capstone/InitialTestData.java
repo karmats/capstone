@@ -29,36 +29,75 @@ public class InitialTestData {
      *            The patient doctor
      * @return {@link List}
      */
-    public static List<Patient> createTestPatients(Doctor doctor, List<PainMedication> meds) {
-        List<Patient> patients = new ArrayList<Patient>();
-        patients.add(new Patient("janedoe", 100, "Jane", "Doe", new Date(), doctor));
-        List<PainMedication> pm = new ArrayList<>();
-        pm.add(meds.get(0));
-        patients.get(0).setPainMedications(pm);
-        patients.add(new Patient("johndoe", 101, "John", "Doe", new Date(), doctor));
-        return patients;
+    public static List<Doctor> createTestDoctorAndPatients(List<PainMedication> meds) {
+        List<Doctor> result = new ArrayList<>();
+        // Family guy
+        Doctor elmer = new Doctor("elme", "Elmer", "Hartman");
+        List<Patient> familyGuyPatients = new ArrayList<Patient>();
+
+        Patient pete = new Patient("pete", 100, "Peter", "Griffin", new Date(), elmer);
+        pete.setPainMedications(meds.subList(0, 1));
+        familyGuyPatients.add(pete);
+
+        Patient john = new Patient("john", 101, "John", "Herbert", new Date(), elmer);
+        john.setPainMedications(meds.subList(1, 2));
+        familyGuyPatients.add(john);
+
+        Patient cart = new Patient("cart", 102, "Carter", "Pewterschmidt", new Date(), elmer);
+        cart.setPainMedications(meds.subList(0, 2));
+        familyGuyPatients.add(cart);
+
+        elmer.setPatients(familyGuyPatients);
+        result.add(elmer);
+
+        // Simpson
+        Doctor hibe = new Doctor("hibe", "Julius", "Hibbert");
+        List<Patient> simpsonPatients = new ArrayList<>();
+
+        Patient home = new Patient("home", 200, "Homer", "Simpson", new Date(), hibe);
+        home.setPainMedications(meds.subList(0, 1));
+        simpsonPatients.add(home);
+
+        Patient krus = new Patient("krus", 201, "Krusty", "Krustofski", new Date(), hibe);
+        krus.setPainMedications(meds.subList(0, 2));
+        simpsonPatients.add(krus);
+
+        Patient jeff = new Patient("jeff", 202, "Jeff ", "Albertson", new Date(), hibe);
+        jeff.setPainMedications(meds.subList(1, 2));
+        simpsonPatients.add(jeff);
+
+        hibe.setPatients(simpsonPatients);
+        result.add(hibe);
+        return result;
     }
 
     public static List<Question> createQuestions() {
         List<Question> questions = new ArrayList<Question>();
-        questions.add(new Question("How bad do you want it?"));
-        questions.add(new Question("Are you sure?"));
-        return questions;
-    }
 
-    public static List<Answer> createAnswers(List<Question> questions) {
-        List<Answer> answers = new ArrayList<Answer>();
-        answers.add(new Answer("Pretty bad", 1, "w00t! pretty bad?", questions.get(0)));
-        answers.add(new Answer("Not very", 0, null, questions.get(0)));
-        answers.add(new Answer("Yes", 1, "omg! really sure :(", questions.get(1)));
-        answers.add(new Answer("No", 0, null, questions.get(1)));
-        answers.add(new Answer("Pretty", 0, null, questions.get(1)));
-        return answers;
+        // Pain
+        Question pain = new Question("How bad is your mouth pain/sore throat?");
+        List<Answer> painAnswers = new ArrayList<>();
+        painAnswers.add(new Answer("Well-controlled", 0, null, pain));
+        painAnswers.add(new Answer("Moderate", 16, "Experience moderate to severe pain for 16 hours", pain));
+        painAnswers.add(new Answer("Severe", 12, "Experience severe pain for 12 hours", pain));
+        pain.setAnswers(painAnswers);
+        questions.add(pain);
+
+        // Eating/drinking
+        Question eatDrink = new Question("Does your pain stop you from eating/drinking?");
+        List<Answer> eatDrinkAnswers = new ArrayList<>();
+        eatDrinkAnswers.add(new Answer("No", 0, null, eatDrink));
+        eatDrinkAnswers.add(new Answer("Some", 0, null, eatDrink));
+        eatDrinkAnswers.add(new Answer("I can't eat", 12, "Haven't been able to eat or drink for 12 hours", eatDrink));
+        eatDrink.setAnswers(eatDrinkAnswers);
+        questions.add(eatDrink);
+
+        return questions;
     }
 
     public static List<PainMedication> createPainMedications() {
         List<PainMedication> medications = new ArrayList<PainMedication>();
-        medications.add(new PainMedication("abc123", "Treo"));
+        medications.add(new PainMedication("abc123", "Hydrocodone"));
         medications.add(new PainMedication("def456", "Lortab"));
         medications.add(new PainMedication("ghi789", "OxyContin"));
         return medications;

@@ -1,10 +1,15 @@
 package org.coursera.capstone.auth;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
+import org.coursera.capstone.InitialTestData;
+import org.coursera.capstone.entity.Doctor;
+import org.coursera.capstone.entity.Patient;
+import org.coursera.capstone.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -21,6 +26,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -118,6 +124,8 @@ public class OAuth2SecurityConfiguration {
         // Delegate the processing of Authentication requests to the framework
         @Autowired
         private AuthenticationManager authenticationManager;
+        @Autowired
+        private DoctorRepository doctorRepo;
 
         // A data structure used to store both a ClientDetailsService and a
         // UserDetailsService
@@ -146,15 +154,16 @@ public class OAuth2SecurityConfiguration {
                     .withClient("mobile").authorizedGrantTypes("password").scopes("read")
                     .resourceIds("patient", "doctor").accessTokenValiditySeconds(3600).and().build();
 
-            // Create a series of hard-coded users. These must also exist in doctor or patient tables
-            UserDetailsService svc = new InMemoryUserDetailsManager(Arrays.asList(
-                    User.create("drporter", "pass", User.UserAuthority.DOCTOR),
-                    User.create("johndoe", "pass", User.UserAuthority.PATIENT),
-                    User.create("janedoe", "pass", User.UserAuthority.PATIENT),
-                    User.create("robrobson", "pass", User.UserAuthority.PATIENT),
-                    User.create("patriksmith", "pass", User.UserAuthority.PATIENT),
-                    User.create("donnasmith", "pass", User.UserAuthority.PATIENT),
-                    User.create("susanblack", "pass", User.UserAuthority.PATIENT)));
+            // Use the doctors and patients that are created in the initial test data
+            List<Doctor> doctors = InitialTestData.createTestDoctorAndPatients(InitialTestData.createPainMedications());
+            List<UserDetails> users = new ArrayList<>();
+            for (Doctor d : doctors) {
+                users.add(User.create(d.getUsername(), "pass", User.UserAuthority.DOCTOR));
+                for (Patient p : d.getPatients()) {
+                    users.add(User.create(p.getUsername(), "pass", User.UserAuthority.PATIENT));
+                }
+            }
+            UserDetailsService svc = new InMemoryUserDetailsManager(users);
 
             // Since clients have to use BASIC authentication with the client's
             // id/secret,
