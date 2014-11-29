@@ -1,8 +1,6 @@
 package org.coursera.capstone.android.fragment;
 
 import android.app.Activity;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
@@ -11,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
+import org.coursera.capstone.android.util.UIUtils;
 
 import java.util.Date;
 
@@ -88,7 +86,7 @@ public class CheckInSummaryFragment extends Fragment {
         LinearLayout questionsView = (LinearLayout) v.findViewById(R.id.patient_check_in_summary_questions);
         questionsView.removeAllViews();
         for (CheckIn.QuestionAnswer qa : mCheckIn.getQuestionAnswers()) {
-            questionsView.addView(createTwoColumnText(qa.getQuestion().getText(), qa.getAnswer().getText()));
+            questionsView.addView(UIUtils.createTwoColumnText(getActivity(), qa.getQuestion().getText(), qa.getAnswer().getText()));
         }
         // Pain medications
         LinearLayout medicationView = (LinearLayout) v.findViewById(R.id.patient_check_in_summary_medications);
@@ -98,37 +96,7 @@ public class CheckInSummaryFragment extends Fragment {
             if (mt.getWhen() != null) {
                 medicationTakenText = DateFormat.getTimeFormat(getActivity()).format(new Date(mt.getWhen()));
             }
-            medicationView.addView(createTwoColumnText(mt.getMedication().getName(), medicationTakenText));
-        }
-    }
-
-    private LinearLayout createTwoColumnText(String text1, String text2) {
-        LinearLayout holderView = new LinearLayout(getActivity());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        holderView.setLayoutParams(params);
-        holderView.setOrientation(LinearLayout.VERTICAL);
-        int padding = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
-        holderView.setPadding(0, padding, 0, 0);
-
-        LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        TextView text1View = new TextView(getActivity());
-        text1View.setText(text1);
-        text1View.setTypeface(null, Typeface.BOLD);
-        text1View.setLayoutParams(textViewParams);
-        holderView.addView(text1View);
-
-        TextView text2View = new TextView(getActivity());
-        text2View.setText(text2);
-        text2View.setLayoutParams(textViewParams);
-        holderView.addView(text2View);
-        return holderView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onCheckInSubmit();
+            medicationView.addView(UIUtils.createTwoColumnText(getActivity(), mt.getMedication().getName(), medicationTakenText));
         }
     }
 

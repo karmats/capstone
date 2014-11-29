@@ -8,11 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
+import org.coursera.capstone.android.adapter.ExpandableCheckInsAdapter;
 import org.coursera.capstone.android.parcelable.CheckInResponse;
 
 import java.util.ArrayList;
@@ -37,13 +38,13 @@ public class ListCheckInsFragment extends Fragment implements AbsListView.OnItem
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private ExpandableListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private ExpandableListAdapter mAdapter;
 
     public static ListCheckInsFragment newInstance(ArrayList<CheckInResponse> checkIns) {
         ListCheckInsFragment fragment = new ListCheckInsFragment();
@@ -68,8 +69,7 @@ public class ListCheckInsFragment extends Fragment implements AbsListView.OnItem
             mCheckIns = getArguments().getParcelableArrayList(CHECK_INS_PARAM);
         }
 
-        mAdapter = new ArrayAdapter<CheckInResponse>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, mCheckIns);
+        mAdapter = new ExpandableCheckInsAdapter(getActivity(), mCheckIns);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ListCheckInsFragment extends Fragment implements AbsListView.OnItem
         View view = inflater.inflate(R.layout.fragment_checkin, container, false);
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView = (ExpandableListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
