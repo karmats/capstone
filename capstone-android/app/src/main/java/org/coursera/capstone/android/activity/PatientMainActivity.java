@@ -1,5 +1,6 @@
 package org.coursera.capstone.android.activity;
 
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -90,9 +91,9 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.patient_fragment_container, new PatientSettingsFragment())
-                    .addToBackStack(null).commit();
+                    .addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -162,16 +163,6 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
                 getSupportFragmentManager().findFragmentByTag(PatientCheckInFragment.TAG);
         checkInFragment.nextQuestion(mCheckIn);
     }
-
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
 
     /**
      * Sets up the check in alarms based on the users preference

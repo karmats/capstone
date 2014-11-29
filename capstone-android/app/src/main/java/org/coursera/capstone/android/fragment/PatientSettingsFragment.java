@@ -2,7 +2,7 @@ package org.coursera.capstone.android.fragment;
 
 import android.os.Bundle;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
+import android.support.v4.preference.PreferenceFragment;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;

@@ -23,4 +23,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
+    compile project(":library:android-support-v4-preferencefragment")
 }
