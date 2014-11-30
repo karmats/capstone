@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
+import org.coursera.capstone.android.animation.ScalePageTransformer;
 import org.coursera.capstone.android.parcelable.CheckInResponse;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
@@ -79,6 +80,7 @@ public class DoctorPatientDetailsFragment extends Fragment {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) v.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setPageTransformer(false, new ScalePageTransformer());
         PagerTabStrip pagerTabStrip = (PagerTabStrip) v.findViewById(R.id.pager_title_strip);
         pagerTabStrip.setTabIndicatorColor(getResources().getColor(R.color.pager_tab_indicator));
 

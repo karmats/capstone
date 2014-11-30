@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="#000"
+            android:background="@color/read_ab"
             android:textColor="#fff"
             android:paddingTop="4dp"
             android:paddingBottom="4dp" />

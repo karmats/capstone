@@ -10,6 +10,7 @@ import android.util.Log;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.activity.DoctorMainActivity;
+import org.coursera.capstone.android.alarm.CheckAlertsReceiver;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
@@ -41,7 +42,6 @@ public class CheckAlertsService extends IntentService {
         if (intent != null) {
             mApi = SymptomManagementApiBuilder.newInstance(intent.getStringExtra(ACCESS_TOKEN_PARAM));
             final ArrayList<String> patientUserNames = intent.getStringArrayListExtra(PATIENTS_PARAM);
-            Log.i(CapstoneConstants.LOG_TAG, "Starting service with access token " + intent.getStringExtra(ACCESS_TOKEN_PARAM));
             // Check if patients has any alerts, if so send a notification
             for (String p : patientUserNames) {
                 Alert patientAlerts = fetchPatientAlerts(p);
@@ -49,7 +49,10 @@ public class CheckAlertsService extends IntentService {
                     notifyAlert(patientAlerts);
                 }
             }
+            // Release the wake lock provided by the BroadcastReceiver.
+            CheckAlertsReceiver.completeWakefulIntent(intent);
         }
+
     }
 
     /**

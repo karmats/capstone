@@ -101,7 +101,8 @@ public class ExpandableCheckInsAdapter extends BaseExpandableListAdapter {
         CheckInResponse checkIn = mCheckIns.get(groupPosition);
         viewHolder.questionAnswers.removeAllViews();
         for (CheckInResponse.QuestionAnswerResponse qa : checkIn.getQuestionAnswers()) {
-            LinearLayout qaView = UIUtils.createTwoColumnText(mContext, qa.getQuestionText(), qa.getAnswerText());
+            LinearLayout qaView = UIUtils.createTwoColumnText(mContext, qa.getQuestionText(), qa.getAnswerText()
+                    , mContext.getResources().getDimension(R.dimen.text_xx_small));
             viewHolder.questionAnswers.addView(qaView);
         }
         viewHolder.medicationsTaken.removeAllViews();
@@ -110,7 +111,8 @@ public class ExpandableCheckInsAdapter extends BaseExpandableListAdapter {
             if (mt.getWhen() != null) {
                 mtWhenText = DateFormat.getTimeFormat(mContext).format(new Date(mt.getWhen()));
             }
-            LinearLayout mtView = UIUtils.createTwoColumnText(mContext, mt.getMedicationName(), mtWhenText);
+            LinearLayout mtView = UIUtils.createTwoColumnText(mContext, mt.getMedicationName(), mtWhenText
+                    , mContext.getResources().getDimension(R.dimen.text_xx_small));
             viewHolder.medicationsTaken.addView(mtView);
         }
         return convertView;

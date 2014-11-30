@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_small"
         android:text="@string/patient_check_in_summary_questions_text" />
 
     <LinearLayout
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_small"
         android:text="@string/patient_check_in_summary_medications_text"
         android:paddingTop="@dimen/activity_vertical_margin" />
 

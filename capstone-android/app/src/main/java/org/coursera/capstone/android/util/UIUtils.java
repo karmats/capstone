@@ -2,6 +2,7 @@ package org.coursera.capstone.android.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,7 +18,16 @@ public class UIUtils {
     private UIUtils() {
     }
 
-    public static LinearLayout createTwoColumnText(Context context, String text1, String text2) {
+    /**
+     * Creates two vertical columns text.
+     *
+     * @param context
+     * @param text1    "Title"
+     * @param text2    "Value"
+     * @param textSize The text size in TypedValue.COMPLEX_UNIT_SP
+     * @return
+     */
+    public static LinearLayout createTwoColumnText(Context context, String text1, String text2, float textSize) {
         LinearLayout holderView = new LinearLayout(context);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         holderView.setLayoutParams(params);
@@ -30,12 +40,14 @@ public class UIUtils {
         TextView text1View = new TextView(context);
         text1View.setText(text1);
         text1View.setTypeface(null, Typeface.BOLD);
+        text1View.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
         text1View.setLayoutParams(textViewParams);
         holderView.addView(text1View);
 
         TextView text2View = new TextView(context);
         text2View.setText(text2);
         text2View.setLayoutParams(textViewParams);
+        text2View.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
         holderView.addView(text2View);
         return holderView;
     }

@@ -3,6 +3,14 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:actionBarStyle">@style/SymptomManagementActionBar</item>
+    </style>
+    <!-- the theme applied to the application or activity -->
+
+    <!-- ActionBar styles -->
+    <style name="SymptomManagementActionBar"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/read_ab</item>
     </style>
     
     <style name="GreenButton">
