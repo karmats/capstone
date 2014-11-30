@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.animation.ScalePageTransformer;
+import org.coursera.capstone.android.parcelable.Answer;
 import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,39 +97,57 @@ public class PatientCheckInFragment extends Fragment {
     }
 
     /**
+     * Called from activity
+     */
+    public void dontAskPainMedicationQuestions() {
+        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + mPatient.getMedications().size());
+        nextQuestion(mCheckIn);
+    }
+
+    /**
      * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         // The check in summary fragment needs to be cached since it needs to be updated
         // when all questions are answered
-        private CheckInSummaryFragment summaryFragment;
+        private CheckInSummaryFragment mSummaryFragment;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             if (mQuestions.size() > position) {
-                return QuestionFragment.newInstance(mQuestions.get(position), null);
-            } else if ((mQuestions.size() + mPatient.getMedications().size()) > position) {
-                return QuestionFragment.newInstance(null, mPatient.getMedications().get(position - mQuestions.size()));
+                return QuestionFragment.newInstance(mQuestions.get(position), null, mPatient.getMedications().size() == 1);
+            } else if (position == mQuestions.size()) {
+                // Special case for the "Did you take your pain medications" question
+                List<Answer> answers = new ArrayList<Answer>();
+                answers.add(new Answer(getString(R.string.patient_answer_yes)));
+                answers.add(new Answer(getString(R.string.patient_answer_no)));
+                Question q = new Question(getString(R.string.patient_check_in_medications_question), answers);
+                return QuestionFragment.newInstance(q, mPatient.getMedications().get(position - mQuestions.size()),
+                        mPatient.getMedications().size() == 1);
+            } else if ((mQuestions.size() + mPatient.getMedications().size() + 1) > position) {
+                return QuestionFragment.newInstance(null, mPatient.getMedications().get((position - 1) - mQuestions.size()),
+                        mPatient.getMedications().size() == 1);
             } else {
                 // All questions answered show summary view
-                if (summaryFragment == null) {
-                    summaryFragment = CheckInSummaryFragment.newInstance(mCheckIn);
+                if (mSummaryFragment == null) {
+                    mSummaryFragment = CheckInSummaryFragment.newInstance(mCheckIn);
                 }
-                return summaryFragment;
+                return mSummaryFragment;
             }
         }
 
         @Override
         public int getCount() {
             // Patient needs to answer questions about the questions and his/hers medications
-            // The +1 is for summary
-            return mQuestions.size() + mPatient.getMedications().size() + 1;
+            // The +2 is for summary and extra did you take your medications question
+            return mQuestions.size() + mPatient.getMedications().size() + 2;
         }
     }
 

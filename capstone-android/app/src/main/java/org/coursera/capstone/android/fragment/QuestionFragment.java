@@ -36,9 +36,11 @@ import java.util.Date;
 public class QuestionFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String QUESTION_PARAM = "question_param";
     private static final String PAIN_MEDICATION_PARAM = "pain_medication_param";
+    private static final String HAS_ONE_PAIN_MEDICATION = "has_one_pain_medication";
 
     private Question mQuestion;
     private PainMedication mPainMedication;
+    private boolean mHasOnePainMedication;
 
     // Question text and answer buttons
     private TextView mQuestionText;
@@ -55,15 +57,17 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param question       The question to be answerd.
-     * @param painMedication if this is a medication question
+     * @param question             The question to be answerd.
+     * @param painMedication       if this is a medication question
+     * @param hasOnePainMedication True if there patient only takes one pain medication
      * @return A new instance of fragment QuestionFragment.
      */
-    public static QuestionFragment newInstance(Question question, PainMedication painMedication) {
+    public static QuestionFragment newInstance(Question question, PainMedication painMedication, boolean hasOnePainMedication) {
         QuestionFragment fragment = new QuestionFragment();
         Bundle args = new Bundle();
         args.putParcelable(QUESTION_PARAM, question);
         args.putParcelable(PAIN_MEDICATION_PARAM, painMedication);
+        args.putBoolean(HAS_ONE_PAIN_MEDICATION, hasOnePainMedication);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +81,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
         if (getArguments() != null) {
             mQuestion = getArguments().getParcelable(QUESTION_PARAM);
             mPainMedication = getArguments().getParcelable(PAIN_MEDICATION_PARAM);
+            mHasOnePainMedication = getArguments().getBoolean(HAS_ONE_PAIN_MEDICATION);
         } else {
             throw new IllegalArgumentException("Questions and Patient is required");
         }
@@ -151,10 +156,20 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
         if (mPainMedication != null) {
             if (answerId == 0) {
                 // Show date picker dialog if this is a medical question and the user responded yes
-                mDatePickerDlg.show();
+                if (mQuestion != null && !mHasOnePainMedication) {
+                    // Don't show if patient has more than one pain medication
+                    mListener.onMedicationsTaken(null);
+                } else {
+                    mDatePickerDlg.show();
+                }
             } else {
-                // Patient choose no
-                mListener.onMedicalQuestionAnswered(mPainMedication, null);
+                // Patient choose no. If both question and pain medication has a value, this is the
+                // "Did you take your pain medication" question, and we choose no for all
+                if (mQuestion != null) {
+                    mListener.onMedicalNoMedicationsTaken();
+                } else {
+                    mListener.onMedicalQuestionAnswered(mPainMedication, null);
+                }
             }
         } else {
             mListener.onQuestionAnswered(mQuestion, mQuestion.getAnswers().get(answerId));
@@ -169,7 +184,13 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
             calendar.set(Calendar.MINUTE, minute);
             Log.i(CapstoneConstants.LOG_TAG, "Adding check in time " + hourOfDay + ":" + minute);
             // Notify listener with date and medication
-            mListener.onMedicalQuestionAnswered(mPainMedication, calendar.getTime());
+            if (mPainMedication != null && mQuestion != null) {
+                // If pain medication and question have values this is the
+                // "Did you take your pain medication" question.
+                mListener.onMedicationsTaken(calendar.getTime());
+            } else {
+                mListener.onMedicalQuestionAnswered(mPainMedication, calendar.getTime());
+            }
         }
     }
 
@@ -223,6 +244,18 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
          * @param when           When patient took it, null if patient didn't take it
          */
         public void onMedicalQuestionAnswered(PainMedication painMedication, Date when);
+
+        /**
+         * Patient didn't take any pain medications
+         */
+        public void onMedicalNoMedicationsTaken();
+
+        /**
+         * Patient choose yes on the "Did you take your pain medication" question
+         *
+         * @param when If there is only one medication, the date is used.
+         */
+        public void onMedicationsTaken(Date when);
 
     }
 

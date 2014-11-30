@@ -25,6 +25,7 @@
     <string name="patient_check_in_summary_desc">Go through your check-in. If all is correct, press the submit button and close this app</string>
     <string name="patient_check_in_summary_questions_text">Questions</string>
     <string name="patient_check_in_summary_medications_text">Pain medications</string>
+    <string name="patient_check_in_medications_question">Did you take your pain medication?</string>
 
     <!-- Doctor main activity -->
     <string name="doctor_patient_alerts_title">Alerts</string>

@@ -16,13 +16,13 @@ import android.view.MenuItem;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.alarm.CheckInAlarmReceiver;
 import org.coursera.capstone.android.constant.CapstoneConstants;
-import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.fragment.CheckInSummaryFragment;
 import org.coursera.capstone.android.fragment.PatientCheckInFragment;
 import org.coursera.capstone.android.fragment.PatientSettingsFragment;
 import org.coursera.capstone.android.fragment.QuestionFragment;
 import org.coursera.capstone.android.fragment.WelcomePatientFragment;
 import org.coursera.capstone.android.parcelable.Answer;
+import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.parcelable.PainMedication;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
@@ -162,6 +162,35 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
         PatientCheckInFragment checkInFragment = (PatientCheckInFragment)
                 getSupportFragmentManager().findFragmentByTag(PatientCheckInFragment.TAG);
         checkInFragment.nextQuestion(mCheckIn);
+    }
+
+    @Override
+    public void onMedicalNoMedicationsTaken() {
+        // Patient didn't take any medications
+        mCheckIn.getMedicationsTaken().clear();
+        for (PainMedication pm : mPatient.getMedications()) {
+            mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(pm, null));
+        }
+        // Don't the pain medication questions
+        PatientCheckInFragment checkInFragment = (PatientCheckInFragment)
+                getSupportFragmentManager().findFragmentByTag(PatientCheckInFragment.TAG);
+        checkInFragment.dontAskPainMedicationQuestions();
+    }
+
+    @Override
+    public void onMedicationsTaken(Date when) {
+        PatientCheckInFragment checkInFragment = (PatientCheckInFragment)
+                getSupportFragmentManager().findFragmentByTag(PatientCheckInFragment.TAG);
+        // If only one medication, there's no need to ask about each one
+        if (mPatient.getMedications().size() == 1) {
+            mCheckIn.getMedicationsTaken().clear();
+            mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(mPatient.getMedications().get(0), null));
+            checkInFragment.dontAskPainMedicationQuestions();
+        } else {
+            // Need to ask for each pain medication
+            checkInFragment.nextQuestion(mCheckIn);
+        }
+
     }
 
     /**
