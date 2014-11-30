@@ -45,6 +45,9 @@ public class LoginActivity extends Activity implements LoginTask.LoginCallbacks 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // See if user already is logged in to server
+
+
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
 

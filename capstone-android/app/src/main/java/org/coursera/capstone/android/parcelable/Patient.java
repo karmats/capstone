@@ -35,6 +35,7 @@ public class Patient extends User {
         super.writeToParcel(dest, flags);
         dest.writeLong(medicalRecordNumber);
         dest.writeLong(birthDate);
+        dest.writeParcelable(doctor, 0);
         dest.writeTypedList(medications);
     }
 

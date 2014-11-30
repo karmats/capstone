@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.coursera.capstone.android.R;
+import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.util.UIUtils;
 
 import java.util.Date;

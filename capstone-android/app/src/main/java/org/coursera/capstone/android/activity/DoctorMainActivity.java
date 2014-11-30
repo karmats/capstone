@@ -1,8 +1,10 @@
 package org.coursera.capstone.android.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import org.coursera.capstone.android.task.FetchPainMedicationsTask;
 import org.coursera.capstone.android.task.UpdatePainMedicationsTask;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class DoctorMainActivity extends FragmentActivity implements FetchDoctorPatientsTask.DoctorPatientsCallbacks,
@@ -61,9 +64,18 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
         Log.i(CapstoneConstants.LOG_TAG, "Success got " + patients.size() + " patients");
         getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
                 ListDoctorPatientsFragment.newInstance(patientArray)).addToBackStack(null)
-                .commit();
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+
         // Now when patients are fetched we can start the polling for alerts service
-        mCheckAlerts.setAlarm(this, patientArray, mUser.getAccessToken());
+        ArrayList<String> patientUsernames = new ArrayList<String>(patientArray.size());
+        for (Patient p : patientArray) {
+            patientUsernames.add(p.getUsername());
+        }
+        // Add doctor patient user names to shared preferences, since on boot we need to read them in CheckAlertsService
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putStringSet(CapstoneConstants.PREFERENCES_DOCTOR_PATIENT_USERNAMES,
+                new HashSet<String>(patientUsernames)).commit();
+        mCheckAlerts.setAlarm(this, patientUsernames, mUser.getAccessToken());
     }
 
     @Override
@@ -134,6 +146,7 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.doctor_fragment_container,
                     DoctorPatientDetailsFragment.newInstance(mCurrentPatient, mAllPainMedications, mCheckIns, mDoctorsPatients))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .addToBackStack(null).commit();
         }
     }

@@ -8,7 +8,6 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import org.coursera.capstone.android.constant.CapstoneConstants;
-import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.service.CheckAlertsService;
 
 import java.util.ArrayList;
@@ -20,14 +19,13 @@ import java.util.ArrayList;
 public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
     // The app's AlarmManager, which provides access to the system alarm services.
     private AlarmManager alarmMgr;
-    // The pending intent that is triggered when the alarm fires.
     private PendingIntent alarmIntent;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(CapstoneConstants.LOG_TAG, "Receiving intent and starting service..");
         Intent service = new Intent(context, CheckAlertsService.class);
         service.putExtras(intent);
-        Log.i(CapstoneConstants.LOG_TAG, "Receiving intent and starting service..");
 
         // Start the service, keeping the device awake while it is launching.
         startWakefulService(context, service);
@@ -39,26 +37,20 @@ public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
      *
      * @param context
      */
-    public void setAlarm(Context context, ArrayList<Patient> patients, String accessToken) {
+    public void setAlarm(Context context, ArrayList<String> patientUserNames, String accessToken) {
         Log.i(CapstoneConstants.LOG_TAG, "Setting up check alerts");
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmIntent != null) {
+            alarmMgr.cancel(alarmIntent);
+        }
         Intent intent = new Intent(context, CheckAlertsReceiver.class);
-        intent.putExtra(CheckAlertsService.PATIENTS_PARAM, patients);
+        intent.putStringArrayListExtra(CheckAlertsService.PATIENTS_PARAM, patientUserNames);
         intent.putExtra(CheckAlertsService.ACCESS_TOKEN_PARAM, accessToken);
-        alarmIntent = PendingIntent.getBroadcast(context, 10, intent, 0);
+        alarmIntent = PendingIntent.getBroadcast(context, 15, intent, 0);
 
         // Set the alarm to fire every hour
-        alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000,
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
-
-        // Enable {@code AlarmBootReceiver} to automatically restart the alarm when the
-        // device is rebooted.
-        /*ComponentName receiver = new ComponentName(context, AlarmBootReceiver.class);
-        PackageManager pm = context.getPackageManager();
-
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP);*/
     }
 
 }

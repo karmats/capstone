@@ -20,6 +20,7 @@ public interface CapstoneConstants {
     static final String PREFERENCES_MEDICAL_RECORD_NUMBER = "pref_medical_record_no";
     static final String PREFERENCES_PATIENT_DOCTOR_NAME = "pref_patient_doctor_name";
     static final String PREFERENCES_PATIENT_REMINDERS = "pref_patient_reminders";
+    static final String PREFERENCES_DOCTOR_PATIENT_USERNAMES = "perf_doctor_patient_usernames";
 
     /**
      * The oauth2 client

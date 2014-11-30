@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.animation.ScalePageTransformer;
+import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.parcelable.Patient;
 import org.coursera.capstone.android.parcelable.Question;
 

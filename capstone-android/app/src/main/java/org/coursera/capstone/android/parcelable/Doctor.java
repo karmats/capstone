@@ -17,6 +17,11 @@ public class Doctor extends User implements Parcelable {
         super(source);
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+    }
+
     public static final Parcelable.Creator<Doctor> CREATOR = new Parcelable.Creator<Doctor>() {
         public Doctor createFromParcel(Parcel data) {
             return new Doctor(data);

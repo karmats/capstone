@@ -91,7 +91,7 @@ public class SymptomManagementClientApiTest {
     public void shouldBeAlerted() throws Exception {
         // Submit an "alert check-in" six hours ago
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR_OF_DAY, -6);
+        c.add(Calendar.HOUR_OF_DAY, -16);
         CheckInRequestDto firstCheckInRequest = TestData.createCheckInRequest(patientService,
                 PATIENT_MEDICAL_RECORD_NO, c.getTime());
         patientService.checkIn(firstCheckInRequest);

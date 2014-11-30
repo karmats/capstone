@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.alarm.CheckInAlarmReceiver;
 import org.coursera.capstone.android.constant.CapstoneConstants;
-import org.coursera.capstone.android.fragment.CheckIn;
+import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.fragment.CheckInSummaryFragment;
 import org.coursera.capstone.android.fragment.PatientCheckInFragment;
 import org.coursera.capstone.android.fragment.PatientSettingsFragment;

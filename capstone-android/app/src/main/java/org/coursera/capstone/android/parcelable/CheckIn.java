@@ -1,4 +1,4 @@
-package org.coursera.capstone.android.fragment;
+package org.coursera.capstone.android.parcelable;
 
 import android.os.Parcel;
 import android.os.Parcelable;
