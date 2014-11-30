@@ -2,8 +2,10 @@ package org.coursera.capstone.android.alarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
@@ -51,6 +53,16 @@ public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
         // Set the alarm to fire every hour
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000,
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
+
+        // Enable AlarmBootReceiver to automatically restart the alarm when the
+        // device is rebooted.
+        ComponentName receiver = new ComponentName(context, AlarmBootReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        if (pm.getComponentEnabledSetting(receiver) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
     }
 
 }

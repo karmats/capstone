@@ -2,6 +2,7 @@ package org.coursera.capstone.client;
 
 import java.util.List;
 
+import org.coursera.capstone.dto.AlertDto;
 import org.coursera.capstone.dto.CheckInPatientResponseDto;
 import org.coursera.capstone.dto.CheckInRequestDto;
 import org.coursera.capstone.dto.PatientDto;
@@ -74,6 +75,6 @@ public interface SymptomManagementApi {
     public List<CheckInPatientResponseDto> getPatientCheckIn(@Path(USERNAME_PARAMETER) String username);
 
     @GET(CHECK_IN_PATIENT_ALERTS_SVC_PATH)
-    public List<String> getPatientAlerts(@Path(USERNAME_PARAMETER) String username);
+    public AlertDto getPatientAlerts(@Path(USERNAME_PARAMETER) String username);
 
 }

@@ -15,6 +15,7 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.coursera.capstone.TestData;
 import org.coursera.capstone.client.SecuredRestBuilder;
 import org.coursera.capstone.client.SymptomManagementApi;
+import org.coursera.capstone.dto.AlertDto;
 import org.coursera.capstone.dto.CheckInPatientResponseDto;
 import org.coursera.capstone.dto.CheckInRequestDto;
 import org.coursera.capstone.dto.PatientDto;
@@ -100,9 +101,9 @@ public class SymptomManagementClientApiTest {
         CheckInRequestDto secondCheckInRequest = TestData.createCheckInRequest(patientService,
                 PATIENT_MEDICAL_RECORD_NO, new Date());
         patientService.checkIn(secondCheckInRequest);
-        List<String> alerts = doctorService.getPatientAlerts(USERNAME_PATIENT);
+        AlertDto alerts = doctorService.getPatientAlerts(USERNAME_PATIENT);
         // Should have an alert
-        assertTrue(alerts.size() > 0);
+        assertTrue(alerts.getAlerts().size() > 0);
     }
 
     @Test

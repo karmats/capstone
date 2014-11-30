@@ -1,5 +1,6 @@
 package org.coursera.capstone.android.http.api;
 
+import org.coursera.capstone.android.parcelable.Alert;
 import org.coursera.capstone.android.parcelable.CheckInRequest;
 import org.coursera.capstone.android.parcelable.CheckInResponse;
 import org.coursera.capstone.android.parcelable.Doctor;
@@ -97,6 +98,6 @@ public interface SymptomManagementApi {
     List<CheckInResponse> getPatientCheckIn(@Path(USERNAME_PARAMETER) String username);
 
     @GET(CHECK_IN_PATIENT_ALERTS_SVC_PATH)
-    List<String> getPatientAlerts(@Path(USERNAME_PARAMETER) String username);
+    Alert getPatientAlerts(@Path(USERNAME_PARAMETER) String username);
 
 }

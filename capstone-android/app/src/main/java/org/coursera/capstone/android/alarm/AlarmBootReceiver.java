@@ -4,11 +4,18 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.coursera.capstone.android.activity.PatientMainActivity;
+import org.coursera.capstone.android.constant.CapstoneConstants;
+import org.coursera.capstone.android.parcelable.User;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This BroadcastReceiver automatically (re)starts the alarm when the device is
@@ -16,6 +23,7 @@ import java.util.List;
  */
 public class AlarmBootReceiver extends BroadcastReceiver {
     CheckInAlarmReceiver mAlarm = new CheckInAlarmReceiver();
+    CheckAlertsReceiver mCheckAlerts = new CheckAlertsReceiver();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,6 +35,12 @@ public class AlarmBootReceiver extends BroadcastReceiver {
                 PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 mAlarm.setAlarm(context, pendingAlarmIntent, alarms.get(i));
             }
+            // Get the user information from shared preferences
+            String userJsonString = PreferenceManager.getDefaultSharedPreferences(context).getString(CapstoneConstants.PREFERENCES_USER, "");
+            User user = User.fromJsonString(userJsonString);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            Set<String> patientUserNames = preferences.getStringSet(CapstoneConstants.PREFERENCES_DOCTOR_PATIENT_USERNAMES, new HashSet<String>());
+            mCheckAlerts.setAlarm(context, new ArrayList<String>(patientUserNames), user.getAccessToken());
         }
     }
 }

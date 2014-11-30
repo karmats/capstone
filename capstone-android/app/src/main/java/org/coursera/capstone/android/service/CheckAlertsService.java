@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -14,9 +13,9 @@ import org.coursera.capstone.android.activity.DoctorMainActivity;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
+import org.coursera.capstone.android.parcelable.Alert;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -45,9 +44,9 @@ public class CheckAlertsService extends IntentService {
             Log.i(CapstoneConstants.LOG_TAG, "Starting service with access token " + intent.getStringExtra(ACCESS_TOKEN_PARAM));
             // Check if patients has any alerts, if so send a notification
             for (String p : patientUserNames) {
-                List<String> patientAlerts = fetchPatientAlerts(p);
-                if (!patientAlerts.isEmpty()) {
-                    notifyAlert(p, patientAlerts);
+                Alert patientAlerts = fetchPatientAlerts(p);
+                if (!patientAlerts.getAlerts().isEmpty()) {
+                    notifyAlert(patientAlerts);
                 }
             }
         }
@@ -56,12 +55,12 @@ public class CheckAlertsService extends IntentService {
     /**
      * Get the patient alerts from provided background thread
      */
-    private List<String> fetchPatientAlerts(String username) {
+    private Alert fetchPatientAlerts(String username) {
         return mApi.getPatientAlerts(username);
     }
 
     // Post a notification indicating whether alerts were found.
-    private void notifyAlert(String p, List<String> alerts) {
+    private void notifyAlert(Alert alert) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -69,14 +68,14 @@ public class CheckAlertsService extends IntentService {
                 new Intent(this, DoctorMainActivity.class), 0);
 
         String alertString = "";
-        for (String alert : alerts) {
-            alertString += alert + "\n";
+        for (String a : alert.getAlerts()) {
+            alertString += a + "\n";
         }
         Log.i(CapstoneConstants.LOG_TAG, alertString);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(p)
+                        .setContentTitle(alert.getFirstName() + " " + alert.getLastName())
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(alertString))
                         .setContentText(alertString);
 

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.coursera.capstone.client.SymptomManagementApi;
+import org.coursera.capstone.dto.AlertDto;
 import org.coursera.capstone.dto.CheckInPatientResponseDto;
 import org.coursera.capstone.dto.CheckInRequestDto;
 import org.coursera.capstone.dto.CheckInRequestDto.MedicationTakenDto;
@@ -119,17 +120,24 @@ public class CheckInController {
                 // Check previous answers to see what the patient has answered
                 // The check-ins comes as sorted descending, i.e. newest first
                 for (CheckIn pastCi : last24HoursCheckIns) {
+                    PatientAnswer highestAlertTime = null;
                     for (PatientAnswer pastPa : pastCi.getPatientAnswers()) {
                         if (pastPa.getQuestion().equals(pa.getQuestion())) {
                             // Patient answered bad this question as well, add the time that has
                             // passed since this check-in
                             if (pastPa.getAnswer().getHoursBeforeAlert() > 0) {
+                                if (highestAlertTime == null
+                                        || pastPa.getAnswer().getHoursBeforeAlert() > highestAlertTime.getAnswer()
+                                                .getHoursBeforeAlert()) {
+                                    highestAlertTime = pastPa;
+                                }
                                 timePast += (int) (now.getTime() - pastCi.getCheckInTime().getTime())
                                         / (1000 * 60 * 60);
                                 if (timePast >= pa.getAnswer().getHoursBeforeAlert()) {
                                     // The time has passed return the answer alert text
-                                    alert += alert.isEmpty() ? pa.getAnswer().getAlertText() : CheckIn.AlERTS_DELIMITER
-                                            + pa.getAnswer().getAlertText();
+                                    alert += alert.isEmpty()
+                                            ? highestAlertTime.getAnswer().getAlertText()
+                                            : CheckIn.AlERTS_DELIMITER + highestAlertTime.getAnswer().getAlertText();
                                     break;
                                 }
                             } else {
@@ -160,9 +168,10 @@ public class CheckInController {
     }
 
     @RequestMapping(value = SymptomManagementApi.CHECK_IN_PATIENT_ALERTS_SVC_PATH, method = RequestMethod.GET)
-    public @ResponseBody Collection<String> getAlertsForPatient(
+    public @ResponseBody AlertDto getAlertsForPatient(
             @PathVariable(SymptomManagementApi.USERNAME_PARAMETER) String username) {
         List<String> alerts = new ArrayList<>();
+        Patient p = patientRepo.findByUsername(username);
         Collection<CheckIn> checkIns = checkInRepo.findByPatientUsername(username);
         // Since the check-ins are ordered by date, we are only interested of the first
         if (!checkIns.isEmpty()) {
@@ -171,6 +180,6 @@ public class CheckInController {
                 alerts = Arrays.asList(latestCheckIn.getAlert().split(CheckIn.AlERTS_DELIMITER));
             }
         }
-        return alerts;
+        return new AlertDto(p, alerts);
     }
 }
