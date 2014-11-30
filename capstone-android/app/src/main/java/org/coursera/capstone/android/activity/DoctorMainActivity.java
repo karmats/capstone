@@ -76,6 +76,8 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.edit().putStringSet(CapstoneConstants.PREFERENCES_DOCTOR_PATIENT_USERNAMES,
                 new HashSet<String>(patientUsernames)).commit();
+        // Restart the check alert alarm
+        mCheckAlerts.cancelAlarm(this);
         mCheckAlerts.setAlarm(this, patientUsernames, mUser.getAccessToken());
     }
 

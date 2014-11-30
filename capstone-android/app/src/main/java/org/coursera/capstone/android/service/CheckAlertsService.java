@@ -72,7 +72,10 @@ public class CheckAlertsService extends IntentService {
 
         String alertString = "";
         for (String a : alert.getAlerts()) {
-            alertString += a + "\n";
+            if (!alertString.contains(a)) {
+                alertString += a + "\n";
+            }
+
         }
         Log.i(CapstoneConstants.LOG_TAG, alertString);
         NotificationCompat.Builder mBuilder =

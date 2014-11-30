@@ -19,6 +19,8 @@ import java.util.ArrayList;
  * and then starts the IntentService {@code SampleSchedulingService} to do some work.
  */
 public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
+    // The pending intent request id
+    public static final int REQUEST_ID = 15;
     // The app's AlarmManager, which provides access to the system alarm services.
     private AlarmManager alarmMgr;
 
@@ -40,12 +42,14 @@ public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
      */
     public void setAlarm(Context context, ArrayList<String> patientUserNames, String accessToken) {
         Log.i(CapstoneConstants.LOG_TAG, "Setting up check alerts");
-        alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmMgr == null) {
+            alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        }
 
         Intent intent = new Intent(context, CheckAlertsReceiver.class);
         intent.putStringArrayListExtra(CheckAlertsService.PATIENTS_PARAM, patientUserNames);
         intent.putExtra(CheckAlertsService.ACCESS_TOKEN_PARAM, accessToken);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 15, intent, 0);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, REQUEST_ID, intent, 0);
 
         // Set the alarm to fire every half hour
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, AlarmManager.INTERVAL_HALF_HOUR,
@@ -60,6 +64,21 @@ public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         }
+    }
+
+    /**
+     * Cancel this alarm
+     *
+     * @param context
+     */
+    public void cancelAlarm(Context context) {
+        if (alarmMgr == null) {
+            alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        }
+        Intent intent = new Intent(context, CheckAlertsReceiver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, REQUEST_ID, intent, 0);
+        alarmIntent.cancel();
+        alarmMgr.cancel(alarmIntent);
     }
 
 }

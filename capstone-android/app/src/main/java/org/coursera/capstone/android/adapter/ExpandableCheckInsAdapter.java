@@ -1,7 +1,6 @@
 package org.coursera.capstone.android.adapter;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.parcelable.CheckInResponse;
 import org.coursera.capstone.android.util.UIUtils;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -109,7 +107,8 @@ public class ExpandableCheckInsAdapter extends BaseExpandableListAdapter {
         for (CheckInResponse.MedicationTaken mt : checkIn.getMedicationsTaken()) {
             String mtWhenText = mContext.getString(R.string.patient_answer_no);
             if (mt.getWhen() != null) {
-                mtWhenText = DateFormat.getTimeFormat(mContext).format(new Date(mt.getWhen()));
+                mtWhenText = DateUtils.getRelativeDateTimeString(mContext, mt.getWhen(),
+                            DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
             }
             LinearLayout mtView = UIUtils.createTwoColumnText(mContext, mt.getMedicationName(), mtWhenText
                     , mContext.getResources().getDimension(R.dimen.text_xx_small));

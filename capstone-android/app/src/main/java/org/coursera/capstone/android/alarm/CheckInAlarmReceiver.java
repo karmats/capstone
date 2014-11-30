@@ -85,4 +85,22 @@ public class CheckInAlarmReceiver extends WakefulBroadcastReceiver {
         builder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
     }
+
+    /**
+     * Cancel this alarm. The request ids goes from 0 to the user defined alerts size
+     *
+     * @param context
+     * @param noOfAlarms The number of alarms to cancel
+     */
+    public void cancelAlarm(Context context, int noOfAlarms) {
+        if (alarmMgr == null) {
+            alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        }
+        for (int i = 0; i < noOfAlarms; i++) {
+            Intent intent = new Intent(context, CheckInAlarmReceiver.class);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(context, i, intent, 0);
+            alarmIntent.cancel();
+            alarmMgr.cancel(alarmIntent);
+        }
+    }
 }

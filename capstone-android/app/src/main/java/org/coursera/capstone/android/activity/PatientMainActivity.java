@@ -201,6 +201,8 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
      */
     private void setupCheckInAlarms() {
         List<Calendar> alarms = getAlarms(this);
+        // Restart the alarms
+        mCheckInAlarm.cancelAlarm(this, alarms.size());
         for (int i = 0; i < alarms.size(); i++) {
             // The pending intent with id to execute on the selected time
             Intent intent = new Intent(this, CheckInAlarmReceiver.class);

@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_small"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="@string/patient_check_in_summary_questions_text" />
 
     <LinearLayout
         android:id="@+id/view_check_in_data_questions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:orientation="vertical"></LinearLayout>
 
     <!-- Pain medications -->
@@ -25,11 +27,13 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_small"
         android:text="@string/patient_check_in_summary_medications_text"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" />
 
     <LinearLayout
         android:id="@+id/view_check_in_data_medications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:orientation="vertical"></LinearLayout>
 </LinearLayout>

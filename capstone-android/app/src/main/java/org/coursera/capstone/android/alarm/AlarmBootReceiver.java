@@ -22,19 +22,23 @@ import java.util.Set;
  * rebooted.
  */
 public class AlarmBootReceiver extends BroadcastReceiver {
-    CheckInAlarmReceiver mAlarm = new CheckInAlarmReceiver();
+    CheckInAlarmReceiver mCheckInAlarm = new CheckInAlarmReceiver();
     CheckAlertsReceiver mCheckAlerts = new CheckAlertsReceiver();
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             List<Calendar> alarms = PatientMainActivity.getAlarms(context);
+            // Restart check in alarms
+            mCheckInAlarm.cancelAlarm(context, alarms.size());
             for (int i = 0; i < alarms.size(); i++) {
                 // The pending intent with id to execute on the selected time
                 Intent alarmIntent = new Intent(context, CheckInAlarmReceiver.class);
                 PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                mAlarm.setAlarm(context, pendingAlarmIntent, alarms.get(i));
+                mCheckInAlarm.setAlarm(context, pendingAlarmIntent, alarms.get(i));
             }
+            // Restart check alerts
+            mCheckAlerts.cancelAlarm(context);
             // Get the user information from shared preferences
             String userJsonString = PreferenceManager.getDefaultSharedPreferences(context).getString(CapstoneConstants.PREFERENCES_USER, "");
             User user = User.fromJsonString(userJsonString);
