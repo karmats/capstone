@@ -55,15 +55,15 @@ public class InitialTestData {
         List<Patient> simpsonPatients = new ArrayList<>();
 
         Patient home = new Patient("home", 200, "Homer", "Simpson", new Date(), hibe);
-        home.setPainMedications(meds.subList(0, 1));
+        home.setPainMedications(meds.subList(1, 2));
         simpsonPatients.add(home);
 
         Patient krus = new Patient("krus", 201, "Krusty", "Krustofski", new Date(), hibe);
-        krus.setPainMedications(meds.subList(0, 2));
+        krus.setPainMedications(meds.subList(0, 3));
         simpsonPatients.add(krus);
 
         Patient jeff = new Patient("jeff", 202, "Jeff ", "Albertson", new Date(), hibe);
-        jeff.setPainMedications(meds.subList(1, 2));
+        jeff.setPainMedications(meds.subList(0, 2));
         simpsonPatients.add(jeff);
 
         hibe.setPatients(simpsonPatients);

@@ -187,7 +187,7 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
         // If only one medication, there's no need to ask about each one
         if (mPatient.getMedications().size() == 1) {
             mCheckIn.getMedicationsTaken().clear();
-            mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(mPatient.getMedications().get(0), null));
+            mCheckIn.getMedicationsTaken().add(new CheckIn.MedicationTaken(mPatient.getMedications().get(0), when.getTime()));
             checkInFragment.dontAskPainMedicationQuestions();
         } else {
             // Need to ask for each pain medication
@@ -201,12 +201,10 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
      */
     private void setupCheckInAlarms() {
         List<Calendar> alarms = getAlarms(this);
-        // Restart the alarms
-        mCheckInAlarm.cancelAlarm(this, alarms.size());
         for (int i = 0; i < alarms.size(); i++) {
             // The pending intent with id to execute on the selected time
             Intent intent = new Intent(this, CheckInAlarmReceiver.class);
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(this, i, intent, 0);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             mCheckInAlarm.setAlarm(this, alarmIntent, alarms.get(i));
         }
     }
@@ -228,6 +226,7 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
             Calendar c = Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hourMinute[0]));
             c.set(Calendar.MINUTE, Integer.parseInt(hourMinute[1]));
+            c.set(Calendar.SECOND, 0);
             // If the time is in the pass, we need to add an extra day so the intent won't be executed
             // right away
             if (c.before(Calendar.getInstance())) {

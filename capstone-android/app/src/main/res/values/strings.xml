@@ -15,7 +15,7 @@
     <string name="welcome_doctor">Welcome doctor %1$s, you have token %2$s</string>
     <string name="action_settings">Settings</string>
     <string name="patient_start_btn">Start</string>
-    <string name="patient_welcome_txt">Welcome to the symptom management app</string>
+    <string name="patient_welcome_txt">Welcome to the symptom management app %1$s</string>
     <string name="patient_howto_txt">Begin by pressing the "Start"-button below</string>
     <string name="patient_question_medication">Did you take your %1$s?</string>
     <string name="patient_answer_yes">Yes</string>

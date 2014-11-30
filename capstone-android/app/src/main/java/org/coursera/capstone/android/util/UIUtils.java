@@ -40,14 +40,14 @@ public class UIUtils {
         TextView text1View = new TextView(context);
         text1View.setText(text1);
         text1View.setTypeface(null, Typeface.BOLD);
-        text1View.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        text1View.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         text1View.setLayoutParams(textViewParams);
         holderView.addView(text1View);
 
         TextView text2View = new TextView(context);
         text2View.setText(text2);
         text2View.setLayoutParams(textViewParams);
-        text2View.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        text2View.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         holderView.addView(text2View);
         return holderView;
     }

@@ -86,7 +86,7 @@ public class CheckInSummaryFragment extends Fragment {
         questionsView.removeAllViews();
         for (CheckIn.QuestionAnswer qa : mCheckIn.getQuestionAnswers()) {
             questionsView.addView(UIUtils.createTwoColumnText(getActivity(), qa.getQuestion().getText(),
-                    qa.getAnswer().getText(), getResources().getDimension(R.dimen.text_x_small)));
+                    qa.getAnswer().getText(), getResources().getDimension(R.dimen.text_small)));
         }
         // Pain medications
         LinearLayout medicationView = (LinearLayout) v.findViewById(R.id.patient_check_in_summary_medications);
@@ -98,7 +98,7 @@ public class CheckInSummaryFragment extends Fragment {
                         DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
             }
             medicationView.addView(UIUtils.createTwoColumnText(getActivity(), mt.getMedication().getName(),
-                    medicationTakenText, getResources().getDimension(R.dimen.text_x_small)));
+                    medicationTakenText, getResources().getDimension(R.dimen.text_small)));
         }
     }
 

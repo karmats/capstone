@@ -30,7 +30,6 @@ public class AlarmBootReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             List<Calendar> alarms = PatientMainActivity.getAlarms(context);
             // Restart check in alarms
-            mCheckInAlarm.cancelAlarm(context, alarms.size());
             for (int i = 0; i < alarms.size(); i++) {
                 // The pending intent with id to execute on the selected time
                 Intent alarmIntent = new Intent(context, CheckInAlarmReceiver.class);

@@ -100,7 +100,7 @@ public class ExpandableCheckInsAdapter extends BaseExpandableListAdapter {
         viewHolder.questionAnswers.removeAllViews();
         for (CheckInResponse.QuestionAnswerResponse qa : checkIn.getQuestionAnswers()) {
             LinearLayout qaView = UIUtils.createTwoColumnText(mContext, qa.getQuestionText(), qa.getAnswerText()
-                    , mContext.getResources().getDimension(R.dimen.text_xx_small));
+                    , mContext.getResources().getDimension(R.dimen.text_small));
             viewHolder.questionAnswers.addView(qaView);
         }
         viewHolder.medicationsTaken.removeAllViews();
@@ -111,7 +111,7 @@ public class ExpandableCheckInsAdapter extends BaseExpandableListAdapter {
                             DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
             }
             LinearLayout mtView = UIUtils.createTwoColumnText(mContext, mt.getMedicationName(), mtWhenText
-                    , mContext.getResources().getDimension(R.dimen.text_xx_small));
+                    , mContext.getResources().getDimension(R.dimen.text_small));
             viewHolder.medicationsTaken.addView(mtView);
         }
         return convertView;

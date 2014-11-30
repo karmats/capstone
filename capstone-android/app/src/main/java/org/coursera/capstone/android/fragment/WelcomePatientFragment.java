@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
@@ -66,6 +67,8 @@ public class WelcomePatientFragment extends Fragment implements FetchQuestionsTa
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_welcome_patient, container, false);
+        TextView titleText = (TextView) v.findViewById(R.id.welcome_patient_title);
+        titleText.setText(getString(R.string.patient_welcome_txt, mPatient.getFirstName()));
         Button nextBtn = (Button) v.findViewById(R.id.patient_next_btn);
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
