@@ -50,9 +50,9 @@ public class CheckAlertsReceiver extends WakefulBroadcastReceiver {
         intent.putExtra(CheckAlertsService.ACCESS_TOKEN_PARAM, accessToken);
         alarmIntent = PendingIntent.getBroadcast(context, 15, intent, 0);
 
-        // Set the alarm to fire every hour
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000,
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
+        // Set the alarm to fire every half hour
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, AlarmManager.INTERVAL_HALF_HOUR,
+                AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
 
         // Enable AlarmBootReceiver to automatically restart the alarm when the
         // device is rebooted.

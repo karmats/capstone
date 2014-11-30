@@ -8,6 +8,8 @@ import org.coursera.capstone.android.parcelable.Patient;
 
 import java.util.List;
 
+import retrofit.RetrofitError;
+
 /**
  * Fetches a doctors patients.
  * <p/>
@@ -26,15 +28,22 @@ public class FetchDoctorPatientsTask extends AsyncTask<String, Void, List<Patien
     @Override
     protected List<Patient> doInBackground(String... params) {
         SymptomManagementApi api = SymptomManagementApiBuilder.newInstance(mAccessToken);
-        return api.getDoctorPatients(params[0]);
+        try {
+            return api.getDoctorPatients(params[0]);
+        } catch (RetrofitError e) {
+            mCallbacks.onPatientsFetchFail("Failed to fetch patients, reason: " + e.getResponse().getStatus());
+            return null;
+        }
     }
 
     @Override
     protected void onPostExecute(List<Patient> patients) {
-        if (patients.size() <= 0) {
-            mCallbacks.onPatientsFetchFail("No patients found :(");
-        } else {
-            mCallbacks.onPatientsFetched(patients);
+        if (patients != null) {
+            if (patients.size() <= 0) {
+                mCallbacks.onPatientsFetchFail("No patients found :(");
+            } else {
+                mCallbacks.onPatientsFetched(patients);
+            }
         }
     }
 

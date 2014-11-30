@@ -1,5 +1,6 @@
 package org.coursera.capstone.android.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -81,6 +82,8 @@ public class DoctorMainActivity extends FragmentActivity implements FetchDoctorP
     @Override
     public void onPatientsFetchFail(String error) {
         Log.e(CapstoneConstants.LOG_TAG, error);
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CapstoneConstants.PREFERENCES_USER, "").commit();
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override

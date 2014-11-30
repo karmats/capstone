@@ -8,6 +8,8 @@ import org.coursera.capstone.android.http.api.SymptomManagementApi;
 import org.coursera.capstone.android.http.api.SymptomManagementApiBuilder;
 import org.coursera.capstone.android.parcelable.Patient;
 
+import retrofit.RetrofitError;
+
 /**
  * Fetches information for a patient.
  * <p/>
@@ -27,14 +29,17 @@ public class FetchPatientInfoTask extends AsyncTask<String, Void, Patient> {
     protected Patient doInBackground(String... params) {
         Log.i(CapstoneConstants.LOG_TAG, "Fetching patient info with username " + params[0]);
         SymptomManagementApi api = SymptomManagementApiBuilder.newInstance(mAccessToken);
-        return api.getPatientInformation(params[0]);
+        try {
+            return api.getPatientInformation(params[0]);
+        } catch (RetrofitError e) {
+            mCallbacks.onPatientFetchFail("Failed to fetch patients, reason: " + e.getResponse().getStatus());
+            return null;
+        }
     }
 
     @Override
     protected void onPostExecute(Patient patient) {
-        if (patient == null) {
-            mCallbacks.onPatientFetchFail("No patient found :(");
-        } else {
+        if (patient != null) {
             mCallbacks.onPatientFetched(patient);
         }
     }

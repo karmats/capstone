@@ -148,7 +148,7 @@ public class CheckInController {
                 }
             }
         }
-        return alert;
+        return alert.isEmpty() ? null : alert;
     }
 
     @RequestMapping(value = SymptomManagementApi.CHECK_IN_SVC_PATH, method = RequestMethod.GET)

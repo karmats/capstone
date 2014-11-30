@@ -21,6 +21,7 @@ import android.widget.TextView;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.constant.CapstoneConstants;
 import org.coursera.capstone.android.parcelable.User;
+import org.coursera.capstone.android.task.FetchDoctorPatientsTask;
 import org.coursera.capstone.android.task.LoginTask;
 
 
@@ -46,33 +47,39 @@ public class LoginActivity extends Activity implements LoginTask.LoginCallbacks 
         setContentView(R.layout.activity_login);
 
         // See if user already is logged in to server
+        // Get the user information from shared preferences
+        String userJsonString = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(CapstoneConstants.PREFERENCES_USER, "");
+        if (!userJsonString.isEmpty()) {
+            User user = User.fromJsonString(userJsonString);
+            startActivityForUser(user);
+        } else {
+            // Set up the login form.
+            mUsernameView = (EditText) findViewById(R.id.username);
 
-
-        // Set up the login form.
-        mUsernameView = (EditText) findViewById(R.id.username);
-
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+            mPasswordView = (EditText) findViewById(R.id.password);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                        attemptLogin();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
-        mSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+            Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
+            mSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin();
+                }
+            });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
+        }
     }
 
     /**
@@ -140,7 +147,12 @@ public class LoginActivity extends Activity implements LoginTask.LoginCallbacks 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
         // Add the user object to shared preferences
         preferences.edit().putString(CapstoneConstants.PREFERENCES_USER, user.toJson()).commit();
+
         // Start doctor or patient activity
+        startActivityForUser(user);
+    }
+
+    private void startActivityForUser(User user) {
         if (CapstoneConstants.PATIENT_ROLE.equals(user.getRole())) {
             startActivity(new Intent(this, PatientMainActivity.class));
         } else if (CapstoneConstants.DOCTOR_ROLE.equals(user.getRole())) {

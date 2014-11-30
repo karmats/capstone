@@ -120,6 +120,9 @@ public class PatientMainActivity extends FragmentActivity implements FetchPatien
     @Override
     public void onPatientFetchFail(String error) {
         Log.e(CapstoneConstants.LOG_TAG, error);
+        // Reset user and start login activity
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(CapstoneConstants.PREFERENCES_USER, "").commit();
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override
