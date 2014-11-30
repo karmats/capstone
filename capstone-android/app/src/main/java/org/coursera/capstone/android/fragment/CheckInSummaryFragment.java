@@ -3,7 +3,7 @@ package org.coursera.capstone.android.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import org.coursera.capstone.android.R;
 import org.coursera.capstone.android.parcelable.CheckIn;
 import org.coursera.capstone.android.util.UIUtils;
-
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,7 +93,8 @@ public class CheckInSummaryFragment extends Fragment {
         for (CheckIn.MedicationTaken mt : mCheckIn.getMedicationsTaken()) {
             String medicationTakenText = getString(R.string.patient_answer_no);
             if (mt.getWhen() != null) {
-                medicationTakenText = DateFormat.getTimeFormat(getActivity()).format(new Date(mt.getWhen()));
+                medicationTakenText = DateUtils.getRelativeDateTimeString(getActivity(), mt.getWhen(),
+                        DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
             }
             medicationView.addView(UIUtils.createTwoColumnText(getActivity(), mt.getMedication().getName(), medicationTakenText));
         }

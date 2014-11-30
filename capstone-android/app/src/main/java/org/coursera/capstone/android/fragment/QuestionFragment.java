@@ -1,6 +1,7 @@
 package org.coursera.capstone.android.fragment;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -31,7 +33,7 @@ import java.util.Date;
  * Use the {@link QuestionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
+public class QuestionFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String QUESTION_PARAM = "question_param";
     private static final String PAIN_MEDICATION_PARAM = "pain_medication_param";
 
@@ -43,7 +45,9 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
     private Button mAnswer1Btn;
     private Button mAnswer2Btn;
     private Button mAnswer3Btn;
+    private DatePickerDialog mDatePickerDlg;
     private TimePickerDialog mTimePickerDlg;
+    private Calendar mCalendar;
 
     private OnQuestionAnsweredListener mListener;
 
@@ -91,10 +95,12 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
         mAnswer2Btn.setOnClickListener(this);
         mAnswer3Btn = (Button) v.findViewById(R.id.checking_answer_3);
         mAnswer3Btn.setOnClickListener(this);
-        // Setup time picker
+        // Setup time and date picker
         Calendar c = Calendar.getInstance();
         mTimePickerDlg = new TimePickerDialog(getActivity(), this, c.get(Calendar.HOUR_OF_DAY),
                 c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
+        mDatePickerDlg = new DatePickerDialog(getActivity(), this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        mCalendar = Calendar.getInstance();
 
         // Either the question or the pain medication is nullœ
         if (mQuestion != null) {
@@ -144,8 +150,8 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
         // Add the answer to the check in
         if (mPainMedication != null) {
             if (answerId == 0) {
-                // Show time picker dialog if this is a medical question and the user responded yes
-                mTimePickerDlg.show();
+                // Show date picker dialog if this is a medical question and the user responded yes
+                mDatePickerDlg.show();
             } else {
                 // Patient choose no
                 mListener.onMedicalQuestionAnswered(mPainMedication, null);
@@ -164,6 +170,16 @@ public class QuestionFragment extends Fragment implements View.OnClickListener, 
             Log.i(CapstoneConstants.LOG_TAG, "Adding check in time " + hourOfDay + ":" + minute);
             // Notify listener with date and medication
             mListener.onMedicalQuestionAnswered(mPainMedication, calendar.getTime());
+        }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        if (view.isShown()) {
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            mTimePickerDlg.show();
         }
     }
 
