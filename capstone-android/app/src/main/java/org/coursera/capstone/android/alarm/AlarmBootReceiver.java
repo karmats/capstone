@@ -28,22 +28,28 @@ public class AlarmBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            List<Calendar> alarms = PatientMainActivity.getAlarms(context);
-            // Restart check in alarms
-            for (int i = 0; i < alarms.size(); i++) {
-                // The pending intent with id to execute on the selected time
-                Intent alarmIntent = new Intent(context, CheckInAlarmReceiver.class);
-                PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                mCheckInAlarm.setAlarm(context, pendingAlarmIntent, alarms.get(i));
-            }
-            // Restart check alerts
-            mCheckAlerts.cancelAlarm(context);
             // Get the user information from shared preferences
-            String userJsonString = PreferenceManager.getDefaultSharedPreferences(context).getString(CapstoneConstants.PREFERENCES_USER, "");
-            User user = User.fromJsonString(userJsonString);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            Set<String> patientUserNames = preferences.getStringSet(CapstoneConstants.PREFERENCES_DOCTOR_PATIENT_USERNAMES, new HashSet<String>());
-            mCheckAlerts.setAlarm(context, new ArrayList<String>(patientUserNames), user.getAccessToken());
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String userJsonString = prefs.getString(CapstoneConstants.PREFERENCES_USER, "");
+            if (!userJsonString.isEmpty()) {
+                User user = User.fromJsonString(userJsonString);
+                // Patient alarms
+                if (CapstoneConstants.PATIENT_ROLE.equals(user.getRole())) {
+                    List<Calendar> alarms = PatientMainActivity.getAlarms(context);
+                    // Restart check in alarms
+                    for (int i = 0; i < alarms.size(); i++) {
+                        // The pending intent with id to execute on the selected time
+                        Intent alarmIntent = new Intent(context, CheckInAlarmReceiver.class);
+                        PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(context, i, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mCheckInAlarm.setAlarm(context, pendingAlarmIntent, alarms.get(i));
+                    }
+                } else if (CapstoneConstants.DOCTOR_ROLE.equals(user.getRole())) { // Doctor alarms
+                    // Restart check alerts
+                    mCheckAlerts.cancelAlarm(context);
+                    Set<String> patientUserNames = prefs.getStringSet(CapstoneConstants.PREFERENCES_DOCTOR_PATIENT_USERNAMES, new HashSet<String>());
+                    mCheckAlerts.setAlarm(context, new ArrayList<String>(patientUserNames), user.getAccessToken());
+                }
+            }
         }
     }
 }
