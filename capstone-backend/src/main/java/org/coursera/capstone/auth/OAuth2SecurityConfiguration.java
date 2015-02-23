@@ -1,21 +1,13 @@
 package org.coursera.capstone.auth;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.catalina.connector.Connector;
-import org.apache.coyote.http11.Http11NioProtocol;
 import org.coursera.capstone.InitialTestData;
 import org.coursera.capstone.entity.Doctor;
 import org.coursera.capstone.entity.Patient;
 import org.coursera.capstone.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -230,7 +222,7 @@ public class OAuth2SecurityConfiguration {
     //
     // http://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html
     //
-    @Bean
+    /*@Bean
     EmbeddedServletContainerCustomizer containerCustomizer(
             @Value("${keystore.file:src/main/resources/private/keystore}") String keystoreFile,
             @Value("${keystore.pass:changeit}") final String keystorePass) throws Exception {
@@ -264,6 +256,6 @@ public class OAuth2SecurityConfiguration {
 
             }
         };
-    }
+    }*/
 
 }

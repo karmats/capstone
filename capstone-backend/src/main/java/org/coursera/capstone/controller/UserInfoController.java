@@ -11,6 +11,8 @@ import org.coursera.capstone.entity.Doctor;
 import org.coursera.capstone.entity.Patient;
 import org.coursera.capstone.repository.DoctorRepository;
 import org.coursera.capstone.repository.PatientRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class UserInfoController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UserInfoController.class);
     @Autowired
     DoctorRepository doctorRepo;
     @Autowired
@@ -35,6 +38,7 @@ public class UserInfoController {
     @RequestMapping(value = SymptomManagementApi.USER_SVC_PATH, method = RequestMethod.GET)
     public @ResponseBody UserDto getUserInfo(Principal p) {
         String username = p.getName();
+        LOG.info("Getting info for user "+ username);
         // Check if the user exists in patient db
         Patient patient = patientRepo.findByUsername(username);
         if (patient != null) {

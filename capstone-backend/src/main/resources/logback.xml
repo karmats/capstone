@@ -6,14 +6,24 @@
 			<pattern>%d{HH:mm:ss.SSS} %-5level %logger{5}: %msg%n</pattern>
 		</encoder>
 	</appender>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <File>/Users/matros/Development/logs/capstone.log</File>
+	    <encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %logger{5}: %msg%n</pattern>
+		</encoder>
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	      <fileNamePattern>/Users/matros/Development/logs/capstone.log.%d{yyyy-MM-dd-HH}.zip</fileNamePattern>
+		  <maxHistory>10</maxHistory>
+	    </rollingPolicy>
+  </appender>
 
 	<logger name="org.springframework" level="INFO">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</logger>
 	<logger name="com.coursera" level="INFO">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</logger>
 	<logger name="org.springframework.web.servlet.mvc" level="INFO">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</logger>
 </configuration>

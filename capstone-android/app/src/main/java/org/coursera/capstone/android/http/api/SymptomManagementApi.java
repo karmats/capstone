@@ -28,7 +28,7 @@ public interface SymptomManagementApi {
     public static final String USERNAME_PARAMETER = "username";
 
     // Service host
-    public static final String HOST = "https://192.168.1.76:8443";
+    public static final String HOST = "http://192.168.1.103:8080/android-capstone-0.1.0";
 
     // Login service oauth2
     public static final String TOKEN_PATH = "/oauth/token";
