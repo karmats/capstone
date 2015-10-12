@@ -28,7 +28,7 @@ public interface SymptomManagementApi {
     public static final String USERNAME_PARAMETER = "username";
 
     // Service host
-    public static final String HOST = "http://104.155.28.181:8080";
+    public static final String HOST = "http://192.168.1.74:8080";
 
     // Login service oauth2
     public static final String TOKEN_PATH = "/oauth/token";
